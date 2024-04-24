@@ -9,12 +9,15 @@
             +name
             +type
             +class
+            +level
             +lifePoints
             +education
             +agility
             +withdom
-            +inventory
             +strength
+            +inventory
+            -experience
+            +stamina
             +equipment item table
             [ hand : ,hand : , body : ,
             head : , shoes : , pents : , amulette: ]
@@ -28,7 +31,6 @@
             die()
             fight()
             walk()
-            run()
             sayHi()
             }
         Caracter <|-- Player
