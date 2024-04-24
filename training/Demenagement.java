@@ -1,4 +1,4 @@
-package training.w3school;
+package training;
 public class Demenagement {
       public static void print1D(int mat[])
     {

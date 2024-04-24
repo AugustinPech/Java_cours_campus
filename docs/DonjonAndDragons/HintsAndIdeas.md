@@ -1,0 +1,1 @@
+To generate sprites for the caracters https://www.asciiart.eu/
