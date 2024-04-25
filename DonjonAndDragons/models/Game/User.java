@@ -34,18 +34,24 @@ public class User {
     public Caracter createCaracter() {
         try {
             Scanner input = new Scanner(System.in);
-            System.out.println("Choose your class by typing : \n (A) for Warrior\n (B) for Wizard");
+            System.out.println("Choose your class by typing : \n (A) for Warrior\n (Z) for Wizard");
             String className = input.nextLine();
+            Pattern pattern = Pattern.compile("^[a-bA-B]{1}$");
+            Matcher matcher = pattern.matcher(className);
+            boolean matchFound = matcher.find();
+            if (!matchFound) {
+                throw new IllegalArgumentException("Invalid input: " + className);
+            }
             System.out.println("Choose the name of your character");
             String charName = input.nextLine();
 
-            switch (className ){
+            switch (className.toUpperCase()){
                 case "A":
                     return new Warrior(charName);
-                case "B":
+                case "Z":
                     return new Wizard(charName);
                 default:
-                    throw new IllegalArgumentException("Invalid input: " + input);
+                    throw new IllegalArgumentException("Invalid input: " + className);
         }
         } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());

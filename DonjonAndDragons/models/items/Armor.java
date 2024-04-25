@@ -5,7 +5,7 @@ public class Armor extends Item{
     public Armor(String caracterClass){
         switch (caracterClass) {
             case "Warrior" -> {
-                this.name = "Plate Armor";
+                this.name = "Leather Armor";
                 this.type = "Armor";
                 this.armor = 5;
                 this.weight = 10;

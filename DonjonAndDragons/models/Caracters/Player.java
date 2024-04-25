@@ -10,11 +10,16 @@ public class Player extends Caracter{
             index++;
         }
         this.inventory[index] = item;
+        System.out.println(this.fullName + " received " + item.name + " to his inventory");
     }
     public void equipItem(int indexOfInventoryItem){
         int index = 0;
         while (this.equipment[index] != null) {
             index++;
+        }
+        if (index >= this.equipment.length) {
+            System.out.println(this.fullName + " can't equip more items");
+            return;
         }
         this.equipment[index] = this.inventory[indexOfInventoryItem];
         this.inventory[index] = null;

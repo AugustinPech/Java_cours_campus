@@ -7,6 +7,7 @@ public class Warrior extends Player{
     public Warrior(String name) {
         super(name);
         this.caracterClass = "Warrior";
+        this.type = "fighter";
         this.setFullName();
         this.addItem(new Weapon(this.caracterClass));
         this.equipItem(0);

@@ -10,20 +10,35 @@ import DonjonAndDragons.models.items.Armor;
 import java.util.Scanner;
 
 public class Menu {
-    public Menu() {
-        Scanner scanner = new Scanner(System.in);
-        Ascii.printTitle();
+    public void startGame() {
+            User user = new User();
+            Caracter caracter = user.createCaracter();
+            System.out.println("Welcome " + caracter.name + " the " + caracter.caracterClass + "!");
+    }
+    public void wantToPlay(Scanner scanner){
         System.out.println("Do you want to join the adventure? (Y / n)");
         String answer = scanner.nextLine();
         switch (answer) {
             case "n":
                 System.out.println("Goodbye");
                 break;
-            default:
-                User user = new User();
-                Caracter caracter = user.createCaracter();
-                System.out.println("Welcome " + user.name + " the " + caracter.caracterClass + "!");
+            case "Y":
+                this.startGame();
                 break;
+            case "y":
+                this.startGame();
+                break;
+            case "":
+                this.startGame();
+                break;
+            default:
+                System.out.println("Invalid input: " + answer);
+                this.wantToPlay(scanner);
         }
+    }
+    public Menu() {
+        Scanner scanner = new Scanner(System.in);
+        Ascii.printTitle();
+        this.wantToPlay(scanner);
     }
 }
