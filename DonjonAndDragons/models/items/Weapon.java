@@ -1,6 +1,5 @@
 package DonjonAndDragons.models.items;
 
-
 public class Weapon extends Item{
     public int damage;
     public int range;

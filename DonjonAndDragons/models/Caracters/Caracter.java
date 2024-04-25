@@ -1,8 +1,9 @@
 package DonjonAndDragons.models.Caracters;
 
 import DonjonAndDragons.models.items.Item;
-
-abstract class Caracter {
+import DonjonAndDragons.models.Caracters.Warrior;
+import DonjonAndDragons.models.Caracters.Wizard;
+public class Caracter {
     public String name;
     public String suffix;
     public String fullName;
@@ -44,7 +45,10 @@ abstract class Caracter {
         // this.speed = 5;
         this.actions = 1;
         this.basicDamage = 5;
-        this.damage = this.basicDamage;
+        this.inventory = new Item[10];
+        this.equipment = new Item[2];
+        this.setDamage();
+        this.setFullName();
         // this.position = new int[2];
         // this.position[0] = 0;
         // this.position[1] = 0;
@@ -86,9 +90,29 @@ abstract class Caracter {
         this.suffix = suffix;
     }
     public void setFullName(){
-        this.fullName = this.name + " the " + this.suffix + " " + this.caracterClass;
+        if (this.suffix == null) {
+            this.fullName = this.name + " the " + this.caracterClass;
+            if (this.caracterClass==null) {
+            this.fullName = this.name;
+            }
+        } else if (this.caracterClass==null) {
+            this.fullName = this.name + " the " + this.suffix;
+        } else {
+            this.fullName = this.name + " the " + this.suffix + " " + this.caracterClass;
+        }
     }
     public void setAction (int n) {
         this.actions += n;
+    }
+    public void setDamage() {
+        int equipedDamage = 0;
+        for (Item item : this.equipment) {
+            if (item ==null) {
+                continue;
+            } else if (item.type == "Weapon") {
+                System.out.println( item);
+            }
+        }
+        this.damage = this.basicDamage + equipedDamage;
     }
 }
