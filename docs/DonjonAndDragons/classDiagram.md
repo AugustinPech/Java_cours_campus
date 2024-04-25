@@ -96,6 +96,7 @@ classDiagram
     }
     class Weapon {
         +damage
+        +range
         constructor(name, type, status)
     }
     class Armor{
