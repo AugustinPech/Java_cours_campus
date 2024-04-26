@@ -58,10 +58,10 @@ public class Menu {
     }
     public void joinedGame(Player player){
         System.out.println("Welcome " + player.fullName + "!");
-        this.spriteShow(player);
+        this.spriteAndStatsShow(player);
     }
-    public void spriteShow(Player player) {
-        Ascii.caracterSprite(player);
+    public void spriteAndStatsShow(Player player) {
+        Ascii.playerSpriteAndStats(player);
     }
 
     public void upKeepMenu(Player player) {

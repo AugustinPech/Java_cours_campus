@@ -62,7 +62,7 @@ public class Ascii {
                 dragonSprite();
                 break;
             default:
-                playerSpriteAndStats(caracter);
+                playerSprite(caracter);
         }
     }
     public static void playerSprite(Caracter caracter) {
@@ -79,8 +79,8 @@ public class Ascii {
             } else {System.out.println();}
         }
     }
-    public static String [] dragonSprite(){
-        String [] str1 = {
+    public static String[] dragonEncounter(){
+        String [] str = {
                     "___________________________________________________________________________________________\n",
                     "|                                                                                          |\n",
                     "|                                                             /===-_---~~~~~~~~~------____ |\n",
@@ -113,6 +113,9 @@ public class Ascii {
                     "|    '   '  `                                                                              |\n",
                     "|__________________________________________________________________________________________|"
         };
+        return str;
+    }
+    public static String [] dragonSprite(){
         String [] str = {
             "⬜⬜⬜⬜⬜⬜⬜🏽⬜⬜⬜⬜⬜🏽⬜⬜⬜⬜⬜⬜",
             "⬜⬜⬜⬜⬜⬜⬜🏿🟨⬜⬜⬜⬜🏿⬜⬜⬜⬜⬜⬜",
@@ -136,7 +139,7 @@ public class Ascii {
             "⬜⬜⬜⬜⬜🟪🟪⬜⬜🟪🟪🟪🟪🟪🟪⬜⬜🟪⬜⬜",
             "⬜⬜⬜⬜⬜🟪⬜⬜⬜⬜🟪🟪⬜⬜🟪⬜⬜⬜⬜⬜",
             "⬜⬜⬜⬜⬜🟪⬜⬜⬜⬜⬜🟪⬜⬜⬜⬜⬜⬜⬜⬜",
-        }
+        };
         return str;
     }
     public static void youDied () {
