@@ -1,12 +1,12 @@
-package DonjonAndDragons.models.items;
+package DonjonAndDragons.src.models.items;
 
 public class Armor extends Item{
-    public int armor;
     public Armor(String caracterClass){
         switch (caracterClass) {
             case "Warrior" -> {
                 this.name = "Leather Armor";
                 this.type = "Armor";
+                this.mipple = "🧥";
                 this.armor = 5;
                 this.weight = 10;
                 this.value = 20;
@@ -15,6 +15,7 @@ public class Armor extends Item{
             case "Wizard" -> {
                 this.name = "Robe";
                 this.type = "Armor";
+                this.mipple = "👘";
                 this.armor = 3;
                 this.weight = 3;
                 this.value = 10;

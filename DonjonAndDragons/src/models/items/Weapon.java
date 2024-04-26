@@ -1,12 +1,12 @@
-package DonjonAndDragons.models.items;
+package DonjonAndDragons.src.models.items;
 
 public class Weapon extends Item{
-    public int damage;
     public int range;
     public Weapon(String caracterClass){
         switch (caracterClass) {
             case "Warrior" -> {
                 this.name = "Sword";
+                this.mipple = "🗡";
                 this.type = "Weapon";
                 this.damage = 5;
                 this.range = 1;
@@ -17,6 +17,7 @@ public class Weapon extends Item{
             case "Wizard" -> {
                 this.name = "Staff";
                 this.type = "Weapon";
+                this.mipple = "⚕";
                 this.damage = 3;
                 this.range = 2;
                 this.weight = 3;

@@ -1,10 +1,13 @@
-package DonjonAndDragons.models.items;
+package DonjonAndDragons.src.models.items;
 public class Item {
     public String name;
     public String type;
     public int weight;
     public int value;
     public String status;
+    public int armor;
+    public int damage;
+    public String mipple = "📦";
     public Item (){
         // Works with subClasses
     }
@@ -23,5 +26,11 @@ public class Item {
     }
     public String toString(){
         return this.status + " " + this.name;
+    }
+    public int getArmor(){
+        return this.armor;
+    }
+    public int getDamage(){
+        return this.damage;
     }
 }

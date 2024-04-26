@@ -1,8 +1,10 @@
-package DonjonAndDragons.models.Caracters;
-import DonjonAndDragons.models.items.Item;
+package DonjonAndDragons.src.models.Caracters;
+import DonjonAndDragons.src.models.Game.Game;
+import DonjonAndDragons.src.models.items.Item;
 public class Player extends Caracter{
-    public Player(String name) {
+    public Player(String name, Game game) {
         super(name);
+        game.addPlayer(this);
     }
     public void addItem(Item item) {
         int index = 0;
