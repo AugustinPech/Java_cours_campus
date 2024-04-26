@@ -15,7 +15,7 @@ public class Menu {
     }
 
     public void startMenu(Game game, User user){
-        Ascii.printTitle();
+        System.out.println(Ascii.printTitle());
         this.wantToPlay(game, user);
     }
 
@@ -24,7 +24,7 @@ public class Menu {
         String answer = this.scanner.nextLine().toLowerCase();
         switch (answer) {
             case "n":      
-                Ascii.NegateLetter();
+                System.out.println(Ascii.NegateLetter());
                 break;
             case "y":
                 game.userJoinsGame(user);
@@ -61,10 +61,10 @@ public class Menu {
         this.spriteAndStatsShow(player);
     }
     public void spriteAndStatsShow(Player player) {
-        Ascii.playerSpriteAndStats(player);
+        System.out.println(Ascii.playerSpriteAndStats(player));
     }
 
-    public void upKeepMenu(Player player) {
+    public void upKeepMenu(Player player, Game game) {
         System.out.println("What do you want to do?");
         System.out.println("A. Move");
         System.out.println("Z. Attack");
@@ -74,7 +74,7 @@ public class Menu {
         String answer = this.scanner.nextLine().toUpperCase();
         switch (answer) {
             case "A":
-                this.moveMenu(player);
+                this.moveMenu(player, game);
                 break;
             case "Z":
                 //this.attackMenu(player);
@@ -90,12 +90,32 @@ public class Menu {
                 break;
             default:
                 System.out.println("Invalid input: " + answer);
-                this.upKeepMenu(player);
+                this.upKeepMenu(player, game);
         }
     }
 
-    private void moveMenu(Player player) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'moveMenu'");
+    public void moveMenu(Player player, Game game) {
+        System.out.println("Where do you want to go?");
+        System.out.println("(A) Next room");
+        System.out.println("(Z) Previous room");
+        System.out.println("(E) You changed your mind. (go to previous menu)");
+        String answer = this.scanner.nextLine().toUpperCase();
+        switch (answer) {
+            case "A":
+                game.playerMoves(player, "forward");
+                break;
+            case "Z":
+                game.playerMoves(player,"Backward");
+                break;
+            case "E":
+                this.upKeepMenu(player, game);
+                break;
+            default:
+                System.out.println("Invalid input: " + answer);
+                this.moveMenu(player, game);
+        }
+    }
+    public void youDiedMenu(Game game, Caracter caracter) {
+        System.out.println(Ascii.youDied());
     }
 }

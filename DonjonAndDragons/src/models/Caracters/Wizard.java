@@ -9,8 +9,7 @@ public class Wizard extends Player{
         super(name, game);
         this.caracterClass = "Wizard";
         this.type = "spellCaster";
-        this.sprite=Ascii.wizardSprite();
-        this.mipple="🪄";
+        this.sprite="🌈";
         this.setFullName();
         this.addItem(new Weapon(this.caracterClass));
         this.equipItem(0);

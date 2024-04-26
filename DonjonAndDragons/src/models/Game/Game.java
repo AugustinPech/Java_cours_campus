@@ -53,7 +53,7 @@ public class Game {
         }
         this.players = newPlayers;
         caracter.die(this.board.dungeon[caracter.position]); 
-        Ascii.youDied();       
+        this.menu.youDiedMenu(this, caracter);       
     }
     public void addNPC(NPC NPC){
         NPC[] newNPCs = new NPC[this.nPCs.length+1];
@@ -97,8 +97,16 @@ public class Game {
             }
         }
     }
-
     private void playerTakesTurn(Player player) {
-        this.menu.upKeepMenu(player);
+        this.menu.upKeepMenu(player, this);
+    }
+    public void playerMoves(Player player, String direction){
+        player.move(direction);
+        this.playerEntersRoom(player, this.board.dungeon[player.position]);
+    }
+
+    public void playerEntersRoom(Player player, Room room) {
+        room.great();
+        room.encounter(player, this);
     }
 }

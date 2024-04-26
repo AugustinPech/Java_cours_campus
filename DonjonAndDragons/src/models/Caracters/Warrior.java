@@ -10,8 +10,7 @@ public class Warrior extends Player{
         super(name, game);
         this.caracterClass = "Warrior";
         this.type = "fighter";
-        this.sprite=Ascii.warriorSprite();
-        this.mipple="🛡️";
+        this.sprite="🔪";
         this.setFullName();
         this.addItem(new Weapon(this.caracterClass));
         this.equipItem(0);

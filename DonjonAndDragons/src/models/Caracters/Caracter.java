@@ -12,34 +12,7 @@ public class Caracter {
     public String type;
     public String caracterClass;
     public int lifePoints;
-    public String mipple = "👨🏽‍🌾";
-    public String[] sprite= {
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-           "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜",
-    };
+    public String sprite = "😃";
     public String[] statsView= {
                 "  ______________________________________________________________" , //0
                 "  |                                                            " ,
@@ -170,13 +143,13 @@ public class Caracter {
         System.out.println(this.name + " is fighting " + otherGuy.name);
         return this;
     }
-    public void move (String how, String Direction){
+    public void move (String how){
         switch (how) {
-            case "walk":
-                this.walk(Direction);
+            case "forward":
+                this.position ++;
                 break;
-            case "run":
-                this.run(Direction);
+            case "backward":
+                this.position --;
                 break;
             default:
                 System.out.println(this.name + " can not move. \nInvalid action");
@@ -184,39 +157,8 @@ public class Caracter {
         
         }
     }
-    public Caracter walk(String direction) {
-        System.out.println(this.name + " tries to walk");
-
-        // switch (direction) {
-        //     case "up":
-        //         this.position[1] += 1;
-        //         break;
-        //     case "down":
-        //         this.position[1] -= 1;
-        //         break;
-        //     case "left":
-        //         this.position[0] -= 1;
-        //         break;
-        //     case "right":
-        //         this.position[0] += 1;
-        //         break;
-        //     default:
-        //         System.out.println(this.name +" can not walk. \nInvalid direction");
-        //         break;
-        // }
-        this.setAction(-1);
-        return this;
-    }
-    public Caracter run(String direction) {
-        System.out.println(this.name + " tries to run");
-        this.setAction(-2);
-        return this;
-    }
     public void sayHi() {
         System.out.println("Hi, I'm " + this.name + " the " + this.suffix + " " + this.caracterClass);
-    }
-    public void encounterMe(){
-        System.out.println("You encountered " + this.name + " the " + this.suffix + " " + this.caracterClass);
     }
     public void setSuffix(String suffix){
         this.suffix = suffix;

@@ -1,17 +1,23 @@
 package DonjonAndDragons.src.models.Game;
 import DonjonAndDragons.src.models.Caracters.Caracter;
+import DonjonAndDragons.src.models.Caracters.NPC;
+import DonjonAndDragons.src.models.Caracters.Player;
 import DonjonAndDragons.src.models.items.Item;
 public class Room {
     public Caracter[] caracters;
     public Item[] items;
     public String name;
     public Room(){
-        this.caracters = new Caracter[0];
+        this.caracters = new Caracter[0]; // make a method to pick random preconfigurated room
         this.items = new Item[0];
         this.fakeName();
     }
-    public Room(String name){
-        this.caracters = new Caracter[0];
+    public Room(String name, Game game){
+        if (name=="Hallway"){
+            this.caracters[0]=new NPC("Doorsman", game);
+        } else {
+            this.caracters = new Caracter[0];
+        }
         this.items = new Item[0];
         this.name = name;
     }
@@ -89,5 +95,8 @@ public class Room {
             }
         }
         this.items = newItems;
+    }
+    public void encounter(Player player, Game game) {
+
     }
 }
