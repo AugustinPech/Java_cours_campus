@@ -4,6 +4,8 @@ import java.util.Scanner;
 import DonjonAndDragons.src.models.Caracters.Caracter;
 import DonjonAndDragons.src.models.Caracters.NPC;
 import DonjonAndDragons.src.models.Caracters.Player;
+import DonjonAndDragons.src.models.Caracters.Warrior;
+import DonjonAndDragons.src.models.Caracters.Wizard;
 import DonjonAndDragons.src.models.Game.Menu;
 import DonjonAndDragons.src.models.items.Corps;
 import DonjonAndDragons.src.views.Ascii;
@@ -31,9 +33,26 @@ public class Game {
 
     public void userJoinsGame(User user) {
             String[] answer = this.menu.joiningGameMenu(user, this);
-            Caracter caracter = user.createCaracter(answer, this);
+            Caracter caracter = this.createCaracter(answer);
             this.addPlayer((Player) caracter);
             this.menu.joinedGame((Player) caracter);
+    }
+    public Caracter createCaracter(String[] answerFromMenu) {
+        try {
+            String className = answerFromMenu[0];
+            String charName = answerFromMenu[1];
+            switch (className){
+                case "A":
+                    return new Warrior(charName, this);
+                case "Z":
+                    return new Wizard(charName,  this);
+                default:
+                    throw new IllegalArgumentException("Invalid input: " + className);
+        }
+        } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                return this.createCaracter(answerFromMenu);
+        }
     }
     public static int roleDice(int [] dice){
         int result = 0;
@@ -101,8 +120,11 @@ public class Game {
         this.menu.upKeepMenu(player, this);
     }
     public void playerMoves(Player player, String direction){
+        int oldPosition = player.position;
         player.move(direction);
-        this.playerEntersRoom(player, this.board.dungeon[player.position]);
+        if (player.position != oldPosition){
+            this.playerEntersRoom(player, this.board.dungeon[player.position]);
+        }
     }
 
     public void playerEntersRoom(Player player, Room room) {

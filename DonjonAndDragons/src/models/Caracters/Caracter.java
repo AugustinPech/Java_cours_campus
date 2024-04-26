@@ -140,7 +140,6 @@ public class Caracter {
         this.setFullName();
     }
     public Caracter fight(Caracter otherGuy) {
-        System.out.println(this.name + " is fighting " + otherGuy.name);
         return this;
     }
     public void move (String how){
@@ -154,7 +153,6 @@ public class Caracter {
             default:
                 System.out.println(this.name + " can not move. \nInvalid action");
                 break;
-        
         }
     }
     public void sayHi() {
@@ -209,6 +207,5 @@ public class Caracter {
         }
         Corps corps = new Corps(this);
         room.addItem(corps);
-        System.out.println(this.name + " the " + this.caracterClass + " died");
     }
 }

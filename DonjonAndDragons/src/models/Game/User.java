@@ -14,22 +14,7 @@ public class User {
             System.out.println("Error creating user");
         }
     }
-    // public void setName() {
 
-    //     Scanner input = new Scanner(System.in);
-    //     System.out.println("Enter username");
-    //     String userName = input.nextLine();
-
-    //     Pattern pattern = Pattern.compile("^[a-zA-Z0-9 ]{1,20}$");
-    //     Matcher matcher = pattern.matcher(userName);
-
-    //     if (!matcher.find()) {
-    //         System.out.println("Invalid username");
-    //         this.setName();
-    //     } else {
-    //         this.name = userName;
-    //     }
-    // }
     public Caracter createCaracter(String[] answerFromMenu, Game game) {
         try {
             String className = answerFromMenu[0];

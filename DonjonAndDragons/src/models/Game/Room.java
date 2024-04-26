@@ -14,6 +14,7 @@ public class Room {
     }
     public Room(String name, Game game){
         if (name=="Hallway"){
+            this.caracters = new Caracter[1];
             this.caracters[0]=new NPC("Doorsman", game);
         } else {
             this.caracters = new Caracter[0];
