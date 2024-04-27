@@ -61,7 +61,7 @@ public class Menu {
         this.spriteAndStatsShow(player);
     }
     public void spriteAndStatsShow(Player player) {
-        System.out.println(Ascii.playerSpriteAndStats(player));
+        System.out.println(Ascii.caracterSpriteAndStats(player));
     }
 
     public void upKeepMenu(Player player, Game game) {
@@ -74,13 +74,13 @@ public class Menu {
         String answer = this.scanner.nextLine().toUpperCase();
         switch (answer) {
             case "A":
-                this.moveMenu(player, game);
+                game.playerMoves(player);
                 break;
             case "Z":
-                //this.attackMenu(player);
+                //game.playerAttacks(player);
                 break;
             case "E":
-                //this.useItemMenu(player);
+                //game.playerUseItem(player);
                 break;
             case "R":
                 //this.skipTurnMenu(player);
@@ -93,27 +93,13 @@ public class Menu {
                 this.upKeepMenu(player, game);
         }
     }
-
-    public void moveMenu(Player player, Game game) {
+    public String moveMenu(Player player, Game game) {
         System.out.println("Where do you want to go?");
         System.out.println("(A) Next room");
         System.out.println("(Z) Previous room");
         System.out.println("(E) You changed your mind. (go to previous menu)");
         String answer = this.scanner.nextLine().toUpperCase();
-        switch (answer) {
-            case "A":
-                game.playerMoves(player, "forward");
-                break;
-            case "Z":
-                game.playerMoves(player,"Backward");
-                break;
-            case "E":
-                this.upKeepMenu(player, game);
-                break;
-            default:
-                System.out.println("Invalid input: " + answer);
-                this.moveMenu(player, game);
-        }
+        return answer;
     }
     public void youDiedMenu(Game game, Caracter caracter) {
         System.out.println(Ascii.youDied());

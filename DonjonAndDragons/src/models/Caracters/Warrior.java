@@ -1,10 +1,7 @@
 package DonjonAndDragons.src.models.Caracters;
-import DonjonAndDragons.src.models.Caracters.Caracter;
 import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.models.items.Armor;
-import DonjonAndDragons.src.models.items.Item;
 import DonjonAndDragons.src.models.items.Weapon;
-import DonjonAndDragons.src.views.Ascii;
 public class Warrior extends Player{
     public Warrior(String name, Game game) {
         super(name, game);
@@ -18,6 +15,5 @@ public class Warrior extends Player{
         this.equipItem(0);
         this.setDamage();
         this.setArmor();
-        this.createStatsView();
     }
 }

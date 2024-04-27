@@ -1,14 +1,11 @@
 package DonjonAndDragons.src.models.Game;
-import java.util.Scanner;
 
 import DonjonAndDragons.src.models.Caracters.Caracter;
 import DonjonAndDragons.src.models.Caracters.NPC;
 import DonjonAndDragons.src.models.Caracters.Player;
 import DonjonAndDragons.src.models.Caracters.Warrior;
 import DonjonAndDragons.src.models.Caracters.Wizard;
-import DonjonAndDragons.src.models.Game.Menu;
-import DonjonAndDragons.src.models.items.Corps;
-import DonjonAndDragons.src.views.Ascii;
+
 
 public class Game {
         public int indexOf(Caracter[] array, Caracter caracter){
@@ -119,16 +116,28 @@ public class Game {
     private void playerTakesTurn(Player player) {
         this.menu.upKeepMenu(player, this);
     }
-    public void playerMoves(Player player, String direction){
+    public void playerMoves(Player player){
         int oldPosition = player.position;
-        player.move(direction);
+        String answer = this.menu.moveMenu(player, this);
+        switch (answer) {
+            case "A":
+                player.move("forward");
+                break;
+            case "Z":
+                player.move("Backward");
+                break;
+            case "E":
+                this.menu.upKeepMenu(player, this);
+                break;
+            default:
+                System.out.println("Invalid input: " + answer);
+                this.menu.moveMenu(player, this);
+        }
         if (player.position != oldPosition){
             this.playerEntersRoom(player, this.board.dungeon[player.position]);
         }
     }
-
     public void playerEntersRoom(Player player, Room room) {
-        room.great();
         room.encounter(player, this);
     }
 }

@@ -1,6 +1,7 @@
 package DonjonAndDragons.src.views;
 
 import DonjonAndDragons.src.models.Caracters.Caracter;
+import DonjonAndDragons.src.models.Caracters.Player;
 
 public class Ascii {
     public static String [] printTitle(){
@@ -58,7 +59,7 @@ public class Ascii {
         };
         return str;        
     }
-    public static String[] caracterSprite (Caracter caracter){
+    public static String [] caracterSprite (Caracter caracter){
         switch (caracter.caracterClass){
             case "Dragon":
                 return dragonSprite();
@@ -66,7 +67,7 @@ public class Ascii {
                 return playerSprite(caracter);
         }
     }
-    public static String[] playerSprite(Caracter caracter) {
+    public static String [] playerSprite(Caracter caracter) {
         String clas = caracter.caracterClass;
         switch (clas){
             case "Warrior" :
@@ -77,11 +78,12 @@ public class Ascii {
                 return defaultSprite();
         }
     }
-    public static String [] playerSpriteAndStats(Caracter caracter) {
-        String[] sprite = playerSprite(caracter);
+    public static String [] caracterSpriteAndStats(Caracter caracter) {
+        String[] sprite = caracterSprite(caracter);
+        String[] statsView = caracterStats(caracter);
         for (int i = 0 ; i < sprite.length; i++){
-            if (i<caracter.statsView.length){
-                sprite[i]+= caracter.statsView[i] + "\n";
+            if (i<statsView.length){
+                sprite[i]+= statsView[i] + "\n";
             } else {
                 sprite[i] += "\n";
             }
@@ -305,4 +307,54 @@ public class Ascii {
         };
         return str;
     };
+    public static String [] caracterStats(Caracter caracter) {
+        String[] statsView= {
+                "  ______________________________________________________________" , //0
+                "  |                                                            " ,
+                "  |                                                            " ,
+                "  |                                                            " ,
+                "  |                                                            " ,
+                "  |                                                            " ,// 5
+                "  |                                                            " ,
+                "  |                                                            " ,
+                "  |                       NO                                   " ,//8
+                "  |                                                            " ,  
+                "  |                                                            " ,//10
+                "  |                                                            " ,
+                "  |                                                            " ,
+                "  |                       STATS                                " ,//13
+                "  |                                                            " ,
+                "  |                                                            " ,//15
+                "  |                          SHOWN                             " ,//16
+                "  |                                                            " ,
+                "  |                                                            " ,
+                "  |                               YET                          " ,//19
+                "  |                                                            " ,// 20
+                "  |                                                            " ,
+                "  |                                                            " ,
+                "  |____________________________________________________________" ,//23
+        };
+           
+        statsView[3]= "  |   Name: " + caracter.fullName;
+        statsView[5]= "  |   Life Points: " + caracter.lifePoints ;
+        statsView[7]= "  |   Armor: " + caracter.armor + "   Damage: "+ caracter.damage;
+        statsView[8]= statsView[12];
+        statsView[9]= "  |   Actions: " + caracter.actionsLeft + "   Actions(max): "+ caracter.actions;
+        statsView[11]= "  |   Position: " + caracter.position ;
+        statsView[13]= "  |   Equipement: " ;
+        if (caracter.equipment[0] != null) {
+            statsView[14]= "  |            (1) " + caracter.equipment[0].mipple + " " + caracter.equipment[0].toString();
+        } else {
+            statsView[14]= "  |            (1) " + "📦" + " Empty";
+        }
+        if (caracter.equipment[1] != null) {
+            statsView[15]= "  |            (2) " + caracter.equipment[1].mipple + " " + caracter.equipment[1].toString();
+        } else {
+            statsView[15]= "  |            (2) " + "📦" + " Empty";
+        }
+        statsView[16]= statsView[12];
+        statsView[17]= "  |   Class: " + caracter.caracterClass ;
+        statsView[19]= statsView[12];
+        return statsView;
+    }
 }

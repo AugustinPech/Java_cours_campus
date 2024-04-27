@@ -98,6 +98,7 @@ public class Room {
         this.items = newItems;
     }
     public void encounter(Player player, Game game) {
-
+        // this is the encounter method
+        this.great();
     }
 }
