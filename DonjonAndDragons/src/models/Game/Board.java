@@ -8,10 +8,17 @@ public class Board {
         this.size = size;
         this.dungeon = new Room[this.size];
         for (int i = 0; i < this.size; i++) {
-            if (i==0){
-                this.dungeon[i] = new Room("Hallway", game);
+            switch (i) {
+                case 0 :
+                    this.dungeon[i] = new Room("Doorstep", game);
+                    break;
+                case 1 :
+                    this.dungeon[i] = new Room("Hallway", game);
+                    break;
+                default :
+                    this.dungeon[i] = new Room();
             }
-            this.dungeon[i] = new Room();
+
         }
     }
 }

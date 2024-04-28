@@ -65,12 +65,13 @@ public class Menu {
     }
 
     public void upKeepMenu(Player player, Game game) {
-        System.out.println("What do you want to do?");
-        System.out.println("A. Move");
-        System.out.println("Z. Attack");
-        System.out.println("E. Use item");
-        System.out.println("R. Skip turn");
-        System.out.println("T. Withdraw from the dungeon");
+        System.out.println( game.board.dungeon[player.position].great()+ "\n"+
+                            "What do you wish to do? \n" +
+                            "   (A) Move\n"+
+                            "   (Z) Attack\n"+
+                            "   (E) Use item\n"+
+                            "   (R) Skip turn\n"+
+                            "   (T) Withdraw from the dungeon");
         String answer = this.scanner.nextLine().toUpperCase();
         switch (answer) {
             case "A":
@@ -94,10 +95,10 @@ public class Menu {
         }
     }
     public String moveMenu(Player player, Game game) {
-        System.out.println("Where do you want to go?");
-        System.out.println("(A) Next room");
-        System.out.println("(Z) Previous room");
-        System.out.println("(E) You changed your mind. (go to previous menu)");
+        System.out.println( "Where do you want to go?\n"+
+                            "   (A) Next room\n"+
+                            "   (Z) Previous room\n"+
+                            "   (E) You changed your mind. (go to previous menu)");
         String answer = this.scanner.nextLine().toUpperCase();
         return answer;
     }

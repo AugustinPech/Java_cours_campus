@@ -7,16 +7,32 @@ public class Room {
     public Caracter[] caracters;
     public Item[] items;
     public String name;
+    public String greatMsg;
     public Room(){
-        this.caracters = new Caracter[0]; // make a method to pick random preconfigurated room
+        // make a method to pick random preconfigurated room
+        this.caracters = new Caracter[0]; 
         this.items = new Item[0];
         this.fakeName();
+        this.greatMsg="You entered the " + this.name;
     }
     public Room(String name, Game game){
-        if (name=="Hallway"){
-            this.caracters = new Caracter[1];
-            this.caracters[0]=new NPC("Doorsman", game);
-        } else {
+        switch (name) {
+            case "Hallway" :
+                this.caracters = new Caracter[1];
+                this.caracters[0]=new NPC("Doorsman", game);
+                this.greatMsg = "Stepping into the murky depths of the dungeon, a chill seeps into your bones as the ancient stone walls loom overhead.\n"+
+                                "The air is thick with the scent of moss and decay, and a faint echo of distant whispers fills the corridor. \n"+
+                                "Suddenly, a figure emerges from the shadows - the Doorsman, a sentinel of this foreboding realm. \n"+
+                                "With a solemn nod, he greets you, his voice a low rumble echoing through the halls. \n"+
+                                "       'Welcome, brave adventurer,' he intones, 'to the heart of darkness.'"+
+                                "The Doorsman's voice carries a weight of ages past, yet holds a hint of kindness beneath its gruff exterior.\n"+
+                                "       'How may I be of service to you, weary traveler?' he asks.";
+                break;
+            case "Doorstep" :
+                this.caracters = new Caracter[0];
+                this.greatMsg="You stand at the threshold of the dungeon, the heavy wooden door stands before you.";
+                break;
+            default :
             this.caracters = new Caracter[0];
         }
         this.items = new Item[0];
@@ -56,8 +72,8 @@ public class Room {
         };
         this.name = seriousRoomNames[(int)(Math.random()*seriousRoomNames.length)];
     }
-    public void great(){
-        System.out.println("You are in the "+this.name);
+    public String great(){
+        return (this.greatMsg);
     }
     public void addCaracter(Caracter caracter){
         Caracter[] newCaracters = new Caracter[this.caracters.length+1];

@@ -124,7 +124,7 @@ public class Game {
                 player.move("forward");
                 break;
             case "Z":
-                player.move("Backward");
+                player.move("backward");
                 break;
             case "E":
                 this.menu.upKeepMenu(player, this);
@@ -139,5 +139,6 @@ public class Game {
     }
     public void playerEntersRoom(Player player, Room room) {
         room.encounter(player, this);
+        System.out.println(player.position);
     }
 }

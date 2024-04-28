@@ -42,7 +42,7 @@ public class Caracter {
         this.equipment = new Item[2];
         this.pickSuffix();
         this.setFullName();
-        this.position=1;
+        this.position=0;
         // this.level = 1;
         // this.experience = 0;
         // this.education = 5;
@@ -98,8 +98,9 @@ public class Caracter {
                 break;
         }
     }
-    public void sayHi() {
-        System.out.println("Hi, I'm " + this.name + " the " + this.suffix + " " + this.caracterClass);
+    public String sayHi() {
+        this.setFullName();
+       return ("Hi, I'm " + this.fullName) + ". ";
     }
     public void setSuffix(String suffix){
         this.suffix = suffix;
