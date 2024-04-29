@@ -4,13 +4,13 @@ import DonjonAndDragons.src.models.Caracters.NPC;
 import DonjonAndDragons.src.models.Caracters.Player;
 import DonjonAndDragons.src.models.items.Item;
 public class Room {
-    public Caracter[] caracters;
+    public NPC[] npcs;
     public Item[] items;
     public String name;
     public String greatMsg;
     public Room(){
         // make a method to pick random preconfigurated room
-        this.caracters = new Caracter[0]; 
+        this.npcs = new NPC[0]; 
         this.items = new Item[0];
         this.fakeName();
         this.greatMsg="You entered the " + this.name;
@@ -18,22 +18,18 @@ public class Room {
     public Room(String name, Game game){
         switch (name) {
             case "Hallway" :
-                this.caracters = new Caracter[1];
-                this.caracters[0]=new NPC("Doorsman", game);
-                this.greatMsg = "Stepping into the murky depths of the dungeon, a chill seeps into your bones as the ancient stone walls loom overhead.\n"+
-                                "The air is thick with the scent of moss and decay, and a faint echo of distant whispers fills the corridor. \n"+
-                                "Suddenly, a figure emerges from the shadows - the Doorsman, a sentinel of this foreboding realm. \n"+
-                                "With a solemn nod, he greets you, his voice a low rumble echoing through the halls. \n"+
-                                "       'Welcome, brave adventurer,' he intones, 'to the heart of darkness.'"+
-                                "The Doorsman's voice carries a weight of ages past, yet holds a hint of kindness beneath its gruff exterior.\n"+
-                                "       'How may I be of service to you, weary traveler?' he asks.";
+                this.hallWay(game);
                 break;
             case "Doorstep" :
-                this.caracters = new Caracter[0];
-                this.greatMsg="You stand at the threshold of the dungeon, the heavy wooden door stands before you.";
+                this.doorStep(game);
                 break;
+            case "Heart" :
+                this.heart(game);
+                break;
+            case "Boss Room":
+            
             default :
-            this.caracters = new Caracter[0];
+            this.npcs = new NPC[0];
         }
         this.items = new Item[0];
         this.name = name;
@@ -72,27 +68,28 @@ public class Room {
         };
         this.name = seriousRoomNames[(int)(Math.random()*seriousRoomNames.length)];
     }
+    
     public String great(){
         return (this.greatMsg);
     }
-    public void addCaracter(Caracter caracter){
-        Caracter[] newCaracters = new Caracter[this.caracters.length+1];
-        for (int i = 0; i < this.caracters.length; i++) {
-            newCaracters[i] = this.caracters[i];
+    public void addNPC(NPC npc, Game game){
+        NPC[] newNPCs = new NPC[this.npcs.length+1];
+        for (int i = 0; i < this.npcs.length; i++) {
+            newNPCs[i] = this.npcs[i];
         }
-        newCaracters[this.caracters.length] = caracter;
-        this.caracters = newCaracters;
+        newNPCs[this.npcs.length] = npc;
+        this.npcs = newNPCs;
     }
-    public void removeCaracter(Caracter caracter){
-        Caracter[] newCaracters = new Caracter[this.caracters.length-1];
+    public void removeNPC(NPC npc){
+        NPC[] newNPCs = new NPC[this.npcs.length-1];
         int j = 0;
-        for (int i = 0; i < this.caracters.length; i++) {
-            if (this.caracters[i] != caracter) {
-                newCaracters[j] = this.caracters[i];
+        for (int i = 0; i < this.npcs.length; i++) {
+            if (this.npcs[i] != npc) {
+                newNPCs[j] = this.npcs[i];
                 j++;
             }
         }
-        this.caracters = newCaracters;
+        this.npcs = newNPCs;
     }
     public void addItem(Item item){
         Item[] newItems = new Item[this.items.length+1];
@@ -113,8 +110,46 @@ public class Room {
         }
         this.items = newItems;
     }
-    public void encounter(Player player, Game game) {
-        // this is the encounter method
-        this.great();
+    public String encounter(Player player, Game game) {
+        String str = "";
+        // for (NPC npc : game.board.dungeon[player.position].npcs) {
+        //     str+= npc.name + ",";
+        // }
+        return str;
+    }
+    public Room hallWay(Game game){
+        Room room = new Room();
+        room.npcs = new NPC[1];
+        room.npcs[0]=new NPC("Doorsman", game);
+        room.greatMsg = "Stepping into the murky depths of the dungeon, a chill seeps into your bones as the ancient stone walls loom overhead.\n"+
+                        "The air is thick with the scent of moss and decay, and a faint echo of distant whispers fills the corridor. \n"+
+                        "Suddenly, a figure emerges from the shadows - the Doorsman, a sentinel of this foreboding realm. \n"+
+                        "With a solemn nod, he greets you, his voice a low rumble echoing through the halls. \n"+
+                        "       'Welcome, brave adventurer,' he intones, 'to the heart of darkness.'"+
+                        "The Doorsman's voice carries a weight of ages past, yet holds a hint of kindness beneath its gruff exterior.\n"+
+                        "       'How may I be of service to you, weary traveler?' he asks.";
+        return room;
+    }
+
+    public Room doorStep(Game game) {
+        Room room = new Room();
+        room.npcs = new NPC[0];
+        room.greatMsg="You stand at the threshold of the dungeon, the heavy wooden door stands before you.";
+        return room;
+    }
+
+    public Room heart(Game game) {
+        Room room = new Room();
+        room.npcs = new NPC[1];
+        room.npcs[0]=new NPC("Guardian", game);
+        room.greatMsg = "You have reached the heart of the dungeon, the very core of its existence. \n";
+        return room;
+    }
+    public String npcSprites() {
+        String str = "";
+        for (NPC npc : this.npcs){
+            str += npc.sprite;
+        }
+        return str;
     }
 }

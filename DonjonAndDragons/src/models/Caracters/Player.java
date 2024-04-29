@@ -4,7 +4,6 @@ import DonjonAndDragons.src.models.items.Item;
 public class Player extends Caracter{
     public Player(String name, Game game) {
         super(name);
-        game.addPlayer(this);
     }
     public void addItem(Item item) {
         int index = 0;

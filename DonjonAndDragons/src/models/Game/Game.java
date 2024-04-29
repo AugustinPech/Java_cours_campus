@@ -6,7 +6,6 @@ import DonjonAndDragons.src.models.Caracters.Player;
 import DonjonAndDragons.src.models.Caracters.Warrior;
 import DonjonAndDragons.src.models.Caracters.Wizard;
 
-
 public class Game {
         public int indexOf(Caracter[] array, Caracter caracter){
             for (int i = 0; i < array.length; i++) {
@@ -18,7 +17,6 @@ public class Game {
         };
     public Player[] players= new Player[0];
     public Board board;
-    public NPC[] nPCs = new NPC[0];
     public Menu menu;
     
 
@@ -32,7 +30,9 @@ public class Game {
             String[] answer = this.menu.joiningGameMenu(user, this);
             Caracter caracter = this.createCaracter(answer);
             this.addPlayer((Player) caracter);
-            this.menu.joinedGame((Player) caracter);
+            for (Player player : this.players){
+                this.menu.joinedGame(player);
+            }
     }
     public Caracter createCaracter(String[] answerFromMenu) {
         try {
@@ -43,6 +43,8 @@ public class Game {
                     return new Warrior(charName, this);
                 case "Z":
                     return new Wizard(charName,  this);
+                case "NPC":
+                    return new NPC(charName, this);
                 default:
                     throw new IllegalArgumentException("Invalid input: " + className);
         }
@@ -51,12 +53,13 @@ public class Game {
                 return this.createCaracter(answerFromMenu);
         }
     }
-    public static int roleDice(int [] dice){
-        int result = 0;
-        for (int i = 0; i < dice.length; i++) {
-            result+= (int) (Math.random()*dice[i]+1);
+    public void addPlayer(Player player){
+        Player[] newPlayers = new Player[this.players.length+1];
+        for (int i = 0; i < this.players.length; i++) {
+            newPlayers[i] = this.players[i];
         }
-        return result;
+        newPlayers[this.players.length] = player;
+        this.players = newPlayers;
     }
     public void caracterDies(Caracter caracter){
         int index = this.indexOf(this.players, caracter);
@@ -71,38 +74,18 @@ public class Game {
         caracter.die(this.board.dungeon[caracter.position]); 
         this.menu.youDiedMenu(this, caracter);       
     }
-    public void addNPC(NPC NPC){
-        NPC[] newNPCs = new NPC[this.nPCs.length+1];
-        for (int i = 0; i < this.nPCs.length; i++) {
-            newNPCs[i] = this.nPCs[i];
-        }
-        newNPCs[this.nPCs.length] = NPC;
-        this.nPCs = newNPCs;
-    }
-    public void addPlayer(Player player){
-        Player[] newPlayers = new Player[this.players.length+1];
-        for (int i = 0; i < this.players.length; i++) {
-            newPlayers[i] = this.players[i];
-        }
-        newPlayers[this.players.length] = player;
-        this.players = newPlayers;
-    }
-
     public void startGame() {
         int totalLife = 0;
         for (int i = 0; i < this.players.length; i++) {
             totalLife += this.players[i].lifePoints;
         }
-        boolean everyBodyIsDead= (totalLife == 0);
-        while (!everyBodyIsDead) {
+        boolean everyBodyIsDead= (totalLife <= 0);
+        boolean playerLeavesGame = false;
+        boolean playing = !everyBodyIsDead && !playerLeavesGame;
+        while (playing) {
             for (int i = 0; i < this.players.length; i++) {
                 if (this.players[i]!=null){
-                    this.playerTakesTurn(this.players[i]);
-                }
-            }
-            for (int i = 0; i < this.nPCs.length; i++) {
-                if (this.nPCs[i]!=null){
-                    this.playerTakesTurn(this.players[i]);
+                    playerLeavesGame = this.playerTakesTurn(this.players[i]);
                 }
             }
             everyBodyIsDead = true;
@@ -111,10 +94,39 @@ public class Game {
                     everyBodyIsDead = false;
                 }
             }
+            playing = !everyBodyIsDead && !playerLeavesGame;
         }
     }
-    private void playerTakesTurn(Player player) {
-        this.menu.upKeepMenu(player, this);
+    private boolean playerTakesTurn(Player player) {
+        boolean playerLeavesGame = false;
+        String answer=this.menu.upKeepMenu(player, this);
+            switch (answer) {
+                case "A":
+                    this.menu.knockMenu();
+                    break;
+                case "W":
+                    playerLeavesGame = this.menu.leaveGameMenu();
+                    break;
+                case "E":
+                    player.move("forward");
+                    break;
+                case "R":
+                    this.playerMoves(player);
+                    break;
+                case "T":
+                    //game.playerAttacks(player);
+                    break;
+                case "Y":
+                    //game.playerUseItem(player);
+                    break;
+                case "U":
+                    //this.skipTurnMenu(player);
+                    break;
+                default:
+                    System.out.println("Invalid input: " + answer);
+                    this.menu.upKeepMenu(player, this);
+            }
+        return playerLeavesGame;
     }
     public void playerMoves(Player player){
         int oldPosition = player.position;
@@ -139,6 +151,13 @@ public class Game {
     }
     public void playerEntersRoom(Player player, Room room) {
         room.encounter(player, this);
-        System.out.println(player.position);
+        System.out.println(player.position); //debug
+    }
+    public static int roleDice(int [] dice){
+        int result = 0;
+        for (int i = 0; i < dice.length; i++) {
+            result+= (int) (Math.random()*dice[i]+1);
+        }
+        return result;
     }
 }
