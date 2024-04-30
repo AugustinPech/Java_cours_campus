@@ -34,7 +34,7 @@ public class Menu {
     }
     public String wantToPlay(Game game, User user){
         System.out.println("Do you want to join the adventure? (Y / n)");
-        String answer = regexCheck("^[yn]{1}$",this.wantToPlay(game, user));
+        String answer = regexCheck("^[yn]{1}$",this.scanner.nextLine().toLowerCase()); // fix regex
         if (answer.contains("Invalid")) {
             System.out.println(answer);
             return wantToPlay(game, user);
@@ -73,7 +73,7 @@ public class Menu {
                     "of rustling leaves and distant whispers of ancient magic greet your ears. Suddenly, a \n"+
                     "voice calls out from the depths of the forest:\n"+
                     "\"Welcome, " + player.fullName + ", to a realm of endless possibilities and untold dangers!\n"+
-                    "Your journey begins now.\""+
+                    "Your journey begins now.\"\n"+
                     "___________________________________________________________________________________________\n"
                     );
         this.spriteAndStatsShow(player);

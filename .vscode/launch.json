@@ -4,7 +4,13 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "DonjonAndDragons.src.Main",
+            "projectName": "Java_cours_campus_93ebd442"
+        },
         {
             "type": "java",
             "name": "Current File",
