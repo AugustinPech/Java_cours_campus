@@ -1,6 +1,6 @@
 package DonjonAndDragons.src.models.Caracters;
 
-import DonjonAndDragons.src.models.Game.Room;
+import DonjonAndDragons.src.models.Game.Board.Room;
 import DonjonAndDragons.src.models.items.Corps;
 import DonjonAndDragons.src.models.items.Item;
 public class Caracter {

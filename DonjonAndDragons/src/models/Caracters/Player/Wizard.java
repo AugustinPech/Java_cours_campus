@@ -1,4 +1,4 @@
-package DonjonAndDragons.src.models.Caracters;
+package DonjonAndDragons.src.models.Caracters.Player;
 import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.models.items.*;
 public class Wizard extends Player{

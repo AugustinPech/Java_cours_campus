@@ -1,10 +1,12 @@
-package DonjonAndDragons.src.models.Game;
+package DonjonAndDragons.src.models.Game.Board;
 import DonjonAndDragons.src.models.Caracters.Caracter;
-import DonjonAndDragons.src.models.Caracters.NPC;
-import DonjonAndDragons.src.models.Caracters.Player;
+import DonjonAndDragons.src.models.Caracters.NPC.NPC;
+import DonjonAndDragons.src.models.Caracters.Player.Player;
+import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.models.items.Item;
 public class Room {
     public NPC[] npcs;
+    public String [] ascii;
     public Item[] items;
     public String name;
     public String greatMsg;
@@ -16,21 +18,8 @@ public class Room {
         this.greatMsg="You entered the " + this.name;
     }
     public Room(String name, Game game){
-        switch (name) {
-            case "Hallway" :
-                this.hallWay(game);
-                break;
-            case "Doorstep" :
-                this.doorStep(game);
-                break;
-            case "Heart" :
-                this.heart(game);
-                break;
-            case "Boss Room":
-            
-            default :
-            this.npcs = new NPC[0];
-        }
+
+        this.npcs = new NPC[0];
         this.items = new Item[0];
         this.name = name;
     }
@@ -110,43 +99,13 @@ public class Room {
         }
         this.items = newItems;
     }
-    public String encounter(Player player, Game game) {
-        String str = "";
-        // for (NPC npc : game.board.dungeon[player.position].npcs) {
-        //     str+= npc.name + ",";
-        // }
-        return str;
-    }
-    public Room hallWay(Game game){
-        Room room = new Room();
-        room.npcs = new NPC[1];
-        room.npcs[0]=new NPC("Doorsman", game);
-        room.greatMsg = "Stepping into the murky depths of the dungeon, a chill seeps into your bones as the ancient stone walls loom overhead.\n"+
-                        "The air is thick with the scent of moss and decay, and a faint echo of distant whispers fills the corridor. \n"+
-                        "Suddenly, a figure emerges from the shadows - the Doorsman, a sentinel of this foreboding realm. \n"+
-                        "With a solemn nod, he greets you, his voice a low rumble echoing through the halls. \n"+
-                        "       'Welcome, brave adventurer,' he intones, 'to the heart of darkness.'"+
-                        "The Doorsman's voice carries a weight of ages past, yet holds a hint of kindness beneath its gruff exterior.\n"+
-                        "       'How may I be of service to you, weary traveler?' he asks.";
-        return room;
-    }
 
-    public Room doorStep(Game game) {
-        Room room = new Room();
-        room.npcs = new NPC[0];
-        room.greatMsg="You stand at the threshold of the dungeon, the heavy wooden door stands before you.";
-        return room;
-    }
-
-    public Room heart(Game game) {
-        Room room = new Room();
-        room.npcs = new NPC[1];
-        room.npcs[0]=new NPC("Guardian", game);
-        room.greatMsg = "You have reached the heart of the dungeon, the very core of its existence. \n";
-        return room;
-    }
-    public String npcSprites() {
+    @Override
+    public String toString() {
         String str = "";
+        if (this.npcs== null) {
+            return "-";
+        }
         for (NPC npc : this.npcs){
             str += npc.sprite;
         }

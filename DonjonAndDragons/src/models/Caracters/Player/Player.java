@@ -1,4 +1,5 @@
-package DonjonAndDragons.src.models.Caracters;
+package DonjonAndDragons.src.models.Caracters.Player;
+import DonjonAndDragons.src.models.Caracters.Caracter;
 import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.models.items.Item;
 public class Player extends Caracter{
