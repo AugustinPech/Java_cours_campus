@@ -1,12 +1,11 @@
 package DonjonAndDragons.src.models.Game.Board;
 
 import DonjonAndDragons.src.models.Caracters.NPC.NPC;
-import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.views.Ascii;
 
 public class DoorStep extends Room {
     
-public DoorStep(Game game) {
+public DoorStep(Board board) {
         this.setName("DoorStep");
         this.setAscii( Ascii.doorStep());
         

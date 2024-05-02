@@ -1,8 +1,10 @@
 package DonjonAndDragons.src.models.Caracters;
 
-import DonjonAndDragons.src.models.Damage;
 import DonjonAndDragons.src.models.Stats;
+import DonjonAndDragons.src.models.Caracters.NPC.NPC;
+import DonjonAndDragons.src.models.Caracters.Player.Player;
 import DonjonAndDragons.src.models.Game.Game;
+import DonjonAndDragons.src.models.Game.Board.Board;
 import DonjonAndDragons.src.models.Game.Board.Room;
 import DonjonAndDragons.src.models.items.Corps;
 import DonjonAndDragons.src.models.items.Item;
@@ -58,6 +60,17 @@ public abstract class Caracter {
         // this.status = new String[0];
         // this.speed = 5;
     }
+    public Caracter (int num ) {// god mode
+        this.name = "God";
+        this.baseStats = new Stats(1000,1000,1000,1000, 1000);
+        this.stats=this.baseStats;
+        this.inventory = new Item[10];
+        this.equipment = new Item[2];
+        this.position=0;
+        this.pickSuffix();
+        this.setFullName();
+        this.considerEquipment();
+    }
     
     private void pickSuffix(){
         String[] suffixes = {
@@ -87,12 +100,15 @@ public abstract class Caracter {
         this.setFullName();
     }
 
-    public void attack (Caracter target, Game game) {
+    public void attack (Caracter target, Board board) {
         int damage = this.stats.getDamage();
-        target.takeDamage(damage, game);
+        target.takeDamage(damage);
+        if (this instanceof Player){
+            board.nPCAreOstile();
+        }
     }
 
-    public void takeDamage(int damage , Game game) {
+    public void takeDamage(int damage ) {
         int armor = this.stats.getArmor();
         int lifePoints = this.stats.getLifePoints();
         if (armor < damage) {
@@ -102,9 +118,7 @@ public abstract class Caracter {
         }
         int newLifePoints = lifePoints - damage;
         this.stats.setLifePoints(newLifePoints);
-        if (this.stats.getLifePoints() <= 0) {
-            this.die(game);
-        }
+
     };
 
     public void move (String how){
@@ -151,16 +165,32 @@ public abstract class Caracter {
         }
         this.setStats(stats);
     }
+    public void useItem(int index, Game game) {
+        Item item = this.inventory[index];
+        if (item != null) {
+            Stats itemStats = item.getStats();
+            this.stats = this.stats.merge(itemStats);
+            this.inventory[index] = null;
+            this.considerEquipment();
+        }
+    }
     public void die (Game game) {
         Room room = game.board.getDungeon()[this.position];
         for (Item item : this.inventory) {
-            room.addItem(item);
+            if (item !=null) {
+                room.addItem(item);
+            }
         }
         for (Item item : this.equipment) {
-            room.addItem(item);
+            if (item !=null) {
+                room.addItem(item);
+            }
         }
         Corps corps = new Corps(this);
         room.addItem(corps);
+        if (this instanceof NPC) {   
+            room.removeNPC((NPC) this);
+        }
     }
     public String getName() {
         return this.name;

@@ -13,6 +13,7 @@ import DonjonAndDragons.src.models.items.Potion;
 public class Board {
     private int size;
     private Room[] dungeon;
+    private Boolean isOstile = false;
 
     public Board(int size, Game game){
         this.size = size;
@@ -25,10 +26,10 @@ public class Board {
     public void setDungeon(Game game){
         int heart = size-1;
         int boss = size-2;
-        this.dungeon[0] = new DoorStep(game);
-        this.dungeon[1] = new HallWay(game);
-        this.dungeon[boss] = new BossRoom( game);
-        this.dungeon[heart] = new Heart (game);
+        this.dungeon[0] = new DoorStep (this);
+        this.dungeon[1] = new HallWay (this);
+        this.dungeon[boss] = new BossRoom (this);
+        this.dungeon[heart] = new Heart (this);
     }
     public int getSize(){
         return this.size;
@@ -38,8 +39,8 @@ public class Board {
     }
 
     public void nPCAreOstile (){
-        for (int i = 0; i < this.size; i++) {
-            this.dungeon[i].setGreatMsg(
+        this.setIsOstile(true);
+            this.dungeon[1].setGreatMsg(
                             "As you step into the murky depths of the dungeon, a sense of foreboding settles over you \n"+
                             "like a heavy cloak. The air is thick with the stench of decay, and the oppressive darkness \n"+
                             "seems to press in from all sides, suffocating and claustrophobic.\n"+
@@ -52,6 +53,7 @@ public class Board {
                             "       'You dare to trespass in this domain without knocking the door,' he growls, \n"+
                             "       'Prepare to face the consequences of your folly.'\n"+
                             "With a menacing glare, he raises his fists, ready to strike at any moment.");
+        for (int i = 0; i < this.size; i++) {
             if (this.dungeon[i].getNPC() != null){
                 for (int j = 0; j < this.dungeon[i].getNPC().length; j++) {
                     if (this.dungeon[i].getNPC()[j] != null){
@@ -69,18 +71,27 @@ public class Board {
         Room nextRoom = this.dungeon[position+1];
         if (position < this.size-2){
             if (role <50){
-                NPC[] npcs= {new Gobelin("Gobelin", game, position+1)};
+                NPC[] npcs= {new Gobelin("Gobelin", this, position+1)};
                 nextRoom.setNPC(npcs);
             }
             if (role >=50 && role <75){
-                NPC[] npcs= {new Orc("Orc", game,position+1)};
+                NPC[] npcs= {new Orc("Orc", this, position+1)};
                 nextRoom.setNPC(npcs);
             }
             if (role >=75){
-                Item [] items= {new Potion("Portion of Healing", 10)};
+                Item [] items= {
+                    new Potion("Potion of Healing", "Health"),
+                    new Potion("Elixir of Protection", "Protection")
+                    };
                 nextRoom.setItems(items);
             }
         }
     }
-    
+
+    public boolean getIsOstile(){
+        return this.isOstile;
+    }
+    public void setIsOstile(Boolean isOstile){
+        this.isOstile = isOstile;
+    }
 }

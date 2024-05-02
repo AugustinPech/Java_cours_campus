@@ -367,6 +367,7 @@ public class Ascii {
                 "  |                                                            " ,// 20
                 "  |                                                            " ,
                 "  |                                                            " ,
+                "  |                                                            " ,
                 "  |____________________________________________________________" ,//23
         };
            
@@ -376,20 +377,37 @@ public class Ascii {
         statsView[8]= statsView[12];
         statsView[9]= "  |   Actions: " + caracter.getActionsLeft() + "   Actions(max): "+ caracter.getStats().getActions();
         statsView[11]= "  |   Position: " + caracter.getPosition() ;
-        statsView[13]= "  |   Equipement: " ;
+        statsView[13]= "  |   Equipement : " ;
         if (caracter.getEquipment()[0] != null) {
-            statsView[14]= "  |            (1) " + caracter.getEquipment()[0].mipple + " " + caracter.getEquipment()[0].toString();
+            statsView[14]= "  |      (1) " + caracter.getEquipment()[0].mipple + " " + caracter.getEquipment()[0].toString();
         } else {
-            statsView[14]= "  |            (1) " + "📦" + " Empty";
+            statsView[14]= "  |      (1) " + "📦" + " Empty";
         }
         if (caracter.getEquipment()[1] != null) {
-            statsView[15]= "  |            (2) " + caracter.getEquipment()[1].mipple + " " + caracter.getEquipment()[1].toString();
+            statsView[15]= "         (2) " + caracter.getEquipment()[1].mipple + " " + caracter.getEquipment()[1].toString();
         } else {
-            statsView[15]= "  |            (2) " + "📦" + " Empty";
+            statsView[15]= "         (2) " + "📦" + " Empty";
         }
-        statsView[16]= statsView[12];
-        statsView[17]= "  |   Class: " + caracter.getCaracterClass() ;
-        statsView[19]= statsView[12];
+        statsView[16]= "  |   Class: " + caracter.getCaracterClass() ;
+        statsView[17]= "  |    Inventory : ";
+        int index=0;
+        for (int i = 0; i < caracter.getInventory().length; i++) {
+            if (i % 2 ==0){
+                index++;
+                if (caracter.getInventory()[i] == null) {
+                    statsView[18  + index]= "  |      (" + (i + 1) + ") " + "📦" + " Empty";
+                } else {
+                    statsView[18  + index]= "  |      (" + (i + 1) + ") " + caracter.getInventory()[i].mipple + " " + caracter.getInventory()[i].getName();
+                }
+            } else {
+                if (caracter.getInventory()[i] == null) {
+                    statsView[18  + index]+= "       (" + (i + 1) + ") " + "📦" + " Empty";
+                } else {
+                    statsView[18  + index]= "       (" + (i + 1) + ") " + caracter.getInventory()[i].mipple + " " + caracter.getInventory()[i].getName();
+                }
+            }
+        }
+
         return statsView;
     }
     public static String[] gameOver() {

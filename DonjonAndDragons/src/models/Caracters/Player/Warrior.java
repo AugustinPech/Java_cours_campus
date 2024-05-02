@@ -7,7 +7,7 @@ public class Warrior extends Player{
     public Warrior(String name, Game game) {
         super(name, game);
         this.setCaracterClass("Warrior");
-        this.setBaseStats(new Stats(100,1,1,555, 0));
+        this.setBaseStats(new Stats(100,1,1,5, 0));
         this.setType("fighter");
         this.setSprite("🔪");
         this.setFullName();
@@ -17,5 +17,9 @@ public class Warrior extends Player{
         this.addItem(new Armor(this.getCaracterClass()));
         this.equipItem(0);
         this.considerEquipment();
+    }
+    public Warrior(int num) {//god mode
+    super (num);
+    this.setCaracterClass("Warrior");
     }
 }

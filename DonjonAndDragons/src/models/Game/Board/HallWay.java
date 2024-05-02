@@ -6,9 +6,9 @@ import DonjonAndDragons.src.models.Caracters.NPC.NPC;
 import DonjonAndDragons.src.models.Game.Game;
 
 public class HallWay extends Room {
-    public HallWay(Game game){
+    public HallWay(Board board){
         this.setName("Hallway");
-        NPC[] npc = {new DoorMan(game)};
+        NPC[] npc = {new DoorMan(board)};
         this.setNPC(npc);
         this.setGreatMsg( "Stepping into the murky depths of the dungeon, a chill seeps into your bones as the ancient stone walls loom overhead.\n"+
                         "The air is thick with the scent of moss and decay, and a faint echo of distant whispers fills the corridor. \n"+

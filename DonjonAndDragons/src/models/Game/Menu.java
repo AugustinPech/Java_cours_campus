@@ -1,7 +1,9 @@
 package DonjonAndDragons.src.models.Game;
 import DonjonAndDragons.src.models.Caracters.Caracter;
+import DonjonAndDragons.src.models.Caracters.NPC.NPC;
 import DonjonAndDragons.src.models.Caracters.Player.Player;
 import DonjonAndDragons.src.models.Game.Board.Room;
+import DonjonAndDragons.src.models.items.Item;
 import DonjonAndDragons.src.views.Ascii;
 
 import java.util.Scanner;
@@ -11,7 +13,7 @@ import java.util.regex.Pattern;
 public class Menu {
     private Scanner scanner;
 
-    public Menu(Game game, User user) {
+    public Menu() {
         this.scanner = new Scanner(System.in);
     }
 
@@ -56,7 +58,7 @@ public class Menu {
             "(1) for Warrior\n"+
             "(2) for Wizard"
         );
-        String className = regexCheck("^[12]{1}$",this.scanner.nextLine().toUpperCase());
+        String className = regexCheck("^[123]{1}$",this.scanner.nextLine().toUpperCase());
         if (className.contains("Invalid")) {
             System.out.println(className);
             return joiningGameMenu(user, game);
@@ -86,8 +88,6 @@ public class Menu {
     }
 
     public void upKeepMenu(Player player, Game game) {
-        int position = player.getPosition();
-        Room room = game.board.getDungeon()[position];
         if (player.getPosition() !=0) {
             System.out.println(
                 "___________________________________________________________________________________________\n"+
@@ -95,18 +95,8 @@ public class Menu {
                 "______________________________________BOARD________________________________________________\n"
             );
         }
-        if (room.getAscii()!=null){
-            String[] ascii = (room.getAscii());
-            for (String line : ascii) {
-                System.out.println(line);
-            }
-        }
-        System.out.println(
-            "___________________________________________________________________________________________\n"+
-            game.board.getDungeon()[player.getPosition()].great()+"\n"+
-            "________________________________________ROOM_GREAT_MSG_____________________________________\n"
-        );
     }
+
     private String displayBoard(Game game) {
         String str = "|";
         for (int i = 0 ; i < game.board.getSize(); i++) {
@@ -122,7 +112,7 @@ public class Menu {
             str +="|";
         return str;
     }
-    public String doorStepMenu(Player player, Game game) {
+    public String doorStepMenu(Player player) {
         System.out.println(
             "What do you wish to do? \n" +
             "   (K) Knock the door like an idiot\n"+
@@ -132,25 +122,25 @@ public class Menu {
         String answer = regexCheck("^[KWI]{1}$",this.scanner.nextLine().toUpperCase());
         if (answer.contains("Invalid")) {
             System.out.println(answer);
-            return doorStepMenu(player, game);
+            return doorStepMenu(player);
         }
         return answer;
     }
-    public String beginningOfTurnMenu(Player player, Game game) {
+    public String beginningOfTurnMenu(Player player) {
         String answer = "";
         if (player.getPosition() == 0){
-            answer = this.doorStepMenu(player, game);
+            answer = this.doorStepMenu(player);
         } else {
             System.out.println( 
                 "What do you wish to do? \n" +
                 "   (M) Move\n"+
                 "   (A) Attack\n"+
                 "   (U) Use item\n"+
+                "   (L) Search the room\n"+
                 "   (S) Skip turn\n"+
                 "   (C) See stats\n"+
                 "   (W) Withdraw from the dungeon");
-            answer = regexCheck("^[MAUSWC]{1}$",this.scanner.nextLine().toUpperCase());
-            this.spriteAndStatsShow(player);
+            answer = regexCheck("^[MAUSLWC]{1}$",this.scanner.nextLine().toUpperCase());
         }
         return answer;
     }
@@ -230,5 +220,61 @@ public class Menu {
             }
         }
         return answer;
+    }
+
+    public void dieMenu(NPC npc) {
+        System.out.println(
+            "___________________________________________________________________________________________\n"+
+            "You have defeated "+npc.getFullName()+"\n"+
+            "His corps is now lying on the ground\n"+
+            "___________________________________________________________________________________________\n"
+        );
+    }
+
+    public String searchRoomMenu(Player player, Room room) {
+        String answer ="";
+        String str = "You are in "+room.getName()+"\n";
+        if (room.getNPC().length > 0) {
+            str += "You see the following characters in the room : \n";
+            int index = 0;
+            for (NPC npc : room.getNPC()) {
+                str += "      "+npc.getFullName()+"\n";
+                index ++;
+            }
+            str += " You can not loot a room if it is guarded. \n";
+            this.beginningOfTurnMenu(player);
+        } else {
+            if (room.getItems() != null) {
+                for (Item item : room.getItems()) {
+                    str += "You see the following items in the room : \n";
+                    int index = 0;
+                    str += "   ("+index+")"+item.getName()+"\n";
+                    index ++;
+                }
+                str += " Try any number to pick up an item or type : \n";
+                str += "   (B) You changed your mind. (go to previous menu)";
+            }
+        }
+        System.out.println(str);
+        answer = regexCheck("^[0-9B]{1}$",this.scanner.nextLine().toUpperCase());
+        if (answer.contains("Invalid")) {
+                System.out.println(answer);
+                return searchRoomMenu(player, room);
+        }
+        return answer;
+    }
+
+    public void enterRoomMenu(Room room) {
+        if (room.getAscii()!=null){
+            String[] ascii = (room.getAscii());
+            for (String line : ascii) {
+                System.out.println(line);
+            }
+        }
+        System.out.println(
+            "___________________________________________________________________________________________\n"+
+            room.great()+"\n"+
+            "________________________________________ROOM_GREAT_MSG_____________________________________\n"
+        );
     }
 }

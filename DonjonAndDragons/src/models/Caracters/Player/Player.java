@@ -6,6 +6,9 @@ public abstract class Player extends Caracter{
     public Player(String name, Game game) {
         super(name);
     }
+    public Player (int num){//god mode
+        super(num);
+    }
     public void addItem(Item item) {
         int index = 0;
         Item [] inventory = this.getInventory();
@@ -17,6 +20,7 @@ public abstract class Player extends Caracter{
             this.setInventory(inventory);
         }
     }
+
     public void equipItem(int indexOfInventoryItem){
         int index = 0;
         Item [] equipment = this.getEquipment();

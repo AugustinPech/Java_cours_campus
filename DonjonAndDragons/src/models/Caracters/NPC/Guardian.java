@@ -1,10 +1,14 @@
 package DonjonAndDragons.src.models.Caracters.NPC;
 
-import DonjonAndDragons.src.models.Game.Game;
+import DonjonAndDragons.src.models.Game.Board.Board;
 
 public class Guardian extends NPC{
-    public Guardian(Game game) {
-        super("Guardian", game, false, game.board.getSize()-1);
+    public Guardian(Board board) {
+        super(
+            "Guardian", 
+            board.getIsOstile(), 
+            board.getSize()-1
+        );
         this.setSprite("🧙");
     }
 }

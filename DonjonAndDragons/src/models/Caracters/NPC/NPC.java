@@ -5,7 +5,7 @@ import DonjonAndDragons.src.models.Game.Game;
 
 public abstract class NPC extends Caracter {
     private Boolean isOstile;
-    public NPC(String name, Game game, Boolean isOstile, int position) {
+    public NPC(String name, Boolean isOstile, int position) {
         super(name);
         this.setPosition(position);
         this.isOstile = isOstile;

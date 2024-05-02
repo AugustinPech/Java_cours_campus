@@ -11,13 +11,12 @@ public class Room {
     private String name;
     private String greatMsg;
     public Room(){
-        // make a method to pick random preconfigurated room
         this.npcs = new NPC[0]; 
         this.items = new Item[0];
         this.fakeName();
         this.greatMsg="You entered the " + this.name;
     }
-    public Room(String name, Game game){
+    public Room(String name){
 
         this.npcs = new NPC[0];
         this.items = new Item[0];

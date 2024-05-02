@@ -13,14 +13,15 @@ public class Game {
     public Board board;
     public Menu menu;
 
+
     /**
      * Constructs a new Game object.
      * 
      * @param user the User object representing the player of the game
      */
     public Game(User user) {
-        this.menu = new Menu(this, user);
-        this.board = new Board(30, this);
+        this.menu = new Menu();
+        this.board = new Board(10, this);
         this.board.setDungeon(this);
         String answer = this.menu.startMenu(this, user);
         this.userBecomesPlayer(user, answer);
@@ -53,7 +54,7 @@ public class Game {
             this.menu.joinedGame(this.player);
     }
     /**
-     * Represents a character in the game.
+     * create a caracter for the player.
      * @param answerFromMenu [String[]] the answer from the menu
      */
     public Caracter createCaracter(String[] answerFromMenu) {
@@ -65,6 +66,8 @@ public class Game {
                     return new Warrior(charName, this);
                 case "2":
                     return new Wizard(charName,  this);
+                case "3":
+                    return new Warrior(3);
                 default:
                     throw new IllegalArgumentException("Invalid input: " + className);
         }
@@ -84,13 +87,20 @@ public class Game {
     public void startGame(User user) {
         int totalLife = this.player.getStats().getLifePoints();
         boolean everyBodyIsDead= (totalLife <= 0);
-        boolean playerLeavesGame = false;
-        boolean playing = !everyBodyIsDead && !playerLeavesGame;
+        boolean playerStillPlaying = true;
+        boolean win = false;
+        boolean playing = !everyBodyIsDead && playerStillPlaying || !win;
 
         while (playing) {
-            playerLeavesGame = this.playerTakesTurn(this.player);
+            this.menu.upKeepMenu(player, this);
+            playerStillPlaying = this.playerTakesTurn(this.player);
+            this.npcTakesTurn(this.player);
+
+            totalLife = this.player.getStats().getLifePoints();
             everyBodyIsDead = (totalLife <= 0);
-            playing = !everyBodyIsDead && !playerLeavesGame;
+            win = this.isWin();
+            
+            playing = !everyBodyIsDead && !playerStillPlaying ||  !win;
         }
 
         if (everyBodyIsDead) {
@@ -98,20 +108,37 @@ public class Game {
             userBecomesPlayer(user, answer);
         }
     }
+    private void npcTakesTurn(Player player) {
+        for (Room room : this.board.getDungeon()) {
+            for (NPC npc : room.getNPC()) {
+                if (npc != null && npc.getIsOstile()) {
+                    npc.attack(player, board);
+                }
+            }
+        }
+    }
+    private boolean isWin() {
+        for (Room room : this.board.getDungeon()) {
+            if (room.getNPC() != null) {
+                return false;
+            }
+        }
+        System.out.println("You have defeated all the enemies and won the game!");
+        return true;
+    }
     private boolean playerTakesTurn(Player player) {
         int oldPosition = player.getPosition();
 
-        boolean playerLeavesGame = false;
+        boolean playerStillPlaying = true;
         
-        this.menu.upKeepMenu(player, this);
 
-        String answer=this.menu.beginningOfTurnMenu(player, this);
+        String answer=this.menu.beginningOfTurnMenu(player);
             switch (answer) {
                 case "K":
                     player.move("forward");
                     break;
                 case "W":
-                    playerLeavesGame = this.menu.leaveGameMenu();
+                    playerStillPlaying = this.menu.leaveGameMenu();
                     break;
                 case "I":
                     this.board.nPCAreOstile();
@@ -130,7 +157,10 @@ public class Game {
                     //this.skipTurnMenu(player);
                     break;
                 case "C":
-                    //this.skipTurnMenu(player);
+                    this.menu.spriteAndStatsShow(player);
+                    break;
+                case "L":
+                    this.playerSearchesRoom(player, this.board.getDungeon()[player.getPosition()]);
                     break;
                 default:
                     System.out.println("Invalid input: " + answer);
@@ -139,18 +169,34 @@ public class Game {
         if (player.getPosition() != oldPosition){
             this.playerEntersRoom(player, this.board.getDungeon()[player.getPosition()]);
         }
-        return playerLeavesGame;
+        return playerStillPlaying;
+    }
+    private void playerSearchesRoom(Player player, Room room) {
+        String answer = this.menu.searchRoomMenu(player, room);
+        switch (answer) {
+            case "B":
+                this.menu.beginningOfTurnMenu(player);
+                break;
+            default :
+                int index = Integer.parseInt(answer);
+                player.addItem(room.getItems()[index]);
+                room.removeItem(room.getItems()[index]);
+        }
     }
     private void caracterFight(Player player) {
         String answer = this.menu.fightMenu(player, this);
         switch (answer){
             case "B":
-                this.menu.beginningOfTurnMenu(player, this);
+                this.menu.beginningOfTurnMenu(player);
                 break;
             default :
                 int index = Integer.parseInt(answer);
                 NPC npc = this.board.getDungeon()[player.getPosition()].getNPC()[index];
-                player.attack(npc, this);
+                player.attack(npc, this.board);
+                if (npc.getStats().getLifePoints() <= 0) {
+                    this.menu.dieMenu(npc);
+                    npc.die(this);
+                }
         }
 
     }
@@ -167,7 +213,7 @@ public class Game {
                 player.move("backward");
                 break;
             case "B":
-                this.menu.beginningOfTurnMenu(player, this);
+                this.menu.beginningOfTurnMenu(player);
                 break;
             default:
                 System.out.println("Invalid input: " + answer);
@@ -175,6 +221,7 @@ public class Game {
         }
     }
     public void playerEntersRoom(Player player, Room room) {
+        this.menu.enterRoomMenu(room);
     }
 
     public int roleDice(int [] dice){

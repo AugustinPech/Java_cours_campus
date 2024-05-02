@@ -1,13 +1,12 @@
 package DonjonAndDragons.src.models.Caracters.NPC;
 
-import DonjonAndDragons.src.models.Game.Game;
+import DonjonAndDragons.src.models.Game.Board.Board;
 
 public class Orc extends NPC{
-    public Orc(String name, Game game, int position) {
+    public Orc(String name, Board board, int position) {
         super(
             name, 
-            game, 
-            game.board.getDungeon()[game.board.getSize()-1].getNPC()[0].getIsOstile(),
+            board.getIsOstile(),
             position
         );
         this.setSprite("🟠");

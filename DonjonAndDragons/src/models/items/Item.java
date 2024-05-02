@@ -3,7 +3,7 @@ package DonjonAndDragons.src.models.items;
 import DonjonAndDragons.src.models.Stats;
 
 public class Item {
-    public String name;
+    private String name;
     public String type;
     public int weight;
     public int value;
@@ -37,5 +37,20 @@ public class Item {
     }
     public Stats getStats() {
         return stats;
+    }
+    public void setStats(Stats stats) {
+        this.stats = stats;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getMipple() {
+        return mipple;
+    }
+    public void setMipple(String mipple) {
+        this.mipple = mipple;
     }
 }

@@ -6,7 +6,7 @@ public class Armor extends Item{
     public Armor(String caracterClass){
         switch (caracterClass) {
             case "Warrior" -> {
-                this.name = "Leather Armor";
+                this.setName("Leather Armor");
                 this.type = "Armor";
                 this.mipple = "🧥";
                 this.stats= new Stats(0, 5, 0, 0, 0);
@@ -15,7 +15,7 @@ public class Armor extends Item{
                 this.status = "Good old";
             }
             case "Wizard" -> {
-                this.name = "Robe";
+                this.setName("Robe");
                 this.type = "Armor";
                 this.mipple = "👘";
                 this.stats= new Stats(0, 1, 0, 0, 0);
