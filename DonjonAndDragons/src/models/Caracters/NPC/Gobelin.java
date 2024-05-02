@@ -1,9 +1,15 @@
 package DonjonAndDragons.src.models.Caracters.NPC;
 import DonjonAndDragons.src.models.Game.Game;
 public class Gobelin extends NPC {
-    public Gobelin(Game game) {
-        Boolean isOstile = game.board.dungeon[game.board.size-1].npcs[0].isOstile;
-        super("Gobelin", game, isOstile);
-        this.sprite = "🟢";
+    
+    
+    public Gobelin(String name, Game game, int position) {
+        super(
+            name, 
+            game, 
+            game.board.getDungeon()[game.board.getSize()-1].getNPC()[0].getIsOstile(),
+            position
+        );
+        this.setSprite("🟢");
     }
 }

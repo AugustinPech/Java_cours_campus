@@ -21,10 +21,11 @@ public class Game {
     public Game(User user) {
         this.menu = new Menu(this, user);
         this.board = new Board(30, this);
+        this.board.setDungeon(this);
         String answer = this.menu.startMenu(this, user);
-        this.userBePlayer(user, answer);
+        this.userBecomesPlayer(user, answer);
     }
-    public void userBePlayer(User user, String answer){
+    public void userBecomesPlayer(User user, String answer){
         switch (answer) {
             case "n": 
                 this.menu.leaveGameMenu();
@@ -49,7 +50,7 @@ public class Game {
             String[] answer = this.menu.joiningGameMenu(user, this);
             Caracter caracter = this.createCaracter(answer);
             this.addPlayer((Player) caracter);
-                this.menu.joinedGame(this.player);
+            this.menu.joinedGame(this.player);
     }
     /**
      * Represents a character in the game.
@@ -73,17 +74,15 @@ public class Game {
         }
     }
     public void addPlayer(Player player){
-
         this.player = player;
     }
     public void caracterDies(Caracter caracter){
-        
         this.player=null;
-        caracter.die(this.board.dungeon[caracter.position]); 
+        caracter.die(this); 
         this.menu.youDiedMenu(this, caracter);       
     }
     public void startGame(User user) {
-        int totalLife = this.player.lifePoints;
+        int totalLife = this.player.getStats().getLifePoints();
         boolean everyBodyIsDead= (totalLife <= 0);
         boolean playerLeavesGame = false;
         boolean playing = !everyBodyIsDead && !playerLeavesGame;
@@ -96,11 +95,11 @@ public class Game {
 
         if (everyBodyIsDead) {
             String answer=this.menu.gameOverMenu(this, user);
-            userBePlayer(user, answer);
+            userBecomesPlayer(user, answer);
         }
     }
     private boolean playerTakesTurn(Player player) {
-        int oldPosition = player.position;
+        int oldPosition = player.getPosition();
 
         boolean playerLeavesGame = false;
         
@@ -122,7 +121,7 @@ public class Game {
                     this.playerMoves(player);
                     break;
                 case "A":
-                    //game.playerAttacks(player);
+                    this.caracterFight(player);
                     break;
                 case "U":
                     //game.playerUseItem(player);
@@ -130,14 +129,30 @@ public class Game {
                 case "S":
                     //this.skipTurnMenu(player);
                     break;
+                case "C":
+                    //this.skipTurnMenu(player);
+                    break;
                 default:
                     System.out.println("Invalid input: " + answer);
                     this.menu.upKeepMenu(player, this);
             }
-        if (player.position != oldPosition){
-            this.playerEntersRoom(player, this.board.dungeon[player.position]);
+        if (player.getPosition() != oldPosition){
+            this.playerEntersRoom(player, this.board.getDungeon()[player.getPosition()]);
         }
         return playerLeavesGame;
+    }
+    private void caracterFight(Player player) {
+        String answer = this.menu.fightMenu(player, this);
+        switch (answer){
+            case "B":
+                this.menu.beginningOfTurnMenu(player, this);
+                break;
+            default :
+                int index = Integer.parseInt(answer);
+                NPC npc = this.board.getDungeon()[player.getPosition()].getNPC()[index];
+                player.attack(npc, this);
+        }
+
     }
     public void playerMoves(Player player){
         String answer = this.menu.moveMenu(player, this);

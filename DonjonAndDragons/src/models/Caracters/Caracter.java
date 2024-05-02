@@ -1,24 +1,29 @@
 package DonjonAndDragons.src.models.Caracters;
 
+import DonjonAndDragons.src.models.Damage;
+import DonjonAndDragons.src.models.Stats;
+import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.models.Game.Board.Room;
 import DonjonAndDragons.src.models.items.Corps;
 import DonjonAndDragons.src.models.items.Item;
-public class Caracter {
-    public String name;
-    public String suffix;
-    public String fullName;
-    public String type;
-    public String caracterClass;
-    public int lifePoints;
-    public String sprite = "😃";
-    public Item[] inventory;
-    public Item[] equipment;
-    public int armor;
-    public int actions;
-    public int actionsLeft;
-    protected int basicDamage;
-    public int damage;
-    public int position;
+public abstract class Caracter {
+    private String name;
+    private String suffix;
+    private String fullName;
+    private String type;
+    private String caracterClass;
+
+    private Stats stats;
+    // private int lifePoints;
+    // private int armor;
+    // private int actions;
+    // private int damage;
+    private Stats baseStats;
+    private String sprite = "😃";
+    private Item[] inventory;
+    private Item[] equipment;
+    private int actionsLeft;
+    private int position;
     // public int level;
     // public int education;
     // public int agility;
@@ -34,15 +39,14 @@ public class Caracter {
 
     public Caracter(String name) {
         this.name = name;
-        this.lifePoints = 100;
-        this.armor = 0;
-        this.actions = 1;
-        this.basicDamage = 5;
+        this.baseStats = new Stats(50,0,1,5, 0);
+        this.stats=this.baseStats;
         this.inventory = new Item[10];
         this.equipment = new Item[2];
+        this.position=0;
         this.pickSuffix();
         this.setFullName();
-        this.position=0;
+        this.considerEquipment();
         // this.level = 1;
         // this.experience = 0;
         // this.education = 5;
@@ -82,9 +86,27 @@ public class Caracter {
         this.suffix = suffixes[(int)(Math.random()*suffixes.length)];
         this.setFullName();
     }
-    public Caracter fight(Caracter otherGuy) {
-        return this;
+
+    public void attack (Caracter target, Game game) {
+        int damage = this.stats.getDamage();
+        target.takeDamage(damage, game);
     }
+
+    public void takeDamage(int damage , Game game) {
+        int armor = this.stats.getArmor();
+        int lifePoints = this.stats.getLifePoints();
+        if (armor < damage) {
+            damage -= armor;
+        } else {
+            damage = 0;
+        }
+        int newLifePoints = lifePoints - damage;
+        this.stats.setLifePoints(newLifePoints);
+        if (this.stats.getLifePoints() <= 0) {
+            this.die(game);
+        }
+    };
+
     public void move (String how){
         switch (how) {
             case "forward":
@@ -97,10 +119,6 @@ public class Caracter {
                 System.out.println(this.name + " can not move. \nInvalid action");
                 break;
         }
-    }
-    public String sayHi() {
-        this.setFullName();
-       return ("Hi, I'm " + this.fullName) + ". ";
     }
     public void setSuffix(String suffix){
         this.suffix = suffix;
@@ -120,29 +138,21 @@ public class Caracter {
     public void setAction (int n) {
         this.actionsLeft += n;
     }
-    public void setDamage() {
-        int equipedDamage = 0;
+    public void considerEquipment() {
+        Stats baseStats = this.getBaseStats(); 
+        this.setStats(baseStats);
+        Stats stats = baseStats;
         for (Item item : this.equipment) {
-            if (item ==null) {
-                continue;
-            } else if (item.getDamage() != 0) {
-                equipedDamage += item .getDamage();
-                
+            if (item != null) {
+                Stats itemStats = item.getStats();
+
+                stats=stats.merge(itemStats);
             }
         }
-        this.damage = this.basicDamage + equipedDamage;
+        this.setStats(stats);
     }
-    public void setArmor() {
-        int equipedArmor = 0;
-        for (Item item : this.equipment) {
-            if (item ==null) {
-                continue;
-            } else if (item.getArmor() != 0) {
-                equipedArmor += item.getArmor();}
-        }
-        this.armor = equipedArmor;
-    }
-    public void die (Room room) {
+    public void die (Game game) {
+        Room room = game.board.getDungeon()[this.position];
         for (Item item : this.inventory) {
             room.addItem(item);
         }
@@ -151,5 +161,69 @@ public class Caracter {
         }
         Corps corps = new Corps(this);
         room.addItem(corps);
+    }
+    public String getName() {
+        return this.name;
+    }
+    public String getFullName() {
+        return this.fullName;
+    }
+    public void setType(String type) {
+        this.type = type;
+    }
+    public String getCaracterClass() {
+        return this.caracterClass;
+    }
+    public String getType() {
+        return this.type;
+    }
+    public String getSprite() {
+        return this.sprite;
+    }
+    public int getActionsLeft() {
+        return this.actionsLeft;
+    }
+    public int getPosition() {
+        return this.position;
+    }
+    public Item[] getInventory() {
+        return this.inventory;
+    }
+    public Item[] getEquipment() {
+        return this.equipment;
+    }
+    public void setActionsLeft(int actionsLeft) {
+        this.actionsLeft = actionsLeft;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+    public void setInventory(Item[] inventory) {
+        this.inventory = inventory;
+    }
+    public void setEquipment(Item[] equipment) {
+        this.equipment = equipment;
+    }
+    public void setCaracterClass(String caracterClass) {
+        this.caracterClass = caracterClass;
+    }
+    public void setSprite(String sprite) {
+        this.sprite = sprite;
+    }
+    public void setName(String name) {
+        this.name = name;
+    } 
+    public void setStats(Stats stats) {
+        this.stats = stats;
+    }
+    public Stats getStats() {
+        return this.stats;
+    }   
+    public void setBaseStats(Stats baseStats) {
+        this.baseStats = baseStats;
+    }
+    public Stats getBaseStats() {
+        return this.baseStats;
     }
 }

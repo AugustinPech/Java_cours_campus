@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Menu {
-    public Scanner scanner;
+    private Scanner scanner;
 
     public Menu(Game game, User user) {
         this.scanner = new Scanner(System.in);
@@ -34,7 +34,7 @@ public class Menu {
     }
     public String wantToPlay(Game game, User user){
         System.out.println("Do you want to join the adventure? (Y / n)");
-        String answer = regexCheck("^[yn]{1}$",this.scanner.nextLine().toLowerCase()); // fix regex
+        String answer = regexCheck("^[yn]{0,1}$",this.scanner.nextLine().toLowerCase()); // fix regex
         if (answer.contains("Invalid")) {
             System.out.println(answer);
             return wantToPlay(game, user);
@@ -72,7 +72,7 @@ public class Menu {
                     "As you step into the world of adventure, a sense of anticipation fills the air. The sound \n"+
                     "of rustling leaves and distant whispers of ancient magic greet your ears. Suddenly, a \n"+
                     "voice calls out from the depths of the forest:\n"+
-                    "\"Welcome, " + player.fullName + ", to a realm of endless possibilities and untold dangers!\n"+
+                    "\"Welcome, " + player.getFullName() + ", to a realm of endless possibilities and untold dangers!\n"+
                     "Your journey begins now.\"\n"+
                     "___________________________________________________________________________________________\n"
                     );
@@ -85,70 +85,35 @@ public class Menu {
         }
     }
 
-    public String moveMenu(Player player, Game game) {
-        String answer="";
-        if (player.position == 0) {
-            System.out.println( "Where do you want to go?\n"+
-                        "   (N) Got to next room : "+game.board.dungeon[player.position+1].name+"\n"+
-                        "\n"+
-                        "   (B) You changed your mind. (go to previous menu)");
-            answer = regexCheck("^[AE]{1}$",this.scanner.nextLine().toUpperCase());
-            if (answer.contains("Invalid")) {
-                System.out.println(answer);
-                return moveMenu(player, game);
-            }
-        } else if (player.position == game.board.dungeon.length-1) {
-            System.out.println( "Where do you want to go?\n"+
-                        "\n"+
-                        "   (P) Got to previous room: "+game.board.dungeon[player.position+1].name+"\n"+
-                        "   (B) You changed your mind. (go to previous menu)");
-            answer = regexCheck("^[ZE]{1}$",this.scanner.nextLine().toUpperCase());
-            if (answer.contains("Invalid")) {
-                System.out.println(answer);
-                return moveMenu(player, game);
-            }
-        } else {
-            System.out.println( "Where do you want to go?\n"+
-                    "   (N) Got to next room : "+game.board.dungeon[player.position-1].name+"\n"+
-                    "   (P) Got to previous room: "+game.board.dungeon[player.position+1].name+"\n"+
-                    "   (B) You changed your mind. (go to previous menu)");
-            answer = regexCheck("^[NPB]{1}$",this.scanner.nextLine().toUpperCase());
-            if (answer.contains("Invalid")) {
-                System.out.println(answer);
-                return moveMenu(player, game);
-            }
-        }
-        return answer;
-    }
     public void upKeepMenu(Player player, Game game) {
-        int position = player.position;
-        Room room = game.board.dungeon[position];
-        if (player.position !=0) {
+        int position = player.getPosition();
+        Room room = game.board.getDungeon()[position];
+        if (player.getPosition() !=0) {
             System.out.println(
                 "___________________________________________________________________________________________\n"+
                 this.displayBoard(game)+"\n"+
                 "______________________________________BOARD________________________________________________\n"
             );
         }
-        if (room.ascii!=null){
-            String[] ascii = (room.ascii);
+        if (room.getAscii()!=null){
+            String[] ascii = (room.getAscii());
             for (String line : ascii) {
                 System.out.println(line);
             }
         }
         System.out.println(
             "___________________________________________________________________________________________\n"+
-            game.board.dungeon[player.position].great()+"\n"+
+            game.board.getDungeon()[player.getPosition()].great()+"\n"+
             "________________________________________ROOM_GREAT_MSG_____________________________________\n"
         );
     }
     private String displayBoard(Game game) {
         String str = "|";
-        for (int i = 0 ; i < game.board.size; i++) {
-            Room room = game.board.dungeon[i];
+        for (int i = 0 ; i < game.board.getSize(); i++) {
+            Room room = game.board.getDungeon()[i];
             str +="|";
-            if (i == game.player.position) {
-                str += " "+ game.player.sprite ;
+            if (i == game.player.getPosition()) {
+                str += " "+ game.player.getSprite() ;
             } else {
                 str += "";
             }
@@ -173,7 +138,7 @@ public class Menu {
     }
     public String beginningOfTurnMenu(Player player, Game game) {
         String answer = "";
-        if (player.position == 0){
+        if (player.getPosition() == 0){
             answer = this.doorStepMenu(player, game);
         } else {
             System.out.println( 
@@ -182,9 +147,10 @@ public class Menu {
                 "   (A) Attack\n"+
                 "   (U) Use item\n"+
                 "   (S) Skip turn\n"+
+                "   (C) See stats\n"+
                 "   (W) Withdraw from the dungeon");
-            answer = regexCheck("^[MAUSW]{1}$",this.scanner.nextLine().toUpperCase());
-            System.out.println(answer + "    " + player.position);
+            answer = regexCheck("^[MAUSWC]{1}$",this.scanner.nextLine().toUpperCase());
+            this.spriteAndStatsShow(player);
         }
         return answer;
     }
@@ -202,7 +168,67 @@ public class Menu {
         for (String line : ascii) {
             System.out.println(line);
         }
-        answer = regexCheck("^[yn]{1}$",this.wantToPlay(game, user));
+        answer = this.wantToPlay(game, user);
+        return answer;
+    }
+
+    public String fightMenu(Player player, Game game) {
+        String answer = "";
+        String[] ascii = (Ascii.fight());
+        for (String line : ascii) {
+            System.out.println(line);
+        }
+        String str = 
+            "You are in"+game.board.getDungeon()[player.getPosition()]+"\n"+
+            "You can attack eather of these targets : \n";
+        int index = 0;
+        for (Caracter caracter : game.board.getDungeon()[player.getPosition()].getNPC()) {
+            str += "   ("+index+")"+caracter.getFullName()+"\n";
+            index ++;
+        }
+        str += "   (B) You changed your mind. (go to previous menu)";
+        System.out.println(str);
+        answer = regexCheck("^[0-9B]{1}$",this.scanner.nextLine().toUpperCase());
+        if (answer.contains("Invalid")) {
+                System.out.println(answer);
+                return fightMenu(player, game);
+        }
+        return answer;
+    }
+
+    public String moveMenu(Player player, Game game) {
+        String answer="";
+        if (player.getPosition() == 0) {
+            System.out.println( "Where do you want to go?\n"+
+                        "   (N) Got to next room : "+game.board.getDungeon()[player.getPosition()+1].getName()+"\n"+
+                        "\n"+
+                        "   (B) You changed your mind. (go to previous menu)");
+            answer = regexCheck("^[AE]{1}$",this.scanner.nextLine().toUpperCase());
+            if (answer.contains("Invalid")) {
+                System.out.println(answer);
+                return moveMenu(player, game);
+            }
+        } else if (player.getPosition() == game.board.getDungeon().length-1) {
+            System.out.println( "Where do you want to go?\n"+
+                        "\n"+
+                        "   (P) Got to previous room: "+game.board.getDungeon()[player.getPosition()-1].getName()+"\n"+
+                        "   (B) You changed your mind. (go to previous menu)");
+            answer = regexCheck("^[ZE]{1}$",this.scanner.nextLine().toUpperCase());
+            if (answer.contains("Invalid")) {
+                System.out.println(answer);
+                return moveMenu(player, game);
+            }
+        } else {
+            System.out.println( "Where do you want to go?\n"+
+                    "   (N) Got to next room : "+game.board.getDungeon()[player.getPosition()-1].getName()+"\n"+
+                    "   (P) Got to previous room: "+game.board.getDungeon()[player.getPosition()+1].getName()+"\n"+
+                    "   (B) You changed your mind. (go to previous menu)");
+            answer = regexCheck("^[NPB]{1}$",this.scanner.nextLine().toUpperCase());
+            if (answer.contains("Invalid")) {
+                System.out.println(answer);
+                return moveMenu(player, game);
+            }
+        }
         return answer;
     }
 }

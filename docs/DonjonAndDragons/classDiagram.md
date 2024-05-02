@@ -6,32 +6,7 @@
             +insides
         }
         class Caracter {[abstract]
-            +name
-            +type
-            +class
-            +level
-            +lifePoints
-            +education
-            +agility
-            +withdom
-            +strength
-            +inventory
-            -experience
-            +stamina
-            +equipment item table
-            [ hand : ,hand : , body : ,
-            head : , shoes : , pents : , amulette: ]
-            +status
-            +armor
-            +speed
-            +actions
-            -basicDamage
-            -damage
-            constructor()
-            die()
-            fight()
-            walk()
-            sayHi()
+           
             }
         Caracter <|-- Player
         Player <|-- Warrior

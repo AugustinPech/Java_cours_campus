@@ -4,7 +4,7 @@ import DonjonAndDragons.src.models.Caracters.Caracter;
 
 public class Corps extends Item{
     public Corps (Caracter caracter)  {
-        super( caracter.name, "corps");
+        super( caracter.getName(), "corps");
         this.status = "deadBody";
     }
 

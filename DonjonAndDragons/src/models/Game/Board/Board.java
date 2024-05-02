@@ -8,29 +8,38 @@ import DonjonAndDragons.src.models.Caracters.NPC.NPC;
 import DonjonAndDragons.src.models.Caracters.NPC.Orc;
 import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.models.items.Item;
+import DonjonAndDragons.src.models.items.Potion;
 
 public class Board {
-    public int size;
-    public Room[] dungeon;
+    private int size;
+    private Room[] dungeon;
 
     public Board(int size, Game game){
         this.size = size;
-        int heart = size-1;
-        int boss = size-2;
         this.dungeon = new Room[this.size];
         
         for (int i = 0; i < this.size; i++) {
                     this.dungeon[i] = new Room();
         }
+    }
+    public void setDungeon(Game game){
+        int heart = size-1;
+        int boss = size-2;
         this.dungeon[0] = new DoorStep(game);
         this.dungeon[1] = new HallWay(game);
         this.dungeon[boss] = new BossRoom( game);
         this.dungeon[heart] = new Heart (game);
     }
+    public int getSize(){
+        return this.size;
+    }
+    public Room[] getDungeon(){
+        return this.dungeon;
+    }
 
     public void nPCAreOstile (){
         for (int i = 0; i < this.size; i++) {
-            this.dungeon[i].greatMsg=
+            this.dungeon[i].setGreatMsg(
                             "As you step into the murky depths of the dungeon, a sense of foreboding settles over you \n"+
                             "like a heavy cloak. The air is thick with the stench of decay, and the oppressive darkness \n"+
                             "seems to press in from all sides, suffocating and claustrophobic.\n"+
@@ -42,11 +51,13 @@ public class Board {
                             " down your spine and setting your nerves on edge.\n"+
                             "       'You dare to trespass in this domain without knocking the door,' he growls, \n"+
                             "       'Prepare to face the consequences of your folly.'\n"+
-                            "With a menacing glare, he raises his fists, ready to strike at any moment.";
-            if (this.dungeon[i].npcs != null){
-                for (int j = 0; j < this.dungeon[i].npcs.length; j++) {
-                    if (this.dungeon[i].npcs[j] != null){
-                        this.dungeon[i].npcs[j].setIsOstile(true);
+                            "With a menacing glare, he raises his fists, ready to strike at any moment.");
+            if (this.dungeon[i].getNPC() != null){
+                for (int j = 0; j < this.dungeon[i].getNPC().length; j++) {
+                    if (this.dungeon[i].getNPC()[j] != null){
+                        NPC[] npcs = this.dungeon[i].getNPC();
+                        npcs [j].setIsOstile(true);
+                        this.dungeon[i].setNPC(npcs);
                     }
                 }
             }
@@ -54,20 +65,20 @@ public class Board {
     }
 
     public void generateRoomContent(Game game, int role) {
-        int position = game.player.position;
+        int position = game.player.getPosition();
         Room nextRoom = this.dungeon[position+1];
         if (position < this.size-2){
             if (role <50){
-                nextRoom.npcs= new NPC[1];
-                nextRoom.npcs[0]= new Gobelin(game);
+                NPC[] npcs= {new Gobelin("Gobelin", game, position+1)};
+                nextRoom.setNPC(npcs);
             }
             if (role >=50 && role <75){
-                nextRoom.npcs= new NPC[1];
-                nextRoom.npcs[0]= new Orc(game);
+                NPC[] npcs= {new Orc("Orc", game,position+1)};
+                nextRoom.setNPC(npcs);
             }
             if (role >=75){
-                nextRoom.items= new Item[1];
-                nextRoom.items[0]= new Potion();
+                Item [] items= {new Potion("Portion of Healing", 10)};
+                nextRoom.setItems(items);
             }
         }
     }

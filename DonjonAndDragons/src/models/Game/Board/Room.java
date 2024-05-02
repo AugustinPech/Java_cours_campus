@@ -5,11 +5,11 @@ import DonjonAndDragons.src.models.Caracters.Player.Player;
 import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.models.items.Item;
 public class Room {
-    public NPC[] npcs;
-    public String [] ascii;
-    public Item[] items;
-    public String name;
-    public String greatMsg;
+    private NPC[] npcs;
+    private String [] ascii;
+    private Item[] items;
+    private String name;
+    private String greatMsg;
     public Room(){
         // make a method to pick random preconfigurated room
         this.npcs = new NPC[0]; 
@@ -107,8 +107,38 @@ public class Room {
             return "-";
         }
         for (NPC npc : this.npcs){
-            str += npc.sprite;
+            str += npc.getSprite();
         }
         return str;
+    }
+    public NPC[] getNPC(){
+        return this.npcs;
+    }
+    public void setNPC(NPC[] npcs) {
+        this.npcs = npcs;
+    }
+    public String[] getAscii(){
+        return this.ascii;
+    }
+    public void setAscii(String[] ascii){
+        this.ascii = ascii;
+    }
+    public Item[] getItems(){
+        return this.items;
+    }
+    public void setItems(Item[] items){
+        this.items = items;
+    }
+    public String getName(){
+        return this.name;
+    }
+    public void setName(String name){
+        this.name = name;
+    }
+    public String getGreatMsg(){
+        return this.greatMsg;
+    }
+    public void setGreatMsg(String greatMsg){
+        this.greatMsg = greatMsg;
     }
 }
