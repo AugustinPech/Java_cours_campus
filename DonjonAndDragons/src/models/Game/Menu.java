@@ -24,7 +24,7 @@ public class Menu {
         for (String line : ascii) {
             System.out.println(line);
         }
-        String answer = this.wantToPlay(game, user);
+        String answer = this.wantToPlay(game);
         return answer;
     }
     public String regexCheck (String regex, String answer) {
@@ -36,12 +36,12 @@ public class Menu {
         }
         return answer;
     }
-    public String wantToPlay(Game game, User user){
+    public String wantToPlay(Game game){
         System.out.println("Do you want to join the adventure? (Y / n)");
         String answer = regexCheck("^[yn]{0,1}$",this.scanner.nextLine().toLowerCase()); // fix regex
         if (answer.contains("Invalid")) {
             System.out.println(answer);
-            return wantToPlay(game, user);
+            return wantToPlay(game);
         }
         return answer;
     }
@@ -157,13 +157,13 @@ public class Menu {
         }
     }
 
-    public String gameOverMenu(Game game, User user) {
+    public String gameOverMenu(Game game) {
         String answer = "";
         String[] ascii = (Ascii.gameOver());
         for (String line : ascii) {
             System.out.println(line);
         }
-        answer = this.wantToPlay(game, user);
+        answer = this.wantToPlay(game);
         return answer;
     }
 

@@ -8,6 +8,7 @@ import DonjonAndDragons.src.models.Caracters.NPC.NPC;
 import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.models.Game.Board.Board;
 import DonjonAndDragons.src.models.Game.Board.Room;
+import DonjonAndDragons.src.models.Game.Exception.PlayerIsDeadException;
 import DonjonAndDragons.src.models.items.Corps;
 import DonjonAndDragons.src.models.items.Item;
 public abstract class Caracter {
@@ -28,6 +29,7 @@ public abstract class Caracter {
 
 
     public Caracter(String name) {
+        try {
         this.name = name;
         this.baseStats = new Stats(50,0,1,5, 0);
         this.stats=this.baseStats;
@@ -37,9 +39,12 @@ public abstract class Caracter {
         this.pickSuffix();
         this.setFullName();
         this.considerEquipment();
+        } catch (PlayerIsDeadException e) {
+        }
 
     }
     public Caracter (int num ) {// god mode
+        try {
         this.name = "God";
         this.baseStats = new Stats(1000,1000,1000,1000, 1000);
         this.stats=this.baseStats;
@@ -49,6 +54,8 @@ public abstract class Caracter {
         this.pickSuffix();
         this.setFullName();
         this.considerEquipment();
+        } catch (PlayerIsDeadException e) {
+        }
     }
     
     private void pickSuffix(){
@@ -140,7 +147,7 @@ public abstract class Caracter {
     public void setAction (int n) {
         this.actionsLeft += n;
     }
-    public void considerEquipment() {
+    public void considerEquipment() throws PlayerIsDeadException {
         Stats baseStats = this.getBaseStats(); 
         this.setStats(baseStats);
         Stats stats = baseStats;
@@ -224,7 +231,10 @@ public abstract class Caracter {
     public void setName(String name) {
         this.name = name;
     } 
-    public void setStats(Stats stats) {
+    public void setStats(Stats stats) throws PlayerIsDeadException{
+        if (stats.getLifePoints() <=0) {
+            throw new PlayerIsDeadException();
+        }
         this.stats = stats;
     }
     public Stats getStats() {

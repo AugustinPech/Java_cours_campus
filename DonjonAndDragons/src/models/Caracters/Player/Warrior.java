@@ -1,11 +1,13 @@
 package DonjonAndDragons.src.models.Caracters.Player;
 import DonjonAndDragons.src.models.Stats;
 import DonjonAndDragons.src.models.Game.Game;
+import DonjonAndDragons.src.models.Game.Exception.PlayerIsDeadException;
 import DonjonAndDragons.src.models.items.Armor;
 import DonjonAndDragons.src.models.items.Weapon;
 public class Warrior extends Player{
     public Warrior(String name, Game game) {
         super(name, game);
+        try{
         this.setCaracterClass("Warrior");
         this.setBaseStats(new Stats(100,1,1,5, 0));
         this.setType("fighter");
@@ -23,6 +25,8 @@ public class Warrior extends Player{
         }catch (Exception e){
         }
         this.considerEquipment();
+        } catch (PlayerIsDeadException e) {
+        }
     }
     public Warrior(int num) {//god mode
     super (num);

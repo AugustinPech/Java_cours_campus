@@ -2,6 +2,7 @@ package DonjonAndDragons.src.models.items;
 
 import DonjonAndDragons.src.models.Stats;
 import DonjonAndDragons.src.models.Caracters.Player.Player;
+import DonjonAndDragons.src.models.Game.Exception.PlayerIsDeadException;
 
 public class Potion extends Usable {
     public Potion(String name, String potionType) {
@@ -21,7 +22,7 @@ public class Potion extends Usable {
             }
         }
     }
-    public Item[] use(Player player){
+    public Item[] use(Player player)  throws PlayerIsDeadException{
         player.setStats(player.getStats().merge(this.stats));
         return null;
     }

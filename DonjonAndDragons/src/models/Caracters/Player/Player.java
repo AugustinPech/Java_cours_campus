@@ -5,6 +5,7 @@ import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.models.Game.Board.Room;
 import DonjonAndDragons.src.models.Game.Exception.NotEquipableException;
 import DonjonAndDragons.src.models.Game.Exception.NotUseAbleException;
+import DonjonAndDragons.src.models.Game.Exception.PlayerIsDeadException;
 import DonjonAndDragons.src.models.items.Equipable;
 import DonjonAndDragons.src.models.items.Item;
 import DonjonAndDragons.src.models.items.Usable;
@@ -27,7 +28,7 @@ public abstract class Player extends Caracter{
         }
     }
 
-    public void equipItem(int indexOfInventoryItem) throws NotEquipableException{
+    public void equipItem(int indexOfInventoryItem) throws NotEquipableException, PlayerIsDeadException {
         int index = 0;
         Item [] equipment = this.getEquipment();
         Item [] inventory = this.getInventory();
@@ -46,7 +47,7 @@ public abstract class Player extends Caracter{
         
         this.considerEquipment();
     }
-    public void dropItem(int indexOfInventoryItem, Room room){
+    public void dropItem(int indexOfInventoryItem, Room room) throws PlayerIsDeadException {
         Item [] initialInventory = this.getInventory();
         room.addItem(initialInventory[indexOfInventoryItem]);
         initialInventory[indexOfInventoryItem] = null;
@@ -62,7 +63,7 @@ public abstract class Player extends Caracter{
         this.setInventory(inventory);
         this.considerEquipment();
     }
-    public void unEquip(Integer valueOf, Room room) {
+    public void unEquip(Integer valueOf, Room room) throws PlayerIsDeadException {
 
         Item [] equipment = this.getEquipment();
         Item [] inventory = this.getInventory();
@@ -79,13 +80,13 @@ public abstract class Player extends Caracter{
         this.setInventory(inventory);
         this.considerEquipment();
     }
-    public Item[] useItem(int index, String EqOrIn) throws NotUseAbleException{
-        try {
+    public Item[] useItem(int index, String EqOrIn) throws NotUseAbleException, PlayerIsDeadException{
             Item[] inventory = this.getInventory();
             Item[] equipment = this.getEquipment();
             
             Item[] output= new Item[0];
             Stats stats = this.getStats();
+
             if (EqOrIn.equals("inventory")) {
                 Usable item = (Usable) inventory[index];
                 if (!(item instanceof Usable)) {
@@ -93,7 +94,9 @@ public abstract class Player extends Caracter{
                 }
                 output= item.use(this);
                 inventory[index] = null;
+
             } else if (EqOrIn.equals("equipment")) {
+            
                 Usable item = (Usable) equipment[index];
                 if (!(item instanceof Usable)) {
                     throw new NotUseAbleException();
@@ -108,9 +111,5 @@ public abstract class Player extends Caracter{
             this.considerEquipment();
 
             return output;
-        } catch (Exception e) {
-            System.out.println(e);
-            return null;
-        }
     }
 }
