@@ -8,7 +8,7 @@ public class Item {
     public int weight;
     public int value;
     public String status;
-    protected Stats stats;
+    protected Stats stats= new Stats (0,0,0,0,0);
     public String mipple = "📦";
     public Item (){
         // Works with subClasses

@@ -3,6 +3,7 @@ import DonjonAndDragons.src.models.Caracters.Caracter;
 import DonjonAndDragons.src.models.Caracters.NPC.NPC;
 import DonjonAndDragons.src.models.Caracters.Player.Player;
 import DonjonAndDragons.src.models.Game.Board.Room;
+import DonjonAndDragons.src.models.Game.Exception.NotUseAbleException;
 import DonjonAndDragons.src.models.items.Item;
 import DonjonAndDragons.src.views.Ascii;
 
@@ -404,6 +405,10 @@ public class Menu {
         }
 
         return answer;
+    }
+
+    public void exceptionMenu(Exception e) {
+        System.out.println(e.getMessage());
     }
 }
 //item.getStats().toString()+"\n";

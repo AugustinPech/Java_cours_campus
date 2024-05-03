@@ -3,6 +3,9 @@ import DonjonAndDragons.src.models.Stats;
 import DonjonAndDragons.src.models.Caracters.Caracter;
 import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.models.Game.Board.Room;
+import DonjonAndDragons.src.models.Game.Exception.NotEquipableException;
+import DonjonAndDragons.src.models.Game.Exception.NotUseAbleException;
+import DonjonAndDragons.src.models.items.Equipable;
 import DonjonAndDragons.src.models.items.Item;
 import DonjonAndDragons.src.models.items.Usable;
 public abstract class Player extends Caracter{
@@ -24,16 +27,19 @@ public abstract class Player extends Caracter{
         }
     }
 
-    public void equipItem(int indexOfInventoryItem){
+    public void equipItem(int indexOfInventoryItem) throws NotEquipableException{
         int index = 0;
         Item [] equipment = this.getEquipment();
         Item [] inventory = this.getInventory();
         while (equipment[index] != null) {
             index++;
         }
+        if (!(inventory[indexOfInventoryItem] instanceof Equipable)) {
+            throw new NotEquipableException();
+        }
         if (index <= equipment.length) {
         equipment[index] = inventory[indexOfInventoryItem];
-        inventory [indexOfInventoryItem] = null;
+        inventory[indexOfInventoryItem] = null;
         }
         this.setEquipment(equipment);
         this.setInventory(inventory);
@@ -73,31 +79,38 @@ public abstract class Player extends Caracter{
         this.setInventory(inventory);
         this.considerEquipment();
     }
-    public Item[] useItem(int index, String EqOrIn) {
-        Item[] inventory = this.getInventory();
-        Item[] equipment = this.getEquipment();
-        
-        Item[] output= new Item[0];
-        Stats stats = this.getStats();
-        if (EqOrIn.equals("inventory")) {
-            Usable item = (Usable) inventory[index];
-            if (item != null) {
+    public Item[] useItem(int index, String EqOrIn) throws NotUseAbleException{
+        try {
+            Item[] inventory = this.getInventory();
+            Item[] equipment = this.getEquipment();
+            
+            Item[] output= new Item[0];
+            Stats stats = this.getStats();
+            if (EqOrIn.equals("inventory")) {
+                Usable item = (Usable) inventory[index];
+                if (!(item instanceof Usable)) {
+                    throw new NotUseAbleException();
+                }
                 output= item.use(this);
                 inventory[index] = null;
-            }
-        } else if (EqOrIn.equals("equipment")) {
-            Usable item = (Usable) equipment[index];
-            if (item != null) {
+            } else if (EqOrIn.equals("equipment")) {
+                Usable item = (Usable) equipment[index];
+                if (!(item instanceof Usable)) {
+                    throw new NotUseAbleException();
+                }
                 output= item.use(this);
                 equipment[index] = null;
             }
+
+            this.setStats(stats);
+            this.setInventory(inventory);
+            this.setEquipment(equipment);
+            this.considerEquipment();
+
+            return output;
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
         }
-
-        this.setStats(stats);
-        this.setInventory(inventory);
-        this.setEquipment(equipment);
-        this.considerEquipment();
-
-        return output;
     }
 }

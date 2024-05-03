@@ -13,9 +13,15 @@ public class Warrior extends Player{
         this.setFullName();
         Weapon weapon = new Weapon(this.getCaracterClass());
         this.addItem(weapon);
-        this.equipItem(0);
+        try{
+            this.equipItem(0);
+        }catch (Exception e){
+        }
         this.addItem(new Armor(this.getCaracterClass()));
-        this.equipItem(0);
+        try{
+            this.equipItem(0);
+        }catch (Exception e){
+        }
         this.considerEquipment();
     }
     public Warrior(int num) {//god mode

@@ -9,6 +9,8 @@ import DonjonAndDragons.src.models.Caracters.Player.Warrior;
 import DonjonAndDragons.src.models.Caracters.Player.Wizard;
 import DonjonAndDragons.src.models.Game.Board.Board;
 import DonjonAndDragons.src.models.Game.Board.Room;
+import DonjonAndDragons.src.models.Game.Exception.NotEquipableException;
+import DonjonAndDragons.src.models.Game.Exception.NotUseAbleException;
 import DonjonAndDragons.src.models.items.Item;
 
 public class Game {
@@ -75,7 +77,7 @@ public class Game {
                     throw new IllegalArgumentException("Invalid input: " + className);
         }
         } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+                this.menu.exceptionMenu(e);
                 return this.createCaracter(answerFromMenu);
         }
     }
@@ -182,73 +184,86 @@ public class Game {
         return true;
     }
     private void inventoryManager() {
-        String answer = this.menu.inventoryMenu(this.player);
-        String answer2= "";
+        try{
+            String answer = this.menu.inventoryMenu(this.player);
+            String answer2= "";
 
-        switch (answer) {
-            case "B":
-                this.playerTakesTurn(this.player);
-                break;
-            case "E":
-                this.equipmentManager();
-                break;
-            default:
-                answer2 = this.menu.itemInIventoryMenu(this.player, Integer.valueOf(answer));
-        }
-        switch (answer2) {
-            case "B":
-                this.menu.inventoryMenu(this.player);
-                break;
-            case "D":
-                this.player.dropItem(Integer.valueOf(answer), this.board.getDungeon()[this.player.getPosition()]);
-                break;
-            case "E":
-                this.player.equipItem(Integer.valueOf(answer));
-                break;
-            case "U":
-                Item [] resultOfUse = this.player.useItem(Integer.valueOf(answer), "inventory");
-                if (resultOfUse.length != 0) {
-                    for (Item item : resultOfUse) {
-                        this.board.getDungeon()[this.player.getPosition()].addItem(item);
+            switch (answer) {
+                case "B":
+                    this.playerTakesTurn(this.player);
+                    break;
+                case "E":
+                    this.equipmentManager();
+                    break;
+                default:
+                    answer2 = this.menu.itemInIventoryMenu(this.player, Integer.valueOf(answer));
+            }
+            switch (answer2) {
+                case "B":
+                    this.menu.inventoryMenu(this.player);
+                    break;
+                case "D":
+                    this.player.dropItem(Integer.valueOf(answer), this.board.getDungeon()[this.player.getPosition()]);
+                    break;
+                case "E":
+                    this.player.equipItem(Integer.valueOf(answer));
+                    break;
+                case "U":
+                    Item [] resultOfUse = this.player.useItem(Integer.valueOf(answer), "inventory");
+                    if (resultOfUse.length != 0) {
+                        for (Item item : resultOfUse) {
+                            this.board.getDungeon()[this.player.getPosition()].addItem(item);
+                        }
                     }
-                }
-                break;
-            default:
-                System.out.println("Invalid input: " + answer2);
-                this.menu.inventoryMenu(this.player);
+                    break;
+                default:
+                    System.out.println("Invalid input: " + answer2);
+                    this.menu.inventoryMenu(this.player);
+            }
+        } catch (NotEquipableException e) {
+            this.menu.exceptionMenu(e);
+            this.inventoryManager();
+        } catch (NotUseAbleException e) {
+            this.menu.exceptionMenu(e);
+            this.inventoryManager();
         }
     }
     private void equipmentManager() {
-        String answer = this.menu.equipmentMenu(this.player);
-        String answer2= "";
+        try{
+            String answer = this.menu.equipmentMenu(this.player);
+            String answer2= "";
 
-        switch (answer) {
-            case "B":
-                this.menu.inventoryMenu(this.player);
-                break;
-            case "I" :
-                this.inventoryManager();
-                break;
-            default:
-                answer2 = this.menu.itemInEquipmentMenu(this.player, Integer.valueOf(answer));
-        }
-        switch (answer2) {
-            case "B":
-                this.menu.equipmentMenu(this.player);
-                break;
-            case "D":
-                Item [] resultOfUse = this.player.useItem(Integer.valueOf(answer), "equipment");
-                if (resultOfUse.length != 0) {
-                    for (Item item : resultOfUse) {
-                        this.board.getDungeon()[this.player.getPosition()].addItem(item);
+            switch (answer) {
+                case "B":
+                    this.menu.inventoryMenu(this.player);
+                    break;
+                case "I" :
+                    this.inventoryManager();
+                    break;
+                default:
+                    answer2 = this.menu.itemInEquipmentMenu(this.player, Integer.valueOf(answer));
+            }
+            switch (answer2) {
+                case "B":
+                    this.menu.equipmentMenu(this.player);
+                    break;
+                case "D":
+                    Item [] resultOfUse = this.player.useItem(Integer.valueOf(answer), "equipment");
+                    if (resultOfUse.length != 0) {
+                        for (Item item : resultOfUse) {
+                            this.board.getDungeon()[this.player.getPosition()].addItem(item);
+                        }
                     }
-                }
-            case "U":
-                this.player.unEquip(Integer.valueOf(answer), this.board.getDungeon()[this.player.getPosition()]);
-                break;
-            default:
-                System.out.println("Invalid input: " + answer2);
-                this.menu.equipmentMenu(this.player);
+                case "U":
+                    this.player.unEquip(Integer.valueOf(answer), this.board.getDungeon()[this.player.getPosition()]);
+                    break;
+                default:
+                    System.out.println("Invalid input: " + answer2);
+                    this.menu.equipmentMenu(this.player);
+            }
+        }  catch (NotUseAbleException e) {
+            this.menu.exceptionMenu(e);
+            this.equipmentManager();
         }
         
     }

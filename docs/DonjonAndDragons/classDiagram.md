@@ -1,85 +1,59 @@
 ```mermaid
     classDiagram
-        class Enemy{
-            +randomSuffix
-            +name=randomName
-            +insides
+        class NPC{
+            
         }
         class Caracter {[abstract]
-           
-            }
+            -stats [Stats]   
+        }
         Caracter <|-- Player
         Player <|-- Warrior
         Player <|-- Wizard
-        Caracter <|-- Enemy
-        Enemy <|-- Humanoid
-        Enemy <|-- Monster
-        class Player {
-            eat(Food)
-            pickUp(Item)
-            drop(Item)
+        Caracter <|-- NPC
+        NPC <|-- DoorMan
+        NPC <|-- Gobelin
+        NPC <|-- Guardian
+        NPC <|-- Orc
+        NPC <|-- Dragon
+        class NPC {[abstract]
+            -isOstile [boolean]
+        }
+        class Player {[abstract]
+            interactionswith(item)
         }
         class Wizard {
-            +type=spellCaster
-            +class=wizard
-            +lifePoints=6
-            +education=10
-            +agility=5
-            +withdom=10
-            +equipment=[ hand : magicScroll ,hand : , body : ,
-            head : , shoes : , pents : , amulette: ]
-            +status=[manaShield]
-            +strength=4
-            +inventory=[spellbook,]
-            +armor=0
-            +speed=1
-            +actions=2
-            -basicDamage=15
-            fight()
-            ->castSpell()
+            
         }
         class Warrior {
-            +type=fighter
-            +class=warrior
-            +lifePoints=10
-            +education=4
-            +agility=8
-            +withdom=5
-            +equipment=[ hand : shortSword ,hand : smallShield, body : ,
-            head : , shoes : , pents : , amulette: ]
-            +status=[]
-            +strength=10
-            +inventory=[chickenSandwitch,]
-            +armor=2
-            +speed=1
-            +actions=2
-            -basicDamage=10
+            
         }
 ```
 ```mermaid
 classDiagram
-    Item <|-- Weapon
-    Item <|-- Armor
-    Item <|-- Scroll
-    Item <|-- Food
+    Item <|-- Equipable
+    Item <|-- Usable
+    Equipable <|-- Weapon
+    Equipable <|-- Armor
+    Usable <|-- Potion
+    Usable <|-- Insides
     class Item {
-        +name
-        +status
-        +type
-        breack()
-        [abstract] use()
+        -stats [Stats]   
     }
     class Weapon {
-        +damage
-        +range
-        constructor(name, type, status)
     }
     class Armor{
         +armor
-        constructor(name, type, status)
     }
-    class Scroll{
+    class Usable {
+        [abstract] use()
     }
-    class Food {
+```
+```mermaid
+classDiagram
+    class Stats {
+        -lifepoints [int]
+        -damage [int]
+        -armor [int]
+        merge(Stats)
     }
 ```

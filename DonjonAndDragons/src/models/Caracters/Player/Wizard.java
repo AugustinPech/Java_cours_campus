@@ -12,9 +12,15 @@ public class Wizard extends Player{
         this.setBaseStats(new Stats(60,0,1,6, 0));
         this.setFullName();
         this.addItem(new Weapon(this.getCaracterClass()));
-        this.equipItem(0);
+        try{
+            this.equipItem(0);
+        }catch (Exception e){
+        }
         this.addItem(new Armor(this.getCaracterClass()));
-        this.equipItem(0);
+        try{
+            this.equipItem(0);
+        }catch (Exception e){
+        }
         this.considerEquipment();
     }
 }

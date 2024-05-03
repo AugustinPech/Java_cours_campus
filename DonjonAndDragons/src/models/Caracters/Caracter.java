@@ -5,7 +5,6 @@ import java.util.Map;
 
 import DonjonAndDragons.src.models.Stats;
 import DonjonAndDragons.src.models.Caracters.NPC.NPC;
-import DonjonAndDragons.src.models.Caracters.Player.Player;
 import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.models.Game.Board.Board;
 import DonjonAndDragons.src.models.Game.Board.Room;
@@ -20,27 +19,13 @@ public abstract class Caracter {
 
     protected Stats stats;
     private Stats baseStats;
-    // private int lifePoints;
-    // private int armor;
-    // private int actions;
-    // private int damage;
+
     private String sprite = "😃";
     private Item[] inventory;
-    private Item[] equipment;
+    protected Item[] equipment;
     private int actionsLeft;
     private int position;
-    // public int level;
-    // public int education;
-    // public int agility;
-    // public int withdom;
-    // public int strength;
-    // protected int experience;
-    // public int stamina;
-    // public int gold;
-    // public String[] status;
-    //public Status[] status;
-    // public int speed;
-    // public int[] position;
+
 
     public Caracter(String name) {
         this.name = name;
@@ -52,16 +37,7 @@ public abstract class Caracter {
         this.pickSuffix();
         this.setFullName();
         this.considerEquipment();
-        // this.level = 1;
-        // this.experience = 0;
-        // this.education = 5;
-        // this.agility = 5;
-        // this.withdom = 5;
-        // this.strength = 5;
-        // this.stamina = 5;
-        // this.gold = 0;
-        // this.status = new String[0];
-        // this.speed = 5;
+
     }
     public Caracter (int num ) {// god mode
         this.name = "God";
