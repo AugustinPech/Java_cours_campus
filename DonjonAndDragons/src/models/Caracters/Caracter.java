@@ -1,5 +1,8 @@
 package DonjonAndDragons.src.models.Caracters;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import DonjonAndDragons.src.models.Stats;
 import DonjonAndDragons.src.models.Caracters.NPC.NPC;
 import DonjonAndDragons.src.models.Caracters.Player.Player;
@@ -15,12 +18,12 @@ public abstract class Caracter {
     private String type;
     private String caracterClass;
 
-    private Stats stats;
+    protected Stats stats;
+    private Stats baseStats;
     // private int lifePoints;
     // private int armor;
     // private int actions;
     // private int damage;
-    private Stats baseStats;
     private String sprite = "😃";
     private Item[] inventory;
     private Item[] equipment;
@@ -100,24 +103,33 @@ public abstract class Caracter {
         this.setFullName();
     }
 
-    public void attack (Caracter target, Board board) {
+    public Map attack (Caracter target, Board board) {
         int damage = this.stats.getDamage();
-        target.takeDamage(damage);
-        if (this instanceof Player){
-            board.nPCAreOstile();
-        }
+        Map fightOuput = target.takeDamage(damage);
+        fightOuput.put ( "attacking caracter", this.fullName);
+        board.nPCAreOstile();
+        return fightOuput;
     }
 
-    public void takeDamage(int damage ) {
+    public Map takeDamage(int damage ) {
         int armor = this.stats.getArmor();
         int lifePoints = this.stats.getLifePoints();
+        Map<String , String> fightOuput = new HashMap<>();
+        fightOuput. put ("damage inflicted", String.valueOf(damage));
+        fightOuput. put ("armor", String.valueOf(armor));
+        fightOuput. put ("initial life points",String.valueOf(lifePoints));
+        fightOuput.put ("resulting life points", String.valueOf(lifePoints-damage));
+        fightOuput.put ("defending caracter", this.fullName);
         if (armor < damage) {
             damage -= armor;
         } else {
             damage = 0;
         }
+        fightOuput. put ("damage taken", String.valueOf(damage));
         int newLifePoints = lifePoints - damage;
         this.stats.setLifePoints(newLifePoints);
+        this.baseStats.setLifePoints(this.baseStats.getLifePoints()-damage);
+        return fightOuput;
 
     };
 
@@ -165,15 +177,7 @@ public abstract class Caracter {
         }
         this.setStats(stats);
     }
-    public void useItem(int index, Game game) {
-        Item item = this.inventory[index];
-        if (item != null) {
-            Stats itemStats = item.getStats();
-            this.stats = this.stats.merge(itemStats);
-            this.inventory[index] = null;
-            this.considerEquipment();
-        }
-    }
+    
     public void die (Game game) {
         Room room = game.board.getDungeon()[this.position];
         for (Item item : this.inventory) {

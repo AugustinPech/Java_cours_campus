@@ -6,6 +6,7 @@ import DonjonAndDragons.src.models.Game.Board.Room;
 import DonjonAndDragons.src.models.items.Item;
 import DonjonAndDragons.src.views.Ascii;
 
+import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,12 +44,12 @@ public class Menu {
         }
         return answer;
     }
-    public boolean leaveGameMenu() {
+    public String leaveGameMenu() {
         String[] ascii = (Ascii.NegateLetter());
         for (String line : ascii) {
             System.out.println(line);
         } 
-        boolean playerLeavesGame = true;
+        String playerLeavesGame = "leavesGame";
         return playerLeavesGame; 
     }
 
@@ -126,6 +127,7 @@ public class Menu {
         }
         return answer;
     }
+
     public String beginningOfTurnMenu(Player player) {
         String answer = "";
         if (player.getPosition() == 0){
@@ -135,12 +137,14 @@ public class Menu {
                 "What do you wish to do? \n" +
                 "   (M) Move\n"+
                 "   (A) Attack\n"+
-                "   (U) Use item\n"+
+                "   (U) Inventory\n"+
+                "   (E) Equipment\n"+
                 "   (L) Search the room\n"+
                 "   (S) Skip turn\n"+
                 "   (C) See stats\n"+
-                "   (W) Withdraw from the dungeon");
-            answer = regexCheck("^[MAUSLWC]{1}$",this.scanner.nextLine().toUpperCase());
+                "   (W) Withdraw from the dungeon\n"
+            );
+            answer = regexCheck("^[MAUESLWC]{1}$",this.scanner.nextLine().toUpperCase());
         }
         return answer;
     }
@@ -242,19 +246,18 @@ public class Menu {
                 index ++;
             }
             str += " You can not loot a room if it is guarded. \n";
-            this.beginningOfTurnMenu(player);
         } else {
             if (room.getItems() != null) {
-                for (Item item : room.getItems()) {
                     str += "You see the following items in the room : \n";
                     int index = 0;
+                for (Item item : room.getItems()) {
                     str += "   ("+index+")"+item.getName()+"\n";
                     index ++;
                 }
                 str += " Try any number to pick up an item or type : \n";
-                str += "   (B) You changed your mind. (go to previous menu)";
             }
         }
+            str += "   (B) You changed your mind. (go to previous menu)";
         System.out.println(str);
         answer = regexCheck("^[0-9B]{1}$",this.scanner.nextLine().toUpperCase());
         if (answer.contains("Invalid")) {
@@ -277,4 +280,130 @@ public class Menu {
             "________________________________________ROOM_GREAT_MSG_____________________________________\n"
         );
     }
+
+    public String skipTurnMenu(Player player) {
+        String answer = "";
+        System.out.println("You choosed to skip your turn. \n Are you certain ? (Y / n)");
+        answer = regexCheck("^[yn]{0,1}$",this.scanner.nextLine().toLowerCase());
+        if (answer.contains("Invalid")) {
+            System.out.println(answer);
+            return skipTurnMenu( player) ;
+        }
+        return answer;
+    }
+
+    public void fightResultMenu(Map fightOuput) {
+        System.out.println(
+            "___________________________________________________________________________________________\n"+
+            fightOuput.get("attacking caracter") + " attacked " + fightOuput.get("defending caracter") + "\n"+
+            " The fight resulted in : \n"+
+            "   Resulting damages (raw damage -- armor) : "+fightOuput.get("damage taken")+"("+fightOuput.get("damage inflicted")+"--"+fightOuput.get("armor")+")\n"+
+            "   "+fightOuput.get("defending caracter")+" lost "+fightOuput.get("damage taken")+" life points\n"+
+
+            "___________________________________________________________________________________________\n"
+        );
+    }
+
+    public String inventoryMenu(Player player) {
+        String answer = "";
+
+        String str = 
+            "___________________________________________________________________________________________\n"+
+            "You have the following items in your inventory : \n";
+        int index = 0;
+        if (player.getInventory().length!=0){
+            for (Item item : player.getInventory()) {
+                if (item !=null){
+                    str += "   ("+index+") "+ item.getMipple()+" "+item.getName()+"\n";
+                } else {
+                    str += "   ("+index+") "+ "📦 Empty\n";}
+                index ++;
+            }
+        }
+        str+= "    Type any of these numbers if you wish to see more about the given Item\n";
+        str+= "   (E) Manage your equipment\n";
+        str +="   (B) You changed your mind. (go to previous menu)\n"+
+            "___________________________________________________________________________________________\n";
+        System.out.println(str);
+        answer = regexCheck("^[0-9BE]{0,1}$",this.scanner.nextLine().toUpperCase());
+
+        if (answer.contains("Invalid")) {
+                System.out.println(answer);
+                return inventoryMenu(player);
+        }
+
+        return answer;
+    }
+
+    public String itemInIventoryMenu(Player player, int index) {
+        String answer = "";
+
+        String str = "___________________________________________________________________________________________\n";
+        str+= player.getInventory()[index].getStats().toString()+"\n";
+        str +=
+            "   (E) Equip the item\n"+
+            "   (D) Drop the item\n"+
+            "   (U) Use the item\n"+
+            "   (B) You changed your mind. (go to previous menu)\n"+
+            "___________________________________________________________________________________________\n";
+        System.out.println(str);
+        answer = regexCheck("^[EUDB]{0,1}$",this.scanner.nextLine().toUpperCase());
+                if (answer.contains("Invalid")) {
+                System.out.println(answer);
+                return itemInIventoryMenu( player, index);
+        }
+
+        return answer;
+    }
+
+    public String equipmentMenu(Player player) {
+        String answer = "";
+
+        String str = 
+            "___________________________________________________________________________________________\n"+
+            "You have the following items in your equipment : \n";
+        int index = 0;
+        if (player.getEquipment().length!=0){
+            for (Item item : player.getEquipment()) {
+                if (item !=null){
+                    str += "   ("+index+") "+ item.getMipple()+" "+item.getName()+"\n";
+                } else {
+                    str += "   ("+index+") "+ "📦 Empty\n";}
+                index ++;
+            }
+        }
+        str+= "    Type any of these numbers if you wish to see more about the given Item\n";
+        str+= "   (I) Manage your inventory\n";
+        str +="   (B) You changed your mind. (go to previous menu)\n"+
+            "___________________________________________________________________________________________\n";
+        System.out.println(str);
+        answer = regexCheck("^[0-9BI]{0,1}$",this.scanner.nextLine().toUpperCase());
+
+        if (answer.contains("Invalid")) {
+                System.out.println(answer);
+                return equipmentMenu(player);
+        }
+        return answer;
+    }
+
+    public String itemInEquipmentMenu(Player player, Integer index) {
+        String answer = "";
+
+        String str = "___________________________________________________________________________________________\n";
+        str+= player.getEquipment()[index].getStats().toString()+"\n";
+        str +=
+            "   (D) Use the item\n" + 
+            "   (U) Un-equip the item\n"+
+            "   (B) You changed your mind. (go to previous menu)\n"+
+            "___________________________________________________________________________________________\n";
+        System.out.println(str);
+        answer = regexCheck("^[UDB]{0,1}$",this.scanner.nextLine().toUpperCase());
+                if (answer.contains("Invalid")) {
+                System.out.println(answer);
+                return itemInIventoryMenu( player, index);
+        }
+
+        return answer;
+    }
 }
+//item.getStats().toString()+"\n";

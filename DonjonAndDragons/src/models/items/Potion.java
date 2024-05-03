@@ -1,9 +1,9 @@
 package DonjonAndDragons.src.models.items;
 
 import DonjonAndDragons.src.models.Stats;
+import DonjonAndDragons.src.models.Caracters.Player.Player;
 
-public class Potion extends Item {
-
+public class Potion extends Usable {
     public Potion(String name, String potionType) {
         super(name, "Potion");
         switch (potionType) {
@@ -20,6 +20,10 @@ public class Potion extends Item {
                 this.stats= new Stats(0 , armor, 0, 0, 0);
             }
         }
+    }
+    public Item[] use(Player player){
+        player.setStats(player.getStats().merge(this.stats));
+        return null;
     }
 
 }

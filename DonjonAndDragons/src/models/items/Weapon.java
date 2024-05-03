@@ -2,8 +2,10 @@ package DonjonAndDragons.src.models.items;
 
 import DonjonAndDragons.src.models.Stats;
 
-public class Weapon extends Item{
+public class Weapon extends Equipable{
     public Weapon(String caracterClass){
+        super("Basic weapon", "Weapon");
+
         switch (caracterClass) {
             case "Warrior" -> {
                 this.setName("Sword");

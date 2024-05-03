@@ -27,7 +27,7 @@ public class Item {
         this.status = status;
     }
     public String toString(){
-        return this.status + " " + this.name;
+        return "["+this.status+"]" + " " + this.name;
     }
     public int getArmor(){
         return this.stats.getArmor();

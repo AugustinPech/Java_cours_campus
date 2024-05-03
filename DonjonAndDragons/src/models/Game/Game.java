@@ -1,5 +1,7 @@
 package DonjonAndDragons.src.models.Game;
 
+import java.util.Map;
+
 import DonjonAndDragons.src.models.Caracters.Caracter;
 import DonjonAndDragons.src.models.Caracters.NPC.NPC;
 import DonjonAndDragons.src.models.Caracters.Player.Player;
@@ -7,6 +9,7 @@ import DonjonAndDragons.src.models.Caracters.Player.Warrior;
 import DonjonAndDragons.src.models.Caracters.Player.Wizard;
 import DonjonAndDragons.src.models.Game.Board.Board;
 import DonjonAndDragons.src.models.Game.Board.Room;
+import DonjonAndDragons.src.models.items.Item;
 
 public class Game {
     public Player player;
@@ -93,14 +96,17 @@ public class Game {
 
         while (playing) {
             this.menu.upKeepMenu(player, this);
-            playerStillPlaying = this.playerTakesTurn(this.player);
-            this.npcTakesTurn(this.player);
 
+            String str = this.playerTakesTurn(this.player);
+            playerStillPlaying = (str == "stillPlaying");
+            
+            this.npcTakesTurn(this.player);
             totalLife = this.player.getStats().getLifePoints();
             everyBodyIsDead = (totalLife <= 0);
             win = this.isWin();
             
             playing = !everyBodyIsDead && !playerStillPlaying ||  !win;
+
         }
 
         if (everyBodyIsDead) {
@@ -109,27 +115,19 @@ public class Game {
         }
     }
     private void npcTakesTurn(Player player) {
-        for (Room room : this.board.getDungeon()) {
+        Room room = this.board.getDungeon()[player.getPosition()];
             for (NPC npc : room.getNPC()) {
                 if (npc != null && npc.getIsOstile()) {
-                    npc.attack(player, board);
+                    Map fightOuput = npc.attack(player, board);
+                    this.menu.fightResultMenu(fightOuput);
                 }
             }
-        }
+        
     }
-    private boolean isWin() {
-        for (Room room : this.board.getDungeon()) {
-            if (room.getNPC() != null) {
-                return false;
-            }
-        }
-        System.out.println("You have defeated all the enemies and won the game!");
-        return true;
-    }
-    private boolean playerTakesTurn(Player player) {
+    private String playerTakesTurn(Player player) {
         int oldPosition = player.getPosition();
 
-        boolean playerStillPlaying = true;
+        String playerStillPlaying = "stillPlaying";
         
 
         String answer=this.menu.beginningOfTurnMenu(player);
@@ -151,16 +149,19 @@ public class Game {
                     this.caracterFight(player);
                     break;
                 case "U":
-                    //game.playerUseItem(player);
+                    this.inventoryManager();
                     break;
                 case "S":
-                    //this.skipTurnMenu(player);
+                    playerStillPlaying = this.menu.skipTurnMenu(player);
                     break;
                 case "C":
                     this.menu.spriteAndStatsShow(player);
                     break;
                 case "L":
                     this.playerSearchesRoom(player, this.board.getDungeon()[player.getPosition()]);
+                    break;
+                case "E":
+                    this.equipmentManager();
                     break;
                 default:
                     System.out.println("Invalid input: " + answer);
@@ -171,11 +172,91 @@ public class Game {
         }
         return playerStillPlaying;
     }
+    private boolean isWin() {
+        for (Room room : this.board.getDungeon()) {
+            if (room.getNPC() != null) {
+                return false;
+            }
+        }
+        System.out.println("You have defeated all the enemies and won the game!");
+        return true;
+    }
+    private void inventoryManager() {
+        String answer = this.menu.inventoryMenu(this.player);
+        String answer2= "";
+
+        switch (answer) {
+            case "B":
+                this.playerTakesTurn(this.player);
+                break;
+            case "E":
+                this.equipmentManager();
+                break;
+            default:
+                answer2 = this.menu.itemInIventoryMenu(this.player, Integer.valueOf(answer));
+        }
+        switch (answer2) {
+            case "B":
+                this.menu.inventoryMenu(this.player);
+                break;
+            case "D":
+                this.player.dropItem(Integer.valueOf(answer), this.board.getDungeon()[this.player.getPosition()]);
+                break;
+            case "E":
+                this.player.equipItem(Integer.valueOf(answer));
+                break;
+            case "U":
+                Item [] resultOfUse = this.player.useItem(Integer.valueOf(answer), "inventory");
+                if (resultOfUse.length != 0) {
+                    for (Item item : resultOfUse) {
+                        this.board.getDungeon()[this.player.getPosition()].addItem(item);
+                    }
+                }
+                break;
+            default:
+                System.out.println("Invalid input: " + answer2);
+                this.menu.inventoryMenu(this.player);
+        }
+    }
+    private void equipmentManager() {
+        String answer = this.menu.equipmentMenu(this.player);
+        String answer2= "";
+
+        switch (answer) {
+            case "B":
+                this.menu.inventoryMenu(this.player);
+                break;
+            case "I" :
+                this.inventoryManager();
+                break;
+            default:
+                answer2 = this.menu.itemInEquipmentMenu(this.player, Integer.valueOf(answer));
+        }
+        switch (answer2) {
+            case "B":
+                this.menu.equipmentMenu(this.player);
+                break;
+            case "D":
+                Item [] resultOfUse = this.player.useItem(Integer.valueOf(answer), "equipment");
+                if (resultOfUse.length != 0) {
+                    for (Item item : resultOfUse) {
+                        this.board.getDungeon()[this.player.getPosition()].addItem(item);
+                    }
+                }
+            case "U":
+                this.player.unEquip(Integer.valueOf(answer), this.board.getDungeon()[this.player.getPosition()]);
+                break;
+            default:
+                System.out.println("Invalid input: " + answer2);
+                this.menu.equipmentMenu(this.player);
+        }
+        
+    }
     private void playerSearchesRoom(Player player, Room room) {
         String answer = this.menu.searchRoomMenu(player, room);
         switch (answer) {
             case "B":
-                this.menu.beginningOfTurnMenu(player);
+                this.playerTakesTurn(this.player);
                 break;
             default :
                 int index = Integer.parseInt(answer);
@@ -187,12 +268,13 @@ public class Game {
         String answer = this.menu.fightMenu(player, this);
         switch (answer){
             case "B":
-                this.menu.beginningOfTurnMenu(player);
+                this.playerTakesTurn(this.player);
                 break;
             default :
                 int index = Integer.parseInt(answer);
                 NPC npc = this.board.getDungeon()[player.getPosition()].getNPC()[index];
-                player.attack(npc, this.board);
+                Map fightOuput = player.attack(npc, this.board);
+                this.menu.fightResultMenu(fightOuput);
                 if (npc.getStats().getLifePoints() <= 0) {
                     this.menu.dieMenu(npc);
                     npc.die(this);
@@ -213,7 +295,7 @@ public class Game {
                 player.move("backward");
                 break;
             case "B":
-                this.menu.beginningOfTurnMenu(player);
+                this.playerTakesTurn(this.player);
                 break;
             default:
                 System.out.println("Invalid input: " + answer);

@@ -18,6 +18,13 @@ public class Stats {
         Stats result = new Stats(this.lifePoints + stats.lifePoints, this.armor + stats.armor, this.actions + stats.actions, this.damage + stats.damage, this.range + stats.range);
         return result;
     }
+    @Override
+    public String toString() {
+        String str = 
+            "    Life Points: "+this.lifePoints+"    Armor: "+this.armor+"    Actions: "+this.actions+"\n"+
+            "    Damage: "+this.damage+"    Range: "+this.range+"\n";
+        return str;
+    }
     public int getLifePoints() {
         return lifePoints;
     }

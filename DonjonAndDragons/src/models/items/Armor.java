@@ -2,8 +2,14 @@ package DonjonAndDragons.src.models.items;
 
 import DonjonAndDragons.src.models.Stats;
 
-public class Armor extends Item{
+public class Armor extends Equipable{
+    public Armor(String name, String type, int weight, int value,String status, int armor){
+        super(name, type, weight, value, status);
+        this.stats.setArmor(armor);
+    }
     public Armor(String caracterClass){
+        super("Basic Armor", "Armor");
+
         switch (caracterClass) {
             case "Warrior" -> {
                 this.setName("Leather Armor");
@@ -24,9 +30,5 @@ public class Armor extends Item{
                 this.status = "Good old";
             }
         }
-    }
-    public Armor(String name, String type, int weight, int value,String status, int armor){
-        super(name, type, weight, value, status);
-        this.stats.setArmor(armor);
     }
 }
