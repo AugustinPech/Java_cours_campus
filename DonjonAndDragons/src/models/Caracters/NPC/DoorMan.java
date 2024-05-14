@@ -11,7 +11,7 @@ public class DoorMan extends NPC {
             board.getIsOstile(), 
             1
         );
-        this.stats = new Stats(20,0,1,5, 0);
+        this.stats = new Stats(20,0,1,5, 0, 0);
         Item [] inventory = {
             new Item("Key", "Key"),
             new Item("Key", "Key"),

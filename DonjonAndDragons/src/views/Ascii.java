@@ -379,12 +379,12 @@ public class Ascii {
         statsView[11]= "  |   Position: " + caracter.getPosition() ;
         statsView[13]= "  |   Equipement : " ;
         if (caracter.getEquipment()[0] != null) {
-            statsView[14]= "  |      (1) " + caracter.getEquipment()[0].mipple + " " + caracter.getEquipment()[0].toString();
+            statsView[14]= "  |      (1) " + caracter.getEquipment()[0].toString();
         } else {
             statsView[14]= "  |      (1) " + "📦" + " Empty";
         }
         if (caracter.getEquipment()[1] != null) {
-            statsView[15]= "         (2) " + caracter.getEquipment()[1].mipple + " " + caracter.getEquipment()[1].toString();
+            statsView[15]= "         (2) " + caracter.getEquipment()[1].toString();
         } else {
             statsView[15]= "         (2) " + "📦" + " Empty";
         }

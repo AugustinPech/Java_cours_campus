@@ -1,17 +1,17 @@
 package DonjonAndDragons.src.models.Caracters.Player;
 import DonjonAndDragons.src.models.Stats;
+import DonjonAndDragons.src.models.Caracters.interfaces.Fighter;
 import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.models.Game.Exception.InventoryFullException;
 import DonjonAndDragons.src.models.Game.Exception.PlayerIsDeadException;
 import DonjonAndDragons.src.models.items.Armor;
 import DonjonAndDragons.src.models.items.Weapon;
-public class Warrior extends Player{
+public class Warrior extends Player implements Fighter{
     public Warrior(String name, Game game) {
         super(name, game);
         try{
         this.setCaracterClass("Warrior");
-        this.setStats(new Stats(100,1,1,5, 0));
-        this.setType("fighter");
+        this.setStats(new Stats(100,1,1,5,0, 0));
         this.setSprite("🔪");
         this.setFullName();
         Weapon weapon = new Weapon(this.getCaracterClass());

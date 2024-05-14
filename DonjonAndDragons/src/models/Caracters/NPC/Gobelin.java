@@ -15,7 +15,7 @@ public class Gobelin extends NPC {
         this.setSprite("🟢");
         this.setLevel((int) (Math.random()*5+1));
         try {
-            this.setStats(new Stats (3*this.getLevel(), (int) this.getLevel()/2, 1, this.getLevel(), 0));
+            this.setStats(new Stats (3*this.getLevel(), (int) this.getLevel()/2, 1, this.getLevel(), 0, 0));
         } catch (PlayerIsDeadException e){}
         this.equipment[0] = new Weapon("Gobelin");
         this.equipment[1] = new Weapon("Gobelin");
@@ -33,7 +33,7 @@ public class Gobelin extends NPC {
         this.setSprite("🟢");
         this.setLevel(level);
         try {
-            this.setStats(new Stats (2*this.getLevel(), (int) this.getLevel()/2, 1, this.getLevel(), 0));
+            this.setStats(new Stats (2*this.getLevel(), (int) this.getLevel()/2, 1, this.getLevel(), 0, 0));
         } catch (PlayerIsDeadException e){}
         this.equipment[0] = new Weapon("Gobelin");
         this.equipment[1] = new Weapon("Gobelin");

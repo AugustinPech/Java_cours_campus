@@ -6,6 +6,7 @@ import java.util.Map;
 import DonjonAndDragons.src.models.Stats;
 import DonjonAndDragons.src.models.Caracters.NPC.NPC;
 import DonjonAndDragons.src.models.Caracters.Player.Player;
+import DonjonAndDragons.src.models.Caracters.interfaces.SpellCaster;
 import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.models.Game.Board.Board;
 import DonjonAndDragons.src.models.Game.Board.Room;
@@ -20,7 +21,6 @@ public abstract class Caracter {
     private String name;
     private String suffix;
     private String fullName;
-    private String type;
     private String caracterClass;
 
     protected Stats stats;
@@ -36,7 +36,7 @@ public abstract class Caracter {
     public Caracter(String name) {
         try {
         this.name = name;
-        this.stats = new Stats(50,0,1,5, 0);
+        this.stats = new Stats(50,0,1,5,1,0);
         this.inventory = new Item[10];
         this.equipment = new Equipable[2];
         this.position=0;
@@ -50,7 +50,7 @@ public abstract class Caracter {
     public Caracter (int num ) {// god mode
         try {
         this.name = "God";
-        this.stats = new Stats(1000,1000,1000,1000, 1000);
+        this.stats = new Stats(1000,1000,1000,1000,1000, 1000);
         this.inventory = new Item[10];
         this.equipment = new Equipable[2];
         this.equipment[0] = new Weapon("God");
@@ -104,27 +104,41 @@ public abstract class Caracter {
 
     public Map attack (Caracter target, Board board) {
         int damage = this.stats.getDamage();
-        Map fightOuput = target.takeDamage(damage);
+        
+        Map fightOuput = target.takeDamage(damage,false);
         fightOuput.put ( "attacking caracter", this.fullName);
         board.nPCAreOstile();
         return fightOuput;
     }
 
-    public Map takeDamage(int damage ) {
+    public Map takeDamage(int damage, boolean isMagic) {
         int armor = this.stats.getArmor();
         int lifePoints = this.stats.getLifePoints();
+        int magic = this.stats.getMagic();
         Map<String , String> fightOuput = new HashMap<>();
-        fightOuput. put ("damage inflicted", String.valueOf(damage));
-        fightOuput. put ("armor", String.valueOf(armor));
-        fightOuput. put ("initial life points",String.valueOf(lifePoints));
-        fightOuput.put ("resulting life points", String.valueOf(lifePoints-damage));
-        fightOuput.put ("defending caracter", this.fullName);
-        if (armor < damage) {
-            damage -= armor;
+            fightOuput. put ("armor", String.valueOf(armor));
+            fightOuput. put ("initial life points",String.valueOf(lifePoints));
+            fightOuput.put ("defending caracter", this.fullName);
+            fightOuput.put ("magic", String.valueOf(magic));
+        if (isMagic){
+            fightOuput.put ("damage inflicted", String.valueOf(damage));
+            fightOuput.put ("resulting life points", String.valueOf(lifePoints-damage));
+            if (magic < damage) {
+                damage -= magic;
+            } else {
+                damage = 0;
+            }
+            fightOuput.put ("damage taken", String.valueOf(damage));
         } else {
-            damage = 0;
+            fightOuput. put ("damage inflicted", String.valueOf(damage));
+            fightOuput.put ("resulting life points", String.valueOf(lifePoints-damage));
+            if (armor < damage) {
+                damage -= armor;
+            } else {
+                damage = 0;
+            }
+            fightOuput. put ("damage taken", String.valueOf(damage));
         }
-        fightOuput. put ("damage taken", String.valueOf(damage));
         int newLifePoints = lifePoints - damage;
         this.stats.setLifePoints(newLifePoints);
         this.stats.setLifePoints(this.stats.getLifePoints()-damage);
@@ -210,15 +224,11 @@ public abstract class Caracter {
     public String getFullName() {
         return this.fullName;
     }
-    public void setType(String type) {
-        this.type = type;
-    }
+
     public String getCaracterClass() {
         return this.caracterClass;
     }
-    public String getType() {
-        return this.type;
-    }
+
     public String getSprite() {
         return this.sprite;
     }

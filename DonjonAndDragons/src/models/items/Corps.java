@@ -9,7 +9,7 @@ public class Corps extends Usable{
     public Corps (Caracter caracter)  {
         super( caracter.getName()+"'s corps", "corps");
         this.name=caracter.getName();
-        this.stats=new Stats(0,1,0,2,0);
+        this.stats=new Stats(0,1,0,2,0,0);
         this.status = "deadBody";
         this.setMipple("💀");
     }

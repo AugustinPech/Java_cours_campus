@@ -12,18 +12,18 @@ public class Potion extends Usable {
                 int heal = (int) (Math.random()*10 + 10);
                 this.setName("Heal Potion");
                 this.mipple = "♡";
-                this.stats= new Stats(heal , 0, 0, 0, 0);
+                this.stats= new Stats(heal , 0, 0, 0,0, 0);
             }
             case "Protection" -> {
                 this.setName("Protection Potion");
                 this.mipple = "🧪";
                 int armor = (int) (Math.random()*10+5);
-                this.stats= new Stats(0 , armor, 0, 0, 0);
+                this.stats= new Stats(0 , armor, 0, 0, 0, 0);
             }
             default -> {
                 this.setName("Potion");
                 this.mipple = "🧪";
-                this.stats= new Stats(0 , 0, 0, 0, 0);
+                this.stats= new Stats(0 , 0, 0, 0, 0, 0);
             }
         }
     }
@@ -31,14 +31,15 @@ public class Potion extends Usable {
         super ("Potion", "Potion");
         this.setName(this.fakeName(roll, level));
         int points = (int) level+roll/5;
-        Stats stats = new Stats(0,0,0,2,0);
+        Stats stats = new Stats(0,0,0,2,0,0);
         for (int i = 0; i <= points; i++) {
-            int pick = (int) (Math.random()*4);
+            int pick = (int) (Math.random()*5);
             switch (pick) {
                 case 0 -> stats.setArmor(stats.getArmor()+1);
                 case 1 -> stats.setLifePoints(stats.getLifePoints()+1);
                 case 2 -> stats.setDamage(stats.getDamage()+1);
                 case 3 -> stats.setExperience(stats.getExperience()+1);
+                case 4 -> stats.setMagic(stats.getMagic()+1);
             }
             this.setStats(stats);
         }

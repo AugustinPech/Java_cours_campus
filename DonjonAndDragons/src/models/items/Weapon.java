@@ -11,7 +11,7 @@ public class Weapon extends Equipable{
             case "Warrior" -> {
                 this.setName("Sword");
                 this.type = "Weapon";
-                this.stats = new Stats(0, 0, 0, 5, 0);
+                this.stats = new Stats(0, 0, 0, 5,0, 0);
                 this.weight = 5;
                 this.value = 10;
                 this.status = "Good old";
@@ -20,7 +20,7 @@ public class Weapon extends Equipable{
                 this.setName("Staff");
                 this.type = "Weapon";
                 this.mipple = "⚕";
-                this.stats = new Stats(0, 0, 0, 10, 1);
+                this.stats = new Stats(0, 0, 0, 3, 10, 1);
                 this.weight = 3;
                 this.value = 5;
                 this.status = "Good old";
@@ -29,7 +29,7 @@ public class Weapon extends Equipable{
                 this.setName("Protectress of Heaven");
                 this.type = "Weapon";
                 this.mipple = "🌟";
-                this.stats = new Stats(0, 0, 0, 100,0);
+                this.stats = new Stats(0, 0, 0, 100,100,0);
                 this.weight = 0;
                 this.value = 1000;
                 this.status = "Divine";
@@ -38,7 +38,7 @@ public class Weapon extends Equipable{
                 this.setName("Gobelin's dagger");
                 this.type = "Weapon";
                 this.mipple = "🔪";
-                this.stats = new Stats(0, 0, 0, 2, 0);
+                this.stats = new Stats(0, 0, 0, 2,0, 0);
                 this.weight = 1;
                 this.value = 2;
                 this.status = "Rusty";
@@ -47,7 +47,7 @@ public class Weapon extends Equipable{
                 this.setName("Orc's axe");
                 this.type = "Weapon";
                 this.mipple = "🪓";
-                this.stats = new Stats(0, 0, 0, 10, 0);
+                this.stats = new Stats(0, 0, 0, 10, 0,0);
                 this.weight = 10;
                 this.value = 20;
                 this.status = "Rusty";
@@ -55,7 +55,7 @@ public class Weapon extends Equipable{
             case "Guardian" -> {
                 this.setName("Guardian's staff");
                 this.type = "Weapon";
-                this.stats = new Stats(10, 10, 0, 30, 0);
+                this.stats = new Stats(10, 10, 0, 30,30, 0);
                 this.weight = 5;
                 this.value = 10;
                 this.status = "Good old";
@@ -72,15 +72,16 @@ public class Weapon extends Equipable{
         super (roll, level);
         this.setName(this.fakeName(roll, level));
         int points = (int) level+roll/5;
-        Stats stats = new Stats(0,0,0,2,0);
+        Stats stats = new Stats(0,0,0,2,0,0);
         for (int i = 0; i <= points; i++) {
-            int pick = (int) (Math.random()*5);
+            int pick = (int) (Math.random()*6);
             switch (pick) {
                 case 0 -> stats.setDamage(stats.getDamage()+1);
                 case 1 -> stats.setLifePoints(stats.getLifePoints()+1);
                 case 2 -> stats.setArmor(stats.getArmor()+1);
                 case 3 -> stats.setDamage(stats.getDamage()+1);
                 case 4 -> stats.setExperience(stats.getExperience()+1);
+                case 5 -> stats.setMagic(stats.getMagic()+1);
             }
             this.setStats(stats);
         }

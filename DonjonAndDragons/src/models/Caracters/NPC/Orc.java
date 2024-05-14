@@ -1,12 +1,13 @@
 package DonjonAndDragons.src.models.Caracters.NPC;
 
 import DonjonAndDragons.src.models.Stats;
+import DonjonAndDragons.src.models.Caracters.interfaces.Fighter;
 import DonjonAndDragons.src.models.Game.Board.Board;
 import DonjonAndDragons.src.models.Game.Exception.PlayerIsDeadException;
 import DonjonAndDragons.src.models.items.Armor;
 import DonjonAndDragons.src.models.items.Weapon;
 
-public class Orc extends NPC{
+public class Orc extends NPC implements Fighter{
     public Orc(String name, Board board, int position) {
         super(
             name, 
@@ -16,7 +17,7 @@ public class Orc extends NPC{
         this.setSprite("🟠");
         this.setLevel((int) (Math.random()*10+3));
         try {
-            this.setStats(new Stats (5*this.getLevel(), this.getLevel(), 1, this.getLevel() + 2, 0));
+            this.setStats(new Stats (5*this.getLevel(), this.getLevel(), 1, this.getLevel() + 2,1, 0));
         } catch (PlayerIsDeadException e){}
         this.equipment[0] = new Weapon("Orc");
         this.equipment[1] = new Armor("Orc");
@@ -34,7 +35,7 @@ public class Orc extends NPC{
         this.setSprite("🟠");
         this.setLevel(level);
                 try {
-            this.setStats(new Stats (5*this.getLevel(), this.getLevel(), 1, this.getLevel() + 2, 0));
+            this.setStats(new Stats (5*this.getLevel(), this.getLevel(), 1, this.getLevel() + 2,1, 0));
         } catch (PlayerIsDeadException e){}
         this.equipment[0] = new Weapon("Orc");
         this.equipment[1] = new Armor("Orc");
