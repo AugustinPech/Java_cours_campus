@@ -18,7 +18,7 @@ public class DoorMan extends NPC {
             new Item("Key", "Key"),
             new Item("Key", "Key"),
         };
-        this.equipment=inventory;
+        this.setInventory(inventory);
         this.setSprite( "👮");
     }
 }

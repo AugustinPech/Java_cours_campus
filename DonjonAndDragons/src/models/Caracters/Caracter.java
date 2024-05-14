@@ -5,12 +5,17 @@ import java.util.Map;
 
 import DonjonAndDragons.src.models.Stats;
 import DonjonAndDragons.src.models.Caracters.NPC.NPC;
+import DonjonAndDragons.src.models.Caracters.Player.Player;
 import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.models.Game.Board.Board;
 import DonjonAndDragons.src.models.Game.Board.Room;
 import DonjonAndDragons.src.models.Game.Exception.PlayerIsDeadException;
+import DonjonAndDragons.src.models.items.Armor;
 import DonjonAndDragons.src.models.items.Corps;
+import DonjonAndDragons.src.models.items.Equipable;
 import DonjonAndDragons.src.models.items.Item;
+import DonjonAndDragons.src.models.items.Potion;
+import DonjonAndDragons.src.models.items.Weapon;
 public abstract class Caracter {
     private String name;
     private String suffix;
@@ -19,22 +24,21 @@ public abstract class Caracter {
     private String caracterClass;
 
     protected Stats stats;
-    private Stats baseStats;
 
     private String sprite = "😃";
     private Item[] inventory;
-    protected Item[] equipment;
+    protected Equipable[] equipment;
     private int actionsLeft;
     private int position;
+    private int level=0;
 
 
     public Caracter(String name) {
         try {
         this.name = name;
-        this.baseStats = new Stats(50,0,1,5, 0);
-        this.stats=this.baseStats;
+        this.stats = new Stats(50,0,1,5, 0);
         this.inventory = new Item[10];
-        this.equipment = new Item[2];
+        this.equipment = new Equipable[2];
         this.position=0;
         this.pickSuffix();
         this.setFullName();
@@ -46,11 +50,23 @@ public abstract class Caracter {
     public Caracter (int num ) {// god mode
         try {
         this.name = "God";
-        this.baseStats = new Stats(1000,1000,1000,1000, 1000);
-        this.stats=this.baseStats;
+        this.stats = new Stats(1000,1000,1000,1000, 1000);
         this.inventory = new Item[10];
-        this.equipment = new Item[2];
+        this.equipment = new Equipable[2];
+        this.equipment[0] = new Weapon("God");
+        this.equipment[1] = new Armor("God");
+        this.inventory[0] = new Potion("Heal Potion", "Health");
+        this.inventory[1] = new Potion("Heal Potion", "Health");
+        this.inventory[2] = new Potion("Protection Potion", "Protection");
+        this.inventory[3] = new Potion("Protection Potion", "Protection");
+        this.inventory[4] = new Potion("Protection Potion", "Protection");
+        this.inventory[5] = new Potion("Protection Potion", "Protection");
+        this.inventory[6] = new Potion("Protection Potion", "Protection");
+        this.inventory[7] = new Potion("Protection Potion", "Protection");
+        this.inventory[8] = new Potion("Protection Potion", "Protection");
+        this.inventory[9] = new Potion("Protection Potion", "Protection");
         this.position=0;
+        this.setCaracterClass("God");
         this.pickSuffix();
         this.setFullName();
         this.considerEquipment();
@@ -111,7 +127,7 @@ public abstract class Caracter {
         fightOuput. put ("damage taken", String.valueOf(damage));
         int newLifePoints = lifePoints - damage;
         this.stats.setLifePoints(newLifePoints);
-        this.baseStats.setLifePoints(this.baseStats.getLifePoints()-damage);
+        this.stats.setLifePoints(this.stats.getLifePoints()-damage);
         return fightOuput;
 
     };
@@ -148,11 +164,18 @@ public abstract class Caracter {
         this.actionsLeft += n;
     }
     public void considerEquipment() throws PlayerIsDeadException {
-        Stats baseStats = this.getBaseStats(); 
-        this.setStats(baseStats);
-        Stats stats = baseStats;
-        for (Item item : this.equipment) {
+        Stats previousStats = this.getStats();
+        for (Equipable item : this.equipment) {
+            if (item != null && item.getIsEquiped()) {
+                item.setIsEquiped(false);
+                Stats itemStats = item.getStats();
+                previousStats = previousStats.detach(itemStats);
+            }
+        }
+        Stats stats = previousStats;
+        for (Equipable item : this.equipment) {
             if (item != null) {
+                item.setIsEquiped(true);
                 Stats itemStats = item.getStats();
 
                 stats=stats.merge(itemStats);
@@ -161,8 +184,7 @@ public abstract class Caracter {
         this.setStats(stats);
     }
     
-    public void die (Game game) {
-        Room room = game.board.getDungeon()[this.position];
+    public void die (Room room, Player player) {
         for (Item item : this.inventory) {
             if (item !=null) {
                 room.addItem(item);
@@ -177,6 +199,9 @@ public abstract class Caracter {
         room.addItem(corps);
         if (this instanceof NPC) {   
             room.removeNPC((NPC) this);
+            Stats stats = player.getStats();
+            stats.setExperience(stats.getExperience()+((NPC)this).getLevel());
+            player.setStats(stats);
         }
     }
     public String getName() {
@@ -206,7 +231,7 @@ public abstract class Caracter {
     public Item[] getInventory() {
         return this.inventory;
     }
-    public Item[] getEquipment() {
+    public Equipable[] getEquipment() {
         return this.equipment;
     }
     public void setActionsLeft(int actionsLeft) {
@@ -219,7 +244,7 @@ public abstract class Caracter {
     public void setInventory(Item[] inventory) {
         this.inventory = inventory;
     }
-    public void setEquipment(Item[] equipment) {
+    public void setEquipment(Equipable[] equipment) {
         this.equipment = equipment;
     }
     public void setCaracterClass(String caracterClass) {
@@ -240,10 +265,11 @@ public abstract class Caracter {
     public Stats getStats() {
         return this.stats;
     }   
-    public void setBaseStats(Stats baseStats) {
-        this.baseStats = baseStats;
+    public void setLevel(int level) {
+        this.level = level;
     }
-    public Stats getBaseStats() {
-        return this.baseStats;
+    public int getLevel() {
+        return this.level;
     }
+
 }

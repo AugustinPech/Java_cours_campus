@@ -1,21 +1,25 @@
 package DonjonAndDragons.src.models.Game.Board;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import DonjonAndDragons.src.models.Caracters.NPC.Gobelin;
 import DonjonAndDragons.src.models.Caracters.NPC.NPC;
 import DonjonAndDragons.src.models.Caracters.NPC.Orc;
+import DonjonAndDragons.src.models.Caracters.Player.Player;
 import DonjonAndDragons.src.models.Game.Game;
+import DonjonAndDragons.src.models.items.Armor;
 import DonjonAndDragons.src.models.items.Item;
 import DonjonAndDragons.src.models.items.Potion;
+import DonjonAndDragons.src.models.items.Weapon;
 
 public class Board {
     private int size;
     private Room[] dungeon;
     private Boolean isOstile = false;
 
-    public Board(int size, Game game){
+    public Board(int size){
         this.size = size;
         this.dungeon = new Room[this.size];
         
@@ -23,7 +27,9 @@ public class Board {
                     this.dungeon[i] = new Room();
         }
     }
-    public void setDungeon(Game game){
+
+
+    public void setDungeon(){
         int heart = size-1;
         int boss = size-2;
         this.dungeon[0] = new DoorStep (this);
@@ -66,24 +72,38 @@ public class Board {
         }
     }
 
-    public void generateRoomContent(Game game, int role) {
-        int position = game.player.getPosition();
+    public void generateRoomContent(Player player, int roll) {
+        int position = player.getPosition();
         Room nextRoom = this.dungeon[position+1];
+        ArrayList<NPC> npcs = new ArrayList<NPC>();
+        ArrayList<Item> items = new ArrayList<Item>();
         if (position < this.size-2){
-            if (role <50){
-                NPC[] npcs= {new Gobelin("Gobelin", this, position+1)};
-                nextRoom.setNPC(npcs);
+            if (roll <25){
+                npcs.add(new Gobelin("Gobelin", this, position+1));
+            } else if (roll <50){
+                npcs.add(new Orc("Orc", this, position+1));
+            } else if (roll <75){
+                items.add(new Potion("Potion of Healing", "Health"));
+                items.add(new Potion("Elixir of Protection", "Protection"));
+            } else {
+                for (int i = 0 ; i < player.getLevel()+1; i++){
+                    Weapon weapon = new Weapon (roll, player.getLevel()+2);
+                    Armor armor = new Armor (roll, player.getLevel()+2);
+                    Potion potion = new Potion (roll, player.getLevel()+2);
+                    if (roll%3==0) {
+                        items.add(weapon);
+                    } else if (roll%3==1) {
+                        items.add(armor);
+                    } else {
+                        items.add(potion);
+                    }
+                }
             }
-            if (role >=50 && role <75){
-                NPC[] npcs= {new Orc("Orc", this, position+1)};
-                nextRoom.setNPC(npcs);
+            for (Item item : items) {
+                nextRoom.addItem(item);
             }
-            if (role >=75){
-                Item [] items= {
-                    new Potion("Potion of Healing", "Health"),
-                    new Potion("Elixir of Protection", "Protection")
-                    };
-                nextRoom.setItems(items);
+            for (NPC npc : npcs) {
+                nextRoom.addNPC(npc);
             }
         }
     }

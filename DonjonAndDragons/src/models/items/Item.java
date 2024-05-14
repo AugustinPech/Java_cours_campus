@@ -1,6 +1,7 @@
 package DonjonAndDragons.src.models.items;
 
 import DonjonAndDragons.src.models.Stats;
+import DonjonAndDragons.src.models.Caracters.Caracter;
 
 public class Item {
     private String name;
@@ -11,6 +12,9 @@ public class Item {
     protected Stats stats= new Stats (0,0,0,0,0);
     public String mipple = "📦";
     public Item (){
+        // Works with subClasses
+    }
+    public Item (int roll){
         // Works with subClasses
     }
     public Item(String name, String type){
@@ -26,8 +30,9 @@ public class Item {
         this.value = value;
         this.status = status;
     }
+    
     public String toString(){
-        return "["+this.status+"]" + " " + this.name;
+        return " " + this.name;
     }
     public int getArmor(){
         return this.stats.getArmor();

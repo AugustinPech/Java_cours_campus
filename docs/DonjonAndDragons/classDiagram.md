@@ -36,13 +36,13 @@ classDiagram
     Equipable <|-- Armor
     Usable <|-- Potion
     Usable <|-- Insides
+    Usable <|-- Corps
     class Item {
         -stats [Stats]   
     }
     class Weapon {
     }
     class Armor{
-        +armor
     }
     class Usable {
         [abstract] use()

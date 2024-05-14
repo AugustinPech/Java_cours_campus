@@ -1,4 +1,6 @@
 package DonjonAndDragons.src.models.Game.Board;
+import java.util.ArrayList;
+
 import DonjonAndDragons.src.models.Caracters.Caracter;
 import DonjonAndDragons.src.models.Caracters.NPC.NPC;
 import DonjonAndDragons.src.models.Caracters.Player.Player;
@@ -60,7 +62,7 @@ public class Room {
     public String great(){
         return (this.greatMsg);
     }
-    public void addNPC(NPC npc, Game game){
+    public void addNPC(NPC npc){
         NPC[] newNPCs = new NPC[this.npcs.length+1];
         for (int i = 0; i < this.npcs.length; i++) {
             newNPCs[i] = this.npcs[i];
@@ -115,6 +117,10 @@ public class Room {
     }
     public void setNPC(NPC[] npcs) {
         this.npcs = npcs;
+    }
+    public void NPCfromList(ArrayList<NPC> npcs){
+        NPC[] npc = new NPC[npcs.size()];
+        this.setNPC(npc);
     }
     public String[] getAscii(){
         return this.ascii;

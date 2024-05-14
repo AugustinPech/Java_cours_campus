@@ -18,13 +18,27 @@ public class Menu {
     public Menu() {
         this.scanner = new Scanner(System.in);
     }
+    public String chooseDifficultyMenu(){
+        System.out.println(
+            "Choose the difficulty of the game by typing : \n"+
+            "(1) if you are new and want to play the tutorial\n"+
+            "(2) if you know the game but don't want to bother with hard stuff\n"+
+            "(3) if you are a challenger and want to test your skills\n"
+        );
+        String answer = regexCheck("^[123]{1}$",this.scanner.nextLine().toUpperCase());
+        if (answer.contains("Invalid")) {
+            System.out.println(answer);
+            return chooseDifficultyMenu();
+        }
+        return answer;
 
-    public String startMenu(Game game, User user){
+    }
+    public String startMenu(User user){
         String[] ascii = (Ascii.printTitle());
         for (String line : ascii) {
             System.out.println(line);
         }
-        String answer = this.wantToPlay(game);
+        String answer = this.wantToPlay();
         return answer;
     }
     public String regexCheck (String regex, String answer) {
@@ -36,12 +50,12 @@ public class Menu {
         }
         return answer;
     }
-    public String wantToPlay(Game game){
+    public String wantToPlay(){
         System.out.println("Do you want to join the adventure? (Y / n)");
-        String answer = regexCheck("^[yn]{0,1}$",this.scanner.nextLine().toLowerCase()); // fix regex
+        String answer = regexCheck("^[yn]{0,1}$",this.scanner.nextLine().toLowerCase());
         if (answer.contains("Invalid")) {
             System.out.println(answer);
-            return wantToPlay(game);
+            return wantToPlay();
         }
         return answer;
     }
@@ -129,13 +143,13 @@ public class Menu {
         return answer;
     }
 
-    public String beginningOfTurnMenu(Player player) {
+    public String beginningOfTurnMenu(Player player, int turnNumber) {
         String answer = "";
         if (player.getPosition() == 0){
             answer = this.doorStepMenu(player);
         } else {
             System.out.println( 
-                "What do you wish to do? \n" +
+                "What do you wish to do?                                turn n°: " + turnNumber+ "\n" +
                 "   (M) Move\n"+
                 "   (A) Attack\n"+
                 "   (U) Inventory\n"+
@@ -157,38 +171,46 @@ public class Menu {
         }
     }
 
-    public String gameOverMenu(Game game) {
+    public String gameOverMenu() {
         String answer = "";
         String[] ascii = (Ascii.gameOver());
         for (String line : ascii) {
             System.out.println(line);
         }
-        answer = this.wantToPlay(game);
+        answer = regexCheck("^[yn]{0,1}$", this.wantToPlay().toLowerCase());
+        if (answer.contains("Invalid")) {
+            System.out.println(answer);
+            return gameOverMenu();
+        }
         return answer;
     }
 
-    public String fightMenu(Player player, Game game) {
-        String answer = "";
-        String[] ascii = (Ascii.fight());
-        for (String line : ascii) {
-            System.out.println(line);
+    public String fightMenu(Player player, Room room) {
+        try {
+            String answer = "";
+            String[] ascii = (Ascii.fight());
+            for (String line : ascii) {
+                System.out.println(line);
+            }
+            String str = 
+                "You are in "+room.getName()+"\n"+
+                "You can attack eather of these targets : \n";
+            int index = 0;
+            for (Caracter caracter : room.getNPC()) {
+                str += "   ("+index+")"+caracter.getFullName()+"\n";
+                index ++;
+            }
+            str += "   (B) You changed your mind. (go to previous menu)";
+            System.out.println(str);
+            answer = regexCheck("^[0-9B]{1}$",this.scanner.nextLine().toUpperCase());
+            if (answer.contains("Invalid")){
+                throw new Exception(answer);
+            }
+            return answer;
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            return fightMenu(player, room);
         }
-        String str = 
-            "You are in"+game.board.getDungeon()[player.getPosition()]+"\n"+
-            "You can attack eather of these targets : \n";
-        int index = 0;
-        for (Caracter caracter : game.board.getDungeon()[player.getPosition()].getNPC()) {
-            str += "   ("+index+")"+caracter.getFullName()+"\n";
-            index ++;
-        }
-        str += "   (B) You changed your mind. (go to previous menu)";
-        System.out.println(str);
-        answer = regexCheck("^[0-9B]{1}$",this.scanner.nextLine().toUpperCase());
-        if (answer.contains("Invalid")) {
-                System.out.println(answer);
-                return fightMenu(player, game);
-        }
-        return answer;
     }
 
     public String moveMenu(Player player, Game game) {
@@ -198,7 +220,7 @@ public class Menu {
                         "   (N) Got to next room : "+game.board.getDungeon()[player.getPosition()+1].getName()+"\n"+
                         "\n"+
                         "   (B) You changed your mind. (go to previous menu)");
-            answer = regexCheck("^[AE]{1}$",this.scanner.nextLine().toUpperCase());
+            answer = regexCheck("^[NB]{1}$",this.scanner.nextLine().toUpperCase());
             if (answer.contains("Invalid")) {
                 System.out.println(answer);
                 return moveMenu(player, game);
@@ -208,15 +230,15 @@ public class Menu {
                         "\n"+
                         "   (P) Got to previous room: "+game.board.getDungeon()[player.getPosition()-1].getName()+"\n"+
                         "   (B) You changed your mind. (go to previous menu)");
-            answer = regexCheck("^[ZE]{1}$",this.scanner.nextLine().toUpperCase());
+            answer = regexCheck("^[PB]{1}$",this.scanner.nextLine().toUpperCase());
             if (answer.contains("Invalid")) {
                 System.out.println(answer);
                 return moveMenu(player, game);
             }
         } else {
             System.out.println( "Where do you want to go?\n"+
-                    "   (N) Got to next room : "+game.board.getDungeon()[player.getPosition()-1].getName()+"\n"+
-                    "   (P) Got to previous room: "+game.board.getDungeon()[player.getPosition()+1].getName()+"\n"+
+                    "   (N) Got to next room : "+game.board.getDungeon()[player.getPosition()+1].getName()+"\n"+
+                    "   (P) Got to previous room: "+game.board.getDungeon()[player.getPosition()-1].getName()+"\n"+
                     "   (B) You changed your mind. (go to previous menu)");
             answer = regexCheck("^[NPB]{1}$",this.scanner.nextLine().toUpperCase());
             if (answer.contains("Invalid")) {
@@ -237,35 +259,39 @@ public class Menu {
     }
 
     public String searchRoomMenu(Player player, Room room) {
-        String answer ="";
-        String str = "You are in "+room.getName()+"\n";
-        if (room.getNPC().length > 0) {
-            str += "You see the following characters in the room : \n";
-            int index = 0;
-            for (NPC npc : room.getNPC()) {
-                str += "      "+npc.getFullName()+"\n";
-                index ++;
-            }
-            str += " You can not loot a room if it is guarded. \n";
-        } else {
-            if (room.getItems() != null) {
-                    str += "You see the following items in the room : \n";
-                    int index = 0;
-                for (Item item : room.getItems()) {
-                    str += "   ("+index+")"+item.getName()+"\n";
+        try {
+            String answer ="";
+            String str = "You are in "+room.getName()+"\n";
+            if (room.getNPC().length > 0) {
+                str += "You see the following characters in the room : \n";
+                int index = 0;
+                for (NPC npc : room.getNPC()) {
+                    str += "      "+npc.getFullName()+"\n";
                     index ++;
                 }
-                str += " Try any number to pick up an item or type : \n";
+                str += " You can not loot a room if it is guarded. \n";
+            } else {
+                if (room.getItems() != null) {
+                        str += "You see the following items in the room : \n";
+                        int index = 0;
+                    for (Item item : room.getItems()) {
+                        str += "   ("+index+")"+item.getName()+"\n";
+                        index ++;
+                    }
+                    str += " Try any number to pick up an item or type : \n";
+                }
             }
+                str += "   (B) You changed your mind. (go to previous menu)";
+            System.out.println(str);
+            answer = regexCheck("^[0-9B]{1}$",this.scanner.nextLine().toUpperCase());
+            if (answer.contains("Invalid")){
+                    throw new Exception(answer);
+            }
+            return answer;
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            return searchRoomMenu(player, room);
         }
-            str += "   (B) You changed your mind. (go to previous menu)";
-        System.out.println(str);
-        answer = regexCheck("^[0-9B]{1}$",this.scanner.nextLine().toUpperCase());
-        if (answer.contains("Invalid")) {
-                System.out.println(answer);
-                return searchRoomMenu(player, room);
-        }
-        return answer;
     }
 
     public void enterRoomMenu(Room room) {
@@ -341,6 +367,16 @@ public class Menu {
 
         String str = "___________________________________________________________________________________________\n";
         str+= player.getInventory()[index].getStats().toString()+"\n";
+        str+=        "In your equipment now : \n";
+        if (player.getEquipment().length!=0){
+            for (Item item : player.getEquipment()) {
+                if (item !=null){
+                    str += "   "+ item.getMipple()+" "+item.getName()+"\n";
+                    str+= item.getStats().toString()+"\n";
+                } else {
+                    str += "   "+"📦 Empty\n";}
+            }
+        }
         str +=
             "   (E) Equip the item\n"+
             "   (D) Drop the item\n"+
@@ -393,7 +429,6 @@ public class Menu {
         String str = "___________________________________________________________________________________________\n";
         str+= player.getEquipment()[index].getStats().toString()+"\n";
         str +=
-            "   (D) Use the item\n" + 
             "   (U) Un-equip the item\n"+
             "   (B) You changed your mind. (go to previous menu)\n"+
             "___________________________________________________________________________________________\n";
@@ -410,5 +445,40 @@ public class Menu {
     public void exceptionMenu(Exception e) {
         System.out.println(e.getMessage());
     }
+    public void levelUpMenu(Player player) {
+        System.out.println(
+            "___________________________________________________________________________________________\n"+
+            "Congratulations "+player.getFullName()+" you have leveled up!\n"+
+            "You are now level "+player.getLevel()+"\n"+
+            "___________________________________________________________________________________________\n"
+        );
+    }
+    public void noOneToFightMenu() {
+        System.out.println(
+            "___________________________________________________________________________________________\n"+
+            "There is no one to fight in this room\n"+
+            "___________________________________________________________________________________________\n"
+        );
+    }
+    public void noSuchItemMenu() {
+        System.out.println(
+            "___________________________________________________________________________________________\n"+
+            "There is no such item in this room\n"+
+            "___________________________________________________________________________________________\n"
+        );
+    }
+    public void noSuchEnemy() {
+        System.out.println(
+            "___________________________________________________________________________________________\n"+
+            "There is no such enemy in this room\n"+
+            "___________________________________________________________________________________________\n"
+        );
+    }
+    public void winMenu() {
+        System.out.println(
+            "___________________________________________________________________________________________\n"+
+            "Congratulations! You have won the game!\n"+
+            "___________________________________________________________________________________________\n"
+        );
+    }
 }
-//item.getStats().toString()+"\n";

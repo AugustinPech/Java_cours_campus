@@ -1,6 +1,7 @@
 package DonjonAndDragons.src.models.Caracters.Player;
 import DonjonAndDragons.src.models.Stats;
 import DonjonAndDragons.src.models.Game.Game;
+import DonjonAndDragons.src.models.Game.Exception.InventoryFullException;
 import DonjonAndDragons.src.models.Game.Exception.PlayerIsDeadException;
 import DonjonAndDragons.src.models.items.Armor;
 import DonjonAndDragons.src.models.items.Weapon;
@@ -9,7 +10,7 @@ public class Warrior extends Player{
         super(name, game);
         try{
         this.setCaracterClass("Warrior");
-        this.setBaseStats(new Stats(100,1,1,5, 0));
+        this.setStats(new Stats(100,1,1,5, 0));
         this.setType("fighter");
         this.setSprite("🔪");
         this.setFullName();
@@ -26,10 +27,21 @@ public class Warrior extends Player{
         }
         this.considerEquipment();
         } catch (PlayerIsDeadException e) {
+        }catch (InventoryFullException e){
         }
     }
     public Warrior(int num) {//god mode
     super (num);
     this.setCaracterClass("Warrior");
+    }
+    public void levelUp() {
+        this.setLevel(this.getLevel()+1);
+        this.getStats().setLifePoints(this.getStats().getLifePoints()+10);
+        this.getStats().setDamage(this.getStats().getDamage()+1);
+        this.getStats().setArmor(this.getStats().getArmor()+2);
+        this.getStats().setExperience(this.getStats().getExperience()-10);
+        if (this.getStats().getExperience() >=10) {
+            this.levelUp();
+        }
     }
 }

@@ -3,6 +3,8 @@ import DonjonAndDragons.src.models.Stats;
 import DonjonAndDragons.src.models.Caracters.Caracter;
 import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.models.Game.Board.Room;
+import DonjonAndDragons.src.models.Game.Exception.EquipmentFullException;
+import DonjonAndDragons.src.models.Game.Exception.InventoryFullException;
 import DonjonAndDragons.src.models.Game.Exception.NotEquipableException;
 import DonjonAndDragons.src.models.Game.Exception.NotUseAbleException;
 import DonjonAndDragons.src.models.Game.Exception.PlayerIsDeadException;
@@ -16,100 +18,94 @@ public abstract class Player extends Caracter{
     public Player (int num){//god mode
         super(num);
     }
-    public void addItem(Item item) {
-        int index = 0;
-        Item [] inventory = this.getInventory();
-        while (inventory[index] != null) {
-            index++;
-        }
-        if (index < inventory.length) {
-            inventory[index] = item;
-            this.setInventory(inventory);
+    public void addItem(Item item) throws InventoryFullException{
+        try {
+            int index = 0;
+            Item [] inventory = this.getInventory();
+            while (inventory[index] != null) {
+                index++;
+            }
+            if (index < inventory.length) {
+                inventory[index] = item;
+                this.setInventory(inventory);
+            }
+        } catch (Exception e) {
+            throw new InventoryFullException();
         }
     }
 
-    public void equipItem(int indexOfInventoryItem) throws NotEquipableException, PlayerIsDeadException {
+    public void equipItem(int indexOfInventoryItem) throws NotEquipableException, PlayerIsDeadException, EquipmentFullException {
         int index = 0;
-        Item [] equipment = this.getEquipment();
+        Equipable [] equipment = this.getEquipment();
         Item [] inventory = this.getInventory();
         while (equipment[index] != null) {
             index++;
+            if (index >= equipment.length) {
+                throw new EquipmentFullException();
+            }
         }
         if (!(inventory[indexOfInventoryItem] instanceof Equipable)) {
             throw new NotEquipableException();
         }
         if (index <= equipment.length) {
-        equipment[index] = inventory[indexOfInventoryItem];
+        equipment[index] = (Equipable) inventory[indexOfInventoryItem];
         inventory[indexOfInventoryItem] = null;
         }
         this.setEquipment(equipment);
         this.setInventory(inventory);
-        
         this.considerEquipment();
     }
     public void dropItem(int indexOfInventoryItem, Room room) throws PlayerIsDeadException {
         Item [] initialInventory = this.getInventory();
+        if (initialInventory[indexOfInventoryItem] instanceof Equipable){
+            Equipable item = (Equipable) initialInventory[indexOfInventoryItem];
+            if (item.getIsEquiped()){
+                item.setIsEquiped(false);
+            }
+        }
         room.addItem(initialInventory[indexOfInventoryItem]);
         initialInventory[indexOfInventoryItem] = null;
-        Item [] inventory = new Item[this.getInventory().length];
-        for (int i = 0; i < inventory.length; i++) {
+        Item [] inventory = initialInventory;
+        this.setInventory(inventory);
+        this.considerEquipment();
+    }
+    public void unEquip(Integer valueOf, Room room) throws PlayerIsDeadException, InventoryFullException {
+        try {
+            Equipable [] equipment = this.getEquipment();
+            Item [] inventory = this.getInventory();
+            Equipable item = equipment[valueOf];
             int index = 0;
-            if (initialInventory[i] != null){
-                inventory[index] = initialInventory[i];
-            }else {
+            while (inventory[index] != null) {
                 index++;
             }
+            if (index < inventory.length) {
+                equipment[valueOf].setIsEquiped(false);
+                inventory[index] = equipment[valueOf];
+                equipment[valueOf] = null;
+            }
+            this.setStats(this.getStats().detach(item.getStats())); 
+            this.setEquipment(equipment);
+            this.setInventory(inventory);
+        } catch (Exception e) {
+            throw new InventoryFullException();
         }
-        this.setInventory(inventory);
-        this.considerEquipment();
     }
-    public void unEquip(Integer valueOf, Room room) throws PlayerIsDeadException {
-
-        Item [] equipment = this.getEquipment();
-        Item [] inventory = this.getInventory();
-        
-        int index = 0;
-        while (inventory[index] != null) {
-            index++;
-        }
-        if (index < inventory.length) {
-            inventory[index] = equipment[valueOf];
-            equipment[valueOf] = null;
-        }
-        this.setEquipment(equipment);
-        this.setInventory(inventory);
-        this.considerEquipment();
-    }
-    public Item[] useItem(int index, String EqOrIn) throws NotUseAbleException, PlayerIsDeadException{
+    public Item[] useItem(int index) throws NotUseAbleException, PlayerIsDeadException{
             Item[] inventory = this.getInventory();
-            Item[] equipment = this.getEquipment();
-            
             Item[] output= new Item[0];
             Stats stats = this.getStats();
-
-            if (EqOrIn.equals("inventory")) {
-                Usable item = (Usable) inventory[index];
-                if (!(item instanceof Usable)) {
-                    throw new NotUseAbleException();
-                }
-                output= item.use(this);
-                inventory[index] = null;
-
-            } else if (EqOrIn.equals("equipment")) {
-            
-                Usable item = (Usable) equipment[index];
-                if (!(item instanceof Usable)) {
-                    throw new NotUseAbleException();
-                }
-                output= item.use(this);
-                equipment[index] = null;
+            Item item = (Item) inventory[index];
+            if (!(item instanceof Usable)) {
+                throw new NotUseAbleException();
             }
-
+            Usable usable = (Usable) item;
+            stats = (stats.merge(item.getStats()));
+            output = usable.use(this);
+            inventory[index] = null;
             this.setStats(stats);
             this.setInventory(inventory);
-            this.setEquipment(equipment);
             this.considerEquipment();
-
             return output;
     }
+    abstract public void levelUp();
 }

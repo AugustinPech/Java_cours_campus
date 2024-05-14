@@ -10,4 +10,10 @@ public class Heart extends Room {
         this.setNPC(npc);
         this.setGreatMsg("You have reached the heart of the dungeon, the very core of its existence. \n");
     }
+    public Heart(Board board, int level) {
+        this.setName("Heart");
+        NPC[] npc = {new Guardian(board, level)};
+        this.setNPC(npc);
+        this.setGreatMsg("You have reached the heart of the dungeon, the very core of its existence. \n");
+    }
 }

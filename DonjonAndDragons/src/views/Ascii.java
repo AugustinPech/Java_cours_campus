@@ -228,9 +228,9 @@ public class Ascii {
             "➖➖➖🟥⬜🟦⬜⬜⬛⬛⬛🟦⬜⬜⬜🟦⬛⬛⬜⬜⬜⬛⬛",
             "➖➖➖➖🟥⬜🟦⬜🟫⬛⬛🟦⬜⬜⬜🟦⬛⬜⬜⬜⬜⬜⬛",
             "➖🟥➖➖➖⬜⬜🟫⬛⬛⬛🟦⬜⬜⬜🟦⬛⬜⬜⬜⬜⬜⬛",
-            "➖🟥➖➖➖➖🟫⬛🟥⬛⬜🟦⬜⬜⬜🟦⬛⬛⬜⬜⬜⬛⬛",
-            "➖➖➖➖➖➖➖⬛⬛⬛⬛🟦⬛⬛⬛🟦⬜⬛⬜⬜⬜⬛➖",
-            "➖➖➖➖🟥➖➖➖➖⬛🟦🟦⬜⬜⬜🟦⬜⬛⬛⬜⬛➖➖",
+            "➖🟥➖➖➖➖🟫⬛🟥⬛⬛🟦⬜⬜⬜🟦⬛⬛⬜⬜⬜⬛⬛",
+            "➖➖➖➖➖➖➖⬛⬛⬛⬛🟦⬛⬛⬛🟦⬛⬛⬜⬜⬜⬛➖",
+            "➖➖➖➖🟥➖➖➖➖⬛🟦🟦⬜⬜⬜🟦🟦⬛⬛⬜⬛➖➖",
             "➖➖➖➖🟥➖➖➖➖➖⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛➖➖",
             "➖➖➖➖➖➖➖➖➖➖⬛⬛⬛➖➖⬛⬛⬛➖➖➖➖➖",
             "➖➖➖➖➖➖➖➖➖➖⬛⬛⬛➖➖⬛⬛⬛➖➖➖➖➖",
@@ -345,29 +345,29 @@ public class Ascii {
     public static String [] caracterStats(Caracter caracter) {
         String[] statsView= {
                 "  ______________________________________________________________" , //0
-                "  |                                                            " ,
-                "  |                                                            " ,
-                "  |                                                            " ,
-                "  |                                                            " ,
-                "  |                                                            " ,// 5
-                "  |                                                            " ,
-                "  |                                                            " ,
-                "  |                       NO                                   " ,//8
-                "  |                                                            " ,  
-                "  |                                                            " ,//10
-                "  |                                                            " ,
-                "  |                                                            " ,
-                "  |                       STATS                                " ,//13
-                "  |                                                            " ,
-                "  |                                                            " ,//15
-                "  |                          SHOWN                             " ,//16
-                "  |                                                            " ,
-                "  |                                                            " ,
-                "  |                               YET                          " ,//19
-                "  |                                                            " ,// 20
-                "  |                                                            " ,
-                "  |                                                            " ,
-                "  |                                                            " ,
+                "  |                                                " ,
+                "  |                                                " ,
+                "  |                                                " ,
+                "  |                                                " ,
+                "  |                                                " ,// 5
+                "  |                                                " ,
+                "  |                                                " ,
+                "  |                                                " ,//8
+                "  |                                                " ,  
+                "  |                                                " ,//10
+                "  |                                                " ,
+                "  |                                                " ,
+                "  |                                                " ,//13
+                "  |                                                " ,
+                "  |                                                " ,//15
+                "  |                                                " ,//16
+                "  |                                                " ,
+                "  |                                                " ,
+                "  |                                                " ,//19
+                "  |                                                " ,// 20
+                "  |                                                " ,
+                "  |                                                " ,
+                "  |                                                " ,
                 "  |____________________________________________________________" ,//23
         };
            
@@ -375,7 +375,7 @@ public class Ascii {
         statsView[5]= "  |   Life Points: " + caracter.getStats().getLifePoints() ;
         statsView[7]= "  |   Armor: " + caracter.getStats().getArmor() + "   Damage: "+ caracter.getStats().getDamage();
         statsView[8]= statsView[12];
-        statsView[9]= "  |   Actions: " + caracter.getActionsLeft() + "   Actions(max): "+ caracter.getStats().getActions();
+        statsView[9]= "  |   Experience to next level: " + (10 - caracter.getStats().getExperience()) + "   Level: "+ caracter.getLevel();
         statsView[11]= "  |   Position: " + caracter.getPosition() ;
         statsView[13]= "  |   Equipement : " ;
         if (caracter.getEquipment()[0] != null) {
@@ -391,21 +391,18 @@ public class Ascii {
         statsView[16]= "  |   Class: " + caracter.getCaracterClass() ;
         statsView[18]= "  |    Inventory : ";
         int index=0;
-        for (int i = 0; i < caracter.getInventory().length; i++) {
-            if (i % 2 ==0){
+        for (int i = 0; i < caracter.getInventory().length-1; i=i+2) {
+                if (caracter.getInventory()[i] == null) {
+                    statsView[19  + index]= "  |      (" + (i + 1) + ") " + "📦" + " Empty";
+                } else {
+                    statsView[19  + index]= "  |      (" + (i + 1) + ") " + caracter.getInventory()[i].mipple + " " + caracter.getInventory()[i].getName();
+                }
+                if (caracter.getInventory()[i+1] == null) {
+                    statsView[19  + index]+= "       (" + (i + 2) + ") " + "📦" + " Empty";
+                } else {
+                    statsView[19  + index]+= "       (" + (i + 2) + ") " + caracter.getInventory()[i+1].mipple + " " + caracter.getInventory()[i+1].getName();
+                }
                 index++;
-                if (caracter.getInventory()[i] == null) {
-                    statsView[18  + index]= "  |      (" + (i + 1) + ") " + "📦" + " Empty";
-                } else {
-                    statsView[18  + index]= "  |      (" + (i + 1) + ") " + caracter.getInventory()[i].mipple + " " + caracter.getInventory()[i].getName();
-                }
-            } else {
-                if (caracter.getInventory()[i] == null) {
-                    statsView[18  + index]+= "       (" + (i + 1) + ") " + "📦" + " Empty";
-                } else {
-                    statsView[18  + index]= "       (" + (i + 1) + ") " + caracter.getInventory()[i].mipple + " " + caracter.getInventory()[i].getName();
-                }
-            }
         }
 
         return statsView;
@@ -441,7 +438,7 @@ public class Ascii {
         String [] str = {
             "|         /\\                                                             /\\         |",
                 "| _       )( ____________________                   ____________________ )(       _ |",
-                "|(_)/////(**)____________________>   FIGHT   <____________________(**)\\\\\\\\\\(_)|" ,
+                "|(_)/////(**)____________________>       FIGHT     <____________________(**)\\\\\\\\\\(_)|" ,
                 "|         )(                                                             )(         |",
                 "|         \\/                                                             \\/         |"
         };
