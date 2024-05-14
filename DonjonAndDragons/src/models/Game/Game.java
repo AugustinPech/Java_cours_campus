@@ -218,9 +218,6 @@ public class Game {
                 case "U":
                     this.inventoryManager();
                     break;
-                case "S":
-                    playerChoice = this.menu.skipTurnMenu(player);
-                    break;
                 case "C":
                     this.menu.spriteAndStatsShow(player);
                     this.playerTakesTurn(player);
@@ -246,36 +243,41 @@ public class Game {
             String answer2= "";
 
             switch (answer) {
-                case "B":
-                    this.playerTakesTurn(this.player);
-                    break;
-                case "E":
-                    this.equipmentManager();
-                    break;
-                default:
-                    answer2 = this.menu.itemInIventoryMenu(this.player, Integer.valueOf(answer));
-            }
-            switch (answer2) {
-                case "B":
-                    this.menu.inventoryMenu(this.player);
-                    break;
-                case "D":
-                    this.player.dropItem(Integer.valueOf(answer), this.board.getDungeon()[this.player.getPosition()]);
-                    break;
-                case "E":
-                    this.player.equipItem(Integer.valueOf(answer));
-                    break;
-                case "U":
-                    Item [] resultOfUse = this.player.useItem(Integer.valueOf(answer));
-                    if (resultOfUse != null) {
-                        for (Item item : resultOfUse) {
-                            this.board.getDungeon()[this.player.getPosition()].addItem(item);
+                    case "B":
+                        this.playerTakesTurn(this.player);
+                        break;
+                    case "E":
+                        this.equipmentManager();
+                        break;
+                    default:
+                        if (this.player.getInventory()[Integer.valueOf(answer)] != null){
+                            answer2 = this.menu.itemInIventoryMenu(this.player, Integer.valueOf(answer));
+                        } else {
+                            this.menu.noSuchItemInInventoryMenu();
+                            this.inventoryManager();
                         }
-                    }
-                    break;
-                default:
-                    System.out.println("Invalid input: " + answer2);
-                    this.menu.inventoryMenu(this.player);
+                switch (answer2) {
+                    case "B":
+                        this.inventoryManager();
+                        break;
+                    case "D":
+                        this.player.dropItem(Integer.valueOf(answer), this.board.getDungeon()[this.player.getPosition()]);
+                        break;
+                    case "E":
+                        this.player.equipItem(Integer.valueOf(answer));
+                        break;
+                    case "U":
+                        Item [] resultOfUse = this.player.useItem(Integer.valueOf(answer));
+                        if (resultOfUse != null) {
+                            for (Item item : resultOfUse) {
+                                this.board.getDungeon()[this.player.getPosition()].addItem(item);
+                            }
+                        }
+                        break;
+                    default:
+                        System.out.println("Invalid input: " + answer2);
+                        this.inventoryManager();
+                }
             }
         } catch (NotEquipableException e) {
             this.menu.exceptionMenu(e);
@@ -295,7 +297,7 @@ public class Game {
 
             switch (answer) {
                 case "B":
-                    this.menu.inventoryMenu(this.player);
+                    this.playerTakesTurn(this.player);
                     break;
                 case "I" :
                     this.inventoryManager();
@@ -305,14 +307,14 @@ public class Game {
             }
             switch (answer2) {
                 case "B":
-                    this.menu.equipmentMenu(this.player);
+                    this.equipmentManager();
                     break;
                 case "U":
                     this.player.unEquip(Integer.valueOf(answer), this.board.getDungeon()[this.player.getPosition()]);
                     break;
                 default:
                     System.out.println("Invalid input: " + answer2);
-                    this.menu.equipmentMenu(this.player);
+                    this.equipmentManager();
             }
         } catch (InventoryFullException e) {
             this.menu.exceptionMenu(e);

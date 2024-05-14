@@ -155,9 +155,9 @@ public class Menu {
                 "   (U) Inventory\n"+
                 "   (E) Equipment\n"+
                 "   (L) Search the room\n"+
-                "   (S) Skip turn\n"+
                 "   (C) See stats\n"+
-                "   (W) Withdraw from the dungeon\n"
+                "   (W) Withdraw from the dungeon\n"+
+                "   (ENTER) Skip turn\n"
             );
             answer = regexCheck("^[MAUESLWC]{1}$",this.scanner.nextLine().toUpperCase());
         }
@@ -202,7 +202,7 @@ public class Menu {
             }
             str += "   (B) You changed your mind. (go to previous menu)";
             System.out.println(str);
-            answer = regexCheck("^[0-9B]{1}$",this.scanner.nextLine().toUpperCase());
+            answer = regexCheck("^[B]{1}|[0-9]{1,2}$",this.scanner.nextLine().toUpperCase());
             if (answer.contains("Invalid")){
                 throw new Exception(answer);
             }
@@ -283,7 +283,7 @@ public class Menu {
             }
                 str += "   (B) You changed your mind. (go to previous menu)";
             System.out.println(str);
-            answer = regexCheck("^[0-9B]{1}$",this.scanner.nextLine().toUpperCase());
+            answer = regexCheck("^[B]{1}|[0-9]{1,2}$",this.scanner.nextLine().toUpperCase());
             if (answer.contains("Invalid")){
                     throw new Exception(answer);
             }
@@ -306,17 +306,6 @@ public class Menu {
             room.great()+"\n"+
             "________________________________________ROOM_GREAT_MSG_____________________________________\n"
         );
-    }
-
-    public String skipTurnMenu(Player player) {
-        String answer = "";
-        System.out.println("You choosed to skip your turn. \n Are you certain ? (Y / n)");
-        answer = regexCheck("^[yn]{0,1}$",this.scanner.nextLine().toLowerCase());
-        if (answer.contains("Invalid")) {
-            System.out.println(answer);
-            return skipTurnMenu( player) ;
-        }
-        return answer;
     }
 
     public void fightResultMenu(Map fightOuput) {
@@ -364,8 +353,8 @@ public class Menu {
 
     public String itemInIventoryMenu(Player player, int index) {
         String answer = "";
-
         String str = "___________________________________________________________________________________________\n";
+        str+= player.getInventory()[index].toString()+"\n";
         str+= player.getInventory()[index].getStats().toString()+"\n";
         str+=        "In your equipment now : \n";
         if (player.getEquipment().length!=0){
@@ -478,6 +467,13 @@ public class Menu {
         System.out.println(
             "___________________________________________________________________________________________\n"+
             "Congratulations! You have won the game!\n"+
+            "___________________________________________________________________________________________\n"
+        );
+    }
+    public void noSuchItemInInventoryMenu() {
+        System.out.println(
+            "___________________________________________________________________________________________\n"+
+            "There is no such item in your inventory\n"+
             "___________________________________________________________________________________________\n"
         );
     }

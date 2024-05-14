@@ -32,7 +32,7 @@ public class Item {
     }
     
     public String toString(){
-        return " " + this.name;
+        return this.mipple + " " + this.name;
     }
     public int getArmor(){
         return this.stats.getArmor();
