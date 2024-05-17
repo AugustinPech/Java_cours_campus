@@ -16,7 +16,7 @@ public class Menu {
     public Menu(InputStream source) {
         this.scanner = new Scanner(source);
     }
-    private String regexCheck(String regex, String answer) throws IllegalArgumentException {
+    public String regexCheck(String regex, String answer) throws IllegalArgumentException {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(answer);
         boolean matchFound = matcher.find();
@@ -86,7 +86,7 @@ public class Menu {
     public void setScanner(Scanner scanner) {
         this.scanner = scanner;
     }
-    public String mainPhasemenu() {
+    public String mainPhaseMenu() {
         try {
             System.out.println(
                 "----------------------------------MAIN-PHASE-----------------------------------------------\n"+
@@ -102,7 +102,7 @@ public class Menu {
             return answer;
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            return mainPhasemenu();
+            return mainPhaseMenu();
         }
     }
     public void caracterSheetMenu(Playable player) {

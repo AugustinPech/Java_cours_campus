@@ -30,4 +30,52 @@ class MenuTests {
         }
     }
     
+    @Test
+    void testChooseCaracterMenu() {
+        InputStream[] in = {
+            new ByteArrayInputStream("1".getBytes()),
+            new ByteArrayInputStream("2\n3".getBytes()),
+            new ByteArrayInputStream("1\n2".getBytes()),
+        };
+        String[] ExpectedOut = {
+            "1",
+            "2",
+            "1"
+        };
+        for (int i =0 ; i < in.length; i++) {
+            Menu menu = new Menu(in[i]);
+            String classRef = menu.chooseCaracterMenu();
+            assertEquals(classRef, ExpectedOut[i]);
+        }
+    }
+    @Test
+    void testRegexCheck() {
+        Menu menu = new Menu(System.in);
+        String regex = "^(?:EASY|MEDIUM|HARD)$";
+        String answer = "EASY";
+        String result = menu.regexCheck(regex, answer);
+        assertEquals(result, answer);
+    }
+    @Test
+    void testMainPhaseMenu(){
+        InputStream[] in = {
+            new ByteArrayInputStream("\n".getBytes()),
+            new ByteArrayInputStream("c\n".getBytes()),
+            new ByteArrayInputStream("i\n".getBytes()),
+            new ByteArrayInputStream("e\n".getBytes()),
+            new ByteArrayInputStream("q\n".getBytes()),
+        };
+        String[] expected = {
+            "",
+            "C",
+            "I",
+            "E",
+            "Q"
+        };
+        for (int i =0 ; i < in.length; i++) {
+            Menu menu = new Menu(in[i]);
+            String result = menu.mainPhaseMenu();
+            assertEquals(result, expected[i]);
+        }
+    }
 }

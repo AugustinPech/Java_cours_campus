@@ -103,7 +103,7 @@ public class Game {
     }
 
     private ArrayList<Caracter> mainPhase(ArrayList<Caracter> whosThere) {
-        String answer = this.menu.mainPhasemenu();
+        String answer = this.menu.mainPhaseMenu();
         switch (answer) {
             case "C":
                 this.menu.caracterSheetMenu(this.player);

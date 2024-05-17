@@ -23,29 +23,29 @@ public class Stats {
             int agility,
             int experience
         ) {
-        this.lifePoints = lifePoints;
         this.staminia = staminia;
         this.strength = strength;
         this.intel = intel;
         this.mental = mental;
         this.experience = experience;
         this.agility = agility;
-        this.armor = ((int) this.staminia/2) >0 ? (int) this.staminia/2 : 0;
+        this.lifePoints = lifePoints;
+        this.armor = (((int) this.staminia/2) >0 ? (int) this.staminia/2 : 0);
         this.initiative = (this.agility - this.armor) > 0 ? this.agility - this.armor : 0;
     }
     
     public Stats merge (Stats stats){
         Stats result = new Stats(
-            this.lifePoints + stats.lifePoints,
-            this.staminia + stats.staminia,
-            this.strength + stats.strength,
-            this.intel + stats.intel,
-            this.mental + stats.mental,
-            this.agility + stats.agility,
-            this.experience + stats.experience
+            (this.lifePoints + stats.lifePoints) > 0 ? this.lifePoints + stats.lifePoints : 0,
+            (this.staminia + stats.staminia) > 0 ? this.staminia + stats.staminia : 0,
+            (this.strength + stats.strength) > 0 ? this.strength + stats.strength : 0,
+            (this.intel + stats.intel) > 0 ? this.intel + stats.intel : 0,
+            (this.mental + stats.mental) > 0 ? this.mental + stats.mental : 0,
+            (this.agility + stats.agility) > 0 ? this.agility + stats.agility : 0,
+            (this.experience + stats.experience) > 0 ? this.experience + stats.experience : 0
         );
-        this.armor = ((int) this.staminia/2) >0 ? (int) this.staminia/2 : 0;
-        this.initiative = (this.agility - this.armor) > 0 ? this.agility - this.armor : 0;
+        this.armor = (((int) this.staminia/2) >0 ? (int) this.staminia/2 : 0)+stats.getArmor();
+        this.initiative = ((this.agility - this.armor) > 0 ? this.agility - this.armor : 0)+stats.getInitiative();
         if (result.experience < 0) {
             result.experience = 0;
         }
@@ -53,26 +53,37 @@ public class Stats {
     }
     public Stats detach(Stats stats){
         Stats result = new Stats(
-            this.lifePoints - stats.lifePoints,
-            this.staminia - stats.staminia,
-            this.strength - stats.strength,
-            this.intel - stats.intel,
-            this.mental - stats.mental,
-            this.agility - stats.agility,
+            (this.lifePoints - stats.lifePoints)>0 ? this.lifePoints - stats.lifePoints : 0,
+            (this.staminia - stats.staminia)>0 ? this.staminia - stats.staminia : 0,
+            (this.strength - stats.strength)>0 ? this.strength - stats.strength : 0,
+            (this.intel - stats.intel)>0 ? this.intel - stats.intel : 0,
+            (this.mental - stats.mental)>0 ? this.mental - stats.mental : 0,
+            (this.agility - stats.agility)>0 ? this.agility - stats.agility : 0,
             this.experience
         );
-        this.armor = ((int) this.staminia/2) >0 ? (int) this.staminia/2 : 0;
-        this.initiative = (this.agility - this.armor) > 0 ? this.agility - this.armor : 0;
+        this.armor = (((int) this.staminia/2) >0 ? (int) this.staminia/2 : 0);
+        this.initiative = ((this.agility - this.armor) > 0 ? this.agility - this.armor : 0);
         if (result.experience < 0) {
             result.experience = 0;
         }
         return result;
     }
+    public void recalculate() {
+        this.armor = (((int) this.staminia/2) >0 ? (int) this.staminia/2 : 0);
+        this.initiative = (this.agility - this.armor) > 0 ? this.agility - this.armor : 0;
+    }
     @Override
     public String toString() {
-        String str = 
-            "    Life Points: "+this.lifePoints+"    Staminia: "+this.staminia+"    Intel: "+this.intel+
-            "    Strength: "+this.strength+"    Experience: "+this.experience+"\n";
+        String str =""
+        +"Life Points: "+this.lifePoints+"\n"
+        +"Staminia: "+this.staminia+"\n"
+        +"Strength: "+this.strength+"\n"
+        +"Intel: "+this.intel+"\n"
+        +"Mental: "+this.mental+"\n"
+        +"Agility: "+this.agility+"\n"
+        +"Experience: "+this.experience+"\n"
+        +"Armor: "+this.armor+"\n"
+        +"Initiative: "+this.initiative+"\n";
         return str;
     }
     public int getLifePoints() {
@@ -86,6 +97,7 @@ public class Stats {
     }
     public void setStaminia(int staminia) {
         this.staminia = staminia;
+        this.setArmor();
     }
     public int getStrength() {
         return strength;
@@ -111,6 +123,7 @@ public class Stats {
 
     public void setAgility(int agility) {
         this.agility = agility;
+        this.setInitiative();
     }
     public int getInitiative() {
         return initiative;
@@ -124,8 +137,8 @@ public class Stats {
         return armor;
     }
 
-    public void setArmor(int armor) {
-        this.armor = armor;
+    public void setArmor() {
+        this.armor = (((int) this.staminia/2) >0 ? (int) this.staminia/2 : 0);
     }
     public int getMental() {
         return mental;

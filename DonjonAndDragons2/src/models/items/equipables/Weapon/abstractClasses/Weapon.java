@@ -8,6 +8,7 @@ import DonjonAndDragons2.src.models.items.equipables.Equipable;
 public abstract class Weapon extends Equipable {
     public Weapon(String name, int level) {
         super(name, level);
+        this.setSprite("⚔️");
     }
 
     public abstract Damage hitWith(Caracter caracter);

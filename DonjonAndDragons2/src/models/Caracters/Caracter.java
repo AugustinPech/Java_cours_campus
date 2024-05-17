@@ -12,7 +12,7 @@ import DonjonAndDragons2.src.models.Game.utilities.status.Status;
 public abstract class Caracter {
     // private Item[] inventory;
     // protected Equipable[] equipment;
-    private ArrayList<Status> status;
+    private ArrayList<Status> statuses;
     private String name;
     private String caracterClass;
     private Stats stats;
@@ -22,25 +22,32 @@ public abstract class Caracter {
 
     public Caracter (int level){
         this.level = level;
-        this.status = new ArrayList<Status>();
+        this.statuses = new ArrayList<Status>();
         this.stats = new Stats(100, 0, 5, 5, 5, 5, 0);
     }
     public Caracter (String name){
         this.name = name;
         this.level = 0;
-        this.status = new ArrayList<Status>();
+        this.statuses = new ArrayList<Status>();
         this.stats = new Stats(100, 0, 5, 5, 5, 5, 0);
     }
 
-    public void applyStatus(Status status){
-        ArrayList<Status> statuses = this.status;
+    public void applyStatuses(){
+        ArrayList<Status> statuses = this.statuses;
+        ArrayList<Status> statusesEnded = new ArrayList<>();
         for (Status st : statuses){
-            statuses.remove(st);
             this.setStats(this.getStats().merge(st.getStats()));
             st.setDuration(st.getDuration()-1);
-            //todo : add a way to remove status when duration is 0
-            statuses.add(st);
+            if (st.getDuration() <= 0) {
+                statusesEnded.add(st);
+            }
         }
+        for (Status st : statusesEnded){
+            statuses.remove(st);
+        }
+    }
+    public void addStatus(Status status){
+        this.statuses.add(status);
     }
     public abstract Damage attack(Caracter target);
 
@@ -83,10 +90,10 @@ public abstract class Caracter {
     public void setLevel(int level) {
         this.level = level;
     }
-    public ArrayList<Status> getStatus() {
-        return status;
+    public ArrayList<Status> getStatuses() {
+        return statuses;
     }
-    public void setStatus(ArrayList<Status> status) {
-        this.status = status;
+    public void setStatuses(ArrayList<Status> statuses) {
+        this.statuses = statuses;
     }
 }

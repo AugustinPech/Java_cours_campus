@@ -10,6 +10,7 @@ public class Axe extends PhysicalWeapon {
 
     public Axe(String name, int level) {
         super(name, level);
+        this.setSprite("🪓");
     }
 
     @Override

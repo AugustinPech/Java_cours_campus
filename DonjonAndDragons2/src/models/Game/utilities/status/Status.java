@@ -7,8 +7,8 @@ public class Status {
     private String name;
     private int duration;
     
-    public Status(Stats stats, int duration, String name) {
-        this.stats = stats;
+    public Status(Stats stats2, int duration, String name) {
+        this.stats = stats2;
         this.duration = duration;
         this.name = name;
     }

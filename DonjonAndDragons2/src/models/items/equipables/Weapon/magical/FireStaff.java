@@ -15,6 +15,7 @@ public class FireStaff extends MagicWeapons{
 
     public FireStaff(String name, int level) {
         super(name, level);
+        this.setSprite("🔥");
         //TODO Auto-generated constructor stub
     }
 
@@ -37,7 +38,7 @@ public class FireStaff extends MagicWeapons{
                 fire = new Fire(caracter.getStats().merge(itemStats),  this.getLevel());
             }
             caracter.defend(fire);
-            caracter.getStatus().add(burning);
+            caracter.addStatus(burning);
         }
         return caracters;
     }

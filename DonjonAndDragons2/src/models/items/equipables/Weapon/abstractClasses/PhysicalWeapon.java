@@ -8,6 +8,7 @@ public abstract class PhysicalWeapon extends Weapon {
 
     public PhysicalWeapon(String name, int level) {
         super(name, level);
+        this.setSprite("⚔️");
     }
     
 }

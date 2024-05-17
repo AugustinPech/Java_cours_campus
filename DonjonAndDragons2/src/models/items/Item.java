@@ -1,6 +1,5 @@
 package DonjonAndDragons2.src.models.items;
 
-import DonjonAndDragons2.src.models.Caracters.Caracter;
 import DonjonAndDragons2.src.models.Game.utilities.Stats;
 
 public class Item {
