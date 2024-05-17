@@ -11,12 +11,12 @@ import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.models.Game.Board.Board;
 import DonjonAndDragons.src.models.Game.Board.Room;
 import DonjonAndDragons.src.models.Game.Exception.PlayerIsDeadException;
-import DonjonAndDragons.src.models.items.Armor;
-import DonjonAndDragons.src.models.items.Corps;
-import DonjonAndDragons.src.models.items.Equipable;
 import DonjonAndDragons.src.models.items.Item;
-import DonjonAndDragons.src.models.items.Potion;
-import DonjonAndDragons.src.models.items.Weapon;
+import DonjonAndDragons.src.models.items.equipables.Armor;
+import DonjonAndDragons.src.models.items.equipables.Equipable;
+import DonjonAndDragons.src.models.items.equipables.Weapon;
+import DonjonAndDragons.src.models.items.usables.Corps;
+import DonjonAndDragons.src.models.items.usables.Potion;
 public abstract class Caracter {
     private String name;
     private String suffix;
@@ -146,13 +146,13 @@ public abstract class Caracter {
 
     };
 
-    public void move (String how){
+    public void move (String how, int roll){
         switch (how) {
             case "forward":
-                this.position ++;
+                this.position += roll;
                 break;
             case "backward":
-                this.position --;
+                this.position -= roll;
                 break;
             default:
                 System.out.println(this.name + " can not move. \nInvalid action");
@@ -191,7 +191,7 @@ public abstract class Caracter {
             if (item != null) {
                 item.setIsEquiped(true);
                 Stats itemStats = item.getStats();
-
+                itemStats.setExperience(0);
                 stats=stats.merge(itemStats);
             }
         }
@@ -266,11 +266,11 @@ public abstract class Caracter {
     public void setName(String name) {
         this.name = name;
     } 
-    public void setStats(Stats stats) throws PlayerIsDeadException{
-        if (stats.getLifePoints() <=0) {
+    public void setStats(Stats stats2) throws PlayerIsDeadException{
+        if (stats2.getLifePoints() <=0) {
             throw new PlayerIsDeadException();
         }
-        this.stats = stats;
+        this.stats = stats2;
     }
     public Stats getStats() {
         return this.stats;

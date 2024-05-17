@@ -10,6 +10,8 @@ import DonjonAndDragons.src.models.Game.Exception.EquipmentFullException;
 import DonjonAndDragons.src.models.Game.Exception.InventoryFullException;
 import DonjonAndDragons.src.models.Game.Exception.NotEquipableException;
 import DonjonAndDragons.src.models.items.*;
+import DonjonAndDragons.src.models.items.equipables.Armor;
+import DonjonAndDragons.src.models.items.equipables.Weapon;
 public class Wizard extends Player implements SpellCaster{
 
     public Wizard(String name, Game game) {
@@ -33,8 +35,9 @@ public class Wizard extends Player implements SpellCaster{
     public void levelUp() {
         this.setLevel(this.getLevel()+1);
         this.getStats().setLifePoints(this.getStats().getLifePoints()+6);
-        this.getStats().setDamage(this.getStats().getDamage()+6);
+        this.getStats().setDamage(this.getStats().getDamage()+1);
         this.getStats().setArmor(this.getStats().getArmor()+1);
+        this.getStats().setMagic(this.getStats().getMagic()+4);
         this.getStats().setExperience(this.getStats().getExperience()-10);
         if (this.getStats().getExperience() >=10) {
             this.levelUp();

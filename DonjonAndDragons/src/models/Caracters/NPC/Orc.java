@@ -4,8 +4,8 @@ import DonjonAndDragons.src.models.Stats;
 import DonjonAndDragons.src.models.Caracters.interfaces.Fighter;
 import DonjonAndDragons.src.models.Game.Board.Board;
 import DonjonAndDragons.src.models.Game.Exception.PlayerIsDeadException;
-import DonjonAndDragons.src.models.items.Armor;
-import DonjonAndDragons.src.models.items.Weapon;
+import DonjonAndDragons.src.models.items.equipables.Armor;
+import DonjonAndDragons.src.models.items.equipables.Weapon;
 
 public class Orc extends NPC implements Fighter{
     public Orc(String name, Board board, int position) {

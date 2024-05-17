@@ -9,25 +9,44 @@ import DonjonAndDragons.src.models.Caracters.NPC.NPC;
 import DonjonAndDragons.src.models.Caracters.NPC.Orc;
 import DonjonAndDragons.src.models.Caracters.Player.Player;
 import DonjonAndDragons.src.models.Game.Game;
-import DonjonAndDragons.src.models.items.Armor;
+import DonjonAndDragons.src.models.Game.dice.D1;
+import DonjonAndDragons.src.models.Game.dice.Dice;
 import DonjonAndDragons.src.models.items.Item;
-import DonjonAndDragons.src.models.items.Potion;
-import DonjonAndDragons.src.models.items.Weapon;
+import DonjonAndDragons.src.models.items.equipables.Armor;
+import DonjonAndDragons.src.models.items.equipables.Weapon;
+import DonjonAndDragons.src.models.items.usables.Potion;
 
 public class Board {
     private int size;
     private Room[] dungeon;
     private Boolean isOstile = false;
+    private Dice dice;
 
+    public Dice getDice() {
+        return dice;
+    }
+    public void setDice(Dice dice) {
+        this.dice = dice;
+    }
     public Board(int size){
         this.size = size;
+        this.dice = new D1();
         this.dungeon = new Room[this.size];
         
         for (int i = 0; i < this.size; i++) {
                     this.dungeon[i] = new Room();
         }
     }
-
+    public Board (String difficulty){
+        switch (difficulty) {
+            case "normal" ->{
+                this.size = 10;
+            }
+            case "hard" -> {
+                this.size = 15;
+            }
+        }
+    }
 
     public void setDungeon(){
         int heart = size-1;

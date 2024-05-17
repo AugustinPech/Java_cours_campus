@@ -14,7 +14,10 @@ import DonjonAndDragons.src.models.Game.Exception.InventoryFullException;
 import DonjonAndDragons.src.models.Game.Exception.NotEquipableException;
 import DonjonAndDragons.src.models.Game.Exception.NotUseAbleException;
 import DonjonAndDragons.src.models.Game.Exception.PlayerIsDeadException;
+import DonjonAndDragons.src.models.Game.dice.D100;
+import DonjonAndDragons.src.models.Game.dice.Dice;
 import DonjonAndDragons.src.models.items.Item;
+import DonjonAndDragons.src.models.items.usables.Corps;
 
 public class Game {
     public Player player;
@@ -22,6 +25,8 @@ public class Game {
     public Menu menu;
     private int turnNumber;
     private User user;
+    private String difficulty;
+    private Dice dice =new D100();
     /**
      * Constructs a new Game object.
      * 
@@ -31,7 +36,7 @@ public class Game {
         this.user = user;
         this.menu = new Menu();
         String answer = this.menu.startMenu(user);
-        String difficulty = this.menu.chooseDifficultyMenu();
+        this.difficulty = this.menu.chooseDifficultyMenu();
         this.userBecomesPlayer(user, answer);
         switch (difficulty) {
             case "1" :
@@ -39,11 +44,11 @@ public class Game {
                 this.board.setDungeon();
                 break;
             case "2" :
-                this.board = new Board(10);
+                this.board = new Board("normal");
                 this.board.setDungeon();
                 break;
             case "3" :
-                this.board = new Board(10);
+                this.board = new Board("hard");
                 this.board.setDungeon();
                 break;
         }
@@ -187,7 +192,6 @@ public class Game {
                     this.menu.fightResultMenu(fightOuput);
                 }
             }
-        
     }
     private String playerTakesTurn(Player player) throws PlayerIsDeadException {
         if (player.getStats().getLifePoints() <= 0) {
@@ -200,14 +204,14 @@ public class Game {
         String answer=this.menu.beginningOfTurnMenu(player, this.turnNumber);
             switch (answer) {
                 case "K":
-                    player.move("forward");
+                    player.move("forward", this.board.getDice().rollDie());
                     break;
                 case "W":
                     playerChoice = this.menu.leaveGameMenu();
                     break;
                 case "I":
                     this.board.nPCAreOstile();
-                    player.move("forward");
+                    player.move("forward", this.board.getDice().rollDie());
                     break;
                 case "M":
                     this.playerMoves(player);
@@ -216,17 +220,14 @@ public class Game {
                     this.caracterFight(player);
                     break;
                 case "U":
-                    this.inventoryManager();
-                    break;
+                    return this.inventoryManager();
                 case "C":
                     this.menu.spriteAndStatsShow(player);
-                    this.playerTakesTurn(player);
-                    break;
+                    return this.playerTakesTurn(player);
+                case "E":
+                    return this.equipmentManager();
                 case "L":
                     this.playerSearchesRoom(player, this.board.getDungeon()[player.getPosition()]);
-                    break;
-                case "E":
-                    this.equipmentManager();
                     break;
                 default:
                     System.out.println("Invalid input: " + answer);
@@ -237,88 +238,104 @@ public class Game {
         }
         return playerChoice;
     }
-    private void inventoryManager() throws PlayerIsDeadException {
+    private String inventoryManager() throws PlayerIsDeadException {
         try{
             String answer = this.menu.inventoryMenu(this.player);
             String answer2= "";
 
             switch (answer) {
-                    case "B":
-                        this.playerTakesTurn(this.player);
-                        break;
-                    case "E":
-                        this.equipmentManager();
-                        break;
-                    default:
-                        if (this.player.getInventory()[Integer.valueOf(answer)] != null){
-                            answer2 = this.menu.itemInIventoryMenu(this.player, Integer.valueOf(answer));
-                        } else {
-                            this.menu.noSuchItemInInventoryMenu();
-                            this.inventoryManager();
-                        }
+                case "B":
+                    return this.playerTakesTurn(this.player);
+                default:
+                    if (this.player.getInventory()[Integer.valueOf(answer)] != null){
+                        answer2 = this.menu.itemInIventoryMenu(this.player, Integer.valueOf(answer));
+                    } else {
+                        this.menu.noSuchItemInInventoryMenu();
+                        return this.inventoryManager();
+                    }
                 switch (answer2) {
                     case "B":
-                        this.inventoryManager();
-                        break;
+                        return this.inventoryManager();
                     case "D":
                         this.player.dropItem(Integer.valueOf(answer), this.board.getDungeon()[this.player.getPosition()]);
-                        break;
+                        return this.playerTakesTurn(this.player);
                     case "E":
                         this.player.equipItem(Integer.valueOf(answer));
-                        break;
+                        return this.playerTakesTurn(this.player);
                     case "U":
-                        Item [] resultOfUse = this.player.useItem(Integer.valueOf(answer));
+                        Item [] resultOfUse = this.playerUseItem(Integer.valueOf(answer));
                         if (resultOfUse != null) {
                             for (Item item : resultOfUse) {
                                 this.board.getDungeon()[this.player.getPosition()].addItem(item);
                             }
                         }
-                        break;
+                        return this.playerTakesTurn(this.player);
                     default:
                         System.out.println("Invalid input: " + answer2);
-                        this.inventoryManager();
+                        return this.inventoryManager();
                 }
             }
         } catch (NotEquipableException e) {
             this.menu.exceptionMenu(e);
-            this.inventoryManager();
+            return this.inventoryManager();
         } catch (NotUseAbleException e) {
             this.menu.exceptionMenu(e);
-            this.inventoryManager();
+            return this.inventoryManager();
         } catch (EquipmentFullException e) {
             this.menu.exceptionMenu(e);
-            this.equipmentManager();
+            return this.inventoryManager();
         }
     }
-    private void equipmentManager()  throws PlayerIsDeadException {
+    private Item[] playerUseItem(Integer indexOfItemInInventory) throws NotUseAbleException, PlayerIsDeadException {
+        String answer = "";
+        Item [] resultOfUse = null;
+        if (this.player.getInventory()[indexOfItemInInventory] instanceof Corps) {
+            answer = this.menu.wishToUseCorpsMenu();
+        } else {
+            answer = "notCorps";
+        }
+        switch (answer) {
+            case "": 
+                this.inventoryManager();
+                break;
+            case "N":
+                this.inventoryManager();
+                break;
+            case "Y":
+                resultOfUse = this.player.useItem(indexOfItemInInventory);
+                this.menu.defileCorpseMenu();
+                break;
+            case "notCorps":
+                resultOfUse = this.player.useItem(indexOfItemInInventory);
+                break;
+        }
+        return resultOfUse;
+
+    }
+    private String equipmentManager()  throws PlayerIsDeadException {
         try{
             String answer = this.menu.equipmentMenu(this.player);
             String answer2= "";
 
             switch (answer) {
                 case "B":
-                    this.playerTakesTurn(this.player);
-                    break;
-                case "I" :
-                    this.inventoryManager();
-                    break;
+                    return this.playerTakesTurn(this.player);
                 default:
                     answer2 = this.menu.itemInEquipmentMenu(this.player, Integer.valueOf(answer));
             }
             switch (answer2) {
                 case "B":
-                    this.equipmentManager();
-                    break;
+                    return this.equipmentManager();
                 case "U":
                     this.player.unEquip(Integer.valueOf(answer), this.board.getDungeon()[this.player.getPosition()]);
-                    break;
+                    return this.playerTakesTurn(this.player);
                 default:
                     System.out.println("Invalid input: " + answer2);
-                    this.equipmentManager();
+                    return this.equipmentManager();
             }
         } catch (InventoryFullException e) {
             this.menu.exceptionMenu(e);
-            this.equipmentManager();
+            return this.equipmentManager();
         }
         
     }
@@ -375,34 +392,29 @@ public class Game {
     }
     public void playerMoves(Player player) throws PlayerIsDeadException {
         String answer = this.menu.moveMenu(player, this);
-        switch (answer) {
-            case "N":
-                int[] dice = {100};
-                int role = this.rollDice(dice);
-
-                this.board.generateRoomContent(player, role);
-                player.move("forward");
-                break;
-            case "P":
-                player.move("backward");
-                break;
-            case "B":
-                this.playerTakesTurn(this.player);
-                break;
-            default:
-                System.out.println("Invalid input: " + answer);
-                this.menu.moveMenu(player, this);
-        }
+            switch (answer) {
+                case "N":
+                    int role = this.rollDice();
+                    this.board.generateRoomContent(player, role);
+                    player.move("forward", this.board.getDice().rollDie());
+                    break;
+                case "P":
+                    player.move("backward", this.board.getDice().rollDie());
+                    break;
+                case "B":
+                    this.playerTakesTurn(this.player);
+                    break;
+                default:
+                    System.out.println("Invalid input: " + answer);
+                    this.menu.moveMenu(player, this);
+            }
     }
     public void playerEntersRoom(Player player, Room room) {
         this.menu.enterRoomMenu(room);
     }
 
-    public int rollDice(int [] dice){
-        int result = 0;
-        for (int i = 0; i < dice.length; i++) {
-            result+= (int) (Math.random()*dice[i]+1);
-        }
+    public int rollDice(){
+        int result = this.dice.rollDie();
         return result;
     }
 }

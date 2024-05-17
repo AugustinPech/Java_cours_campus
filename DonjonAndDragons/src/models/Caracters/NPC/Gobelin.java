@@ -1,8 +1,9 @@
 package DonjonAndDragons.src.models.Caracters.NPC;
+
 import DonjonAndDragons.src.models.Stats;
 import DonjonAndDragons.src.models.Game.Board.Board;
 import DonjonAndDragons.src.models.Game.Exception.PlayerIsDeadException;
-import DonjonAndDragons.src.models.items.Weapon;
+import DonjonAndDragons.src.models.items.equipables.Weapon;
 public class Gobelin extends NPC {
     
     

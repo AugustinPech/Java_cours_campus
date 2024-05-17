@@ -1,9 +1,9 @@
 package DonjonAndDragons.src.models.Game.Board;
 
-import DonjonAndDragons.src.models.items.Armor;
 import DonjonAndDragons.src.models.items.Item;
-import DonjonAndDragons.src.models.items.Potion;
-import DonjonAndDragons.src.models.items.Weapon;
+import DonjonAndDragons.src.models.items.equipables.Armor;
+import DonjonAndDragons.src.models.items.equipables.Weapon;
+import DonjonAndDragons.src.models.items.usables.Potion;
 
 public class TresoreRoom extends Room {
     public TresoreRoom (Board board, int level) {

@@ -337,11 +337,10 @@ public class Menu {
             }
         }
         str+= "    Type any of these numbers if you wish to see more about the given Item\n";
-        str+= "   (E) Manage your equipment\n";
         str +="   (B) You changed your mind. (go to previous menu)\n"+
             "___________________________________________________________________________________________\n";
         System.out.println(str);
-        answer = regexCheck("^[0-9BE]{0,1}$",this.scanner.nextLine().toUpperCase());
+        answer = regexCheck("^[0-9B]{0,1}$",this.scanner.nextLine().toUpperCase());
 
         if (answer.contains("Invalid")) {
                 System.out.println(answer);
@@ -399,11 +398,10 @@ public class Menu {
             }
         }
         str+= "    Type any of these numbers if you wish to see more about the given Item\n";
-        str+= "   (I) Manage your inventory\n";
         str +="   (B) You changed your mind. (go to previous menu)\n"+
             "___________________________________________________________________________________________\n";
         System.out.println(str);
-        answer = regexCheck("^[0-9BI]{0,1}$",this.scanner.nextLine().toUpperCase());
+        answer = regexCheck("^[0-9B]{0,1}$",this.scanner.nextLine().toUpperCase());
 
         if (answer.contains("Invalid")) {
                 System.out.println(answer);
@@ -474,6 +472,35 @@ public class Menu {
         System.out.println(
             "___________________________________________________________________________________________\n"+
             "There is no such item in your inventory\n"+
+            "___________________________________________________________________________________________\n"
+        );
+    }
+    public String wishToUseCorpsMenu() {
+        String answer = "";
+        String str =
+               "You stand over the lifeless creature, its body still and silent. Power tempts you, but the cost is high.\n" +
+               "Will you defile the corpse to harvest its parts for your quest?\n" +
+               "This act may grant you strength but at the price of your morality.\n\n" +
+               "Do you wish to proceed? (y/N)\n\n" +
+               "(Y) Yes, I will harvest the parts.\n" +
+               "(N) No, I cannot desecrate the dead.";
+        System.out.println(str);
+        answer = regexCheck("^[YN]{0,1}$",this.scanner.nextLine().toUpperCase());
+        if (answer.contains("Invalid")) {
+                System.out.println(answer);
+                return wishToUseCorpsMenu();
+        }
+        return answer;
+    }
+    public void defileCorpseMenu() {
+        System.out.println(
+            "___________________________________________________________________________________________\n"+
+            "You have harvested this corpse.\n"+
+            "You feel power flowing throw you when you where it's skin on your armor.\n"+
+            "The insides of this dead body are lying on the very ground of the room.\n"+
+            "Traces of you barbaric behavior are all over the room.\n"+
+            "As you look up to the door of the next room, you feel a vibration in the air.\n"+
+            "An unexplicable feeling of sadness and anger is flowing trought the dungeon.\n"+
             "___________________________________________________________________________________________\n"
         );
     }

@@ -8,9 +8,9 @@ import DonjonAndDragons.src.models.Game.Exception.InventoryFullException;
 import DonjonAndDragons.src.models.Game.Exception.NotEquipableException;
 import DonjonAndDragons.src.models.Game.Exception.NotUseAbleException;
 import DonjonAndDragons.src.models.Game.Exception.PlayerIsDeadException;
-import DonjonAndDragons.src.models.items.Equipable;
 import DonjonAndDragons.src.models.items.Item;
-import DonjonAndDragons.src.models.items.Usable;
+import DonjonAndDragons.src.models.items.equipables.Equipable;
+import DonjonAndDragons.src.models.items.usables.Usable;
 public abstract class Player extends Caracter{
     public Player(String name, Game game) {
         super(name);
@@ -35,17 +35,17 @@ public abstract class Player extends Caracter{
     }
 
     public void equipItem(int indexOfInventoryItem) throws NotEquipableException, PlayerIsDeadException, EquipmentFullException {
-        int index = 0;
         Equipable [] equipment = this.getEquipment();
         Item [] inventory = this.getInventory();
+        if (!(inventory[indexOfInventoryItem] instanceof Equipable)) {
+            throw new NotEquipableException();
+        }
+        int index = 0;
         while (equipment[index] != null) {
             index++;
             if (index >= equipment.length) {
                 throw new EquipmentFullException();
             }
-        }
-        if (!(inventory[indexOfInventoryItem] instanceof Equipable)) {
-            throw new NotEquipableException();
         }
         if (index <= equipment.length) {
         equipment[index] = (Equipable) inventory[indexOfInventoryItem];

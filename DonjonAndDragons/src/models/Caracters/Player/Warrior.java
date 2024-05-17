@@ -4,8 +4,8 @@ import DonjonAndDragons.src.models.Caracters.interfaces.Fighter;
 import DonjonAndDragons.src.models.Game.Game;
 import DonjonAndDragons.src.models.Game.Exception.InventoryFullException;
 import DonjonAndDragons.src.models.Game.Exception.PlayerIsDeadException;
-import DonjonAndDragons.src.models.items.Armor;
-import DonjonAndDragons.src.models.items.Weapon;
+import DonjonAndDragons.src.models.items.equipables.Armor;
+import DonjonAndDragons.src.models.items.equipables.Weapon;
 public class Warrior extends Player implements Fighter{
     public Warrior(String name, Game game) {
         super(name, game);
@@ -39,6 +39,7 @@ public class Warrior extends Player implements Fighter{
         this.getStats().setLifePoints(this.getStats().getLifePoints()+10);
         this.getStats().setDamage(this.getStats().getDamage()+1);
         this.getStats().setArmor(this.getStats().getArmor()+2);
+        this.getStats().setMagic(this.getStats().getMagic()+1);
         this.getStats().setExperience(this.getStats().getExperience()-10);
         if (this.getStats().getExperience() >=10) {
             this.levelUp();

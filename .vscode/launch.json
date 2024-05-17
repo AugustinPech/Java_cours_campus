@@ -8,6 +8,13 @@
             "type": "java",
             "name": "Main",
             "request": "launch",
+            "mainClass": "DonjonAndDragons2.src.Main",
+            "projectName": "Java_7c8306fb"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
             "mainClass": "DonjonAndDragons.src.Main",
             "projectName": "Java_cours_campus_93ebd442"
         },

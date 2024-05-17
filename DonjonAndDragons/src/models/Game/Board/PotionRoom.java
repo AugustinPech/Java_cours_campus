@@ -1,6 +1,6 @@
 package DonjonAndDragons.src.models.Game.Board;
 
-import DonjonAndDragons.src.models.items.Potion;
+import DonjonAndDragons.src.models.items.usables.Potion;
 
 public class PotionRoom extends Room {
     public PotionRoom(Board board, int level) {

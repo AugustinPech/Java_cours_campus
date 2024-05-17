@@ -7,8 +7,8 @@ import DonjonAndDragons.src.models.Caracters.Caracter;
 import DonjonAndDragons.src.models.Caracters.interfaces.SpellCaster;
 import DonjonAndDragons.src.models.Game.Board.Board;
 import DonjonAndDragons.src.models.Game.Exception.PlayerIsDeadException;
-import DonjonAndDragons.src.models.items.Armor;
-import DonjonAndDragons.src.models.items.Weapon;
+import DonjonAndDragons.src.models.items.equipables.Armor;
+import DonjonAndDragons.src.models.items.equipables.Weapon;
 
 public class Guardian extends NPC implements SpellCaster{
     public Guardian(Board board) {
@@ -49,7 +49,7 @@ public class Guardian extends NPC implements SpellCaster{
     }
     @Override
     public int castSpell(Caracter target) {
-        int damage = (int) (Math.random()*this.getStats().getMagic());
+        int damage = (int) (Math.random()*this.getStats().getMagic()*2);
         return damage;
 
     }
