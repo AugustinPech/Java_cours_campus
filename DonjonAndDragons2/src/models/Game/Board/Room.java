@@ -8,8 +8,8 @@ public abstract class Room {
     private String name;
     private String description;
     private int level;
-    private ArrayList<Caracter> npcs;
-    private ArrayList<Item> items;
+    private ArrayList<Caracter> npcs= new ArrayList<Caracter>();
+    private ArrayList<Item> items= new ArrayList<Item>();
 
     public Room(int level) {
         this.level = level;
@@ -17,15 +17,15 @@ public abstract class Room {
     @Override
     public String toString() {
         String str = "";
-        if (this.npcs.size() > 0) {
-            for (Caracter npc : this.npcs) {
+        if (this.getNpcs()!=null && this.getNpcs().size() > 0) {
+            for (Caracter npc : this.getNpcs()) {
                 str += npc.getSprite();
             }
         }
-        if (this.items.size() > 0) {
-            str += "🪙";
+        if (this.getItems()!=null && this.getItems().size() > 0) {
+            str += "📦";
         }
-        return super.toString();
+        return str;
     }
     
     public abstract void enterRoom();

@@ -16,8 +16,7 @@ public class Axe extends PhysicalWeapon {
     @Override
     public Damage hitWith(Caracter caracter) {
         Stats caracterStats = caracter.getStats();
-        Stats itemStats = this.getStats();
-        Normal damage = new Normal(caracterStats.merge(itemStats), this.getLevel());
+        Normal damage = new Normal(caracterStats, this.getLevel());
         return damage;
     }
     

@@ -4,8 +4,7 @@ import java.util.ArrayList;
 
 import DonjonAndDragons2.src.models.Caracters.Caracter;
 import DonjonAndDragons2.src.models.Caracters.interfaces.Fighter;
-import DonjonAndDragons2.src.models.Game.Board.Board;
-import DonjonAndDragons2.src.models.Game.Exception.PlayerIsDeadException;
+import DonjonAndDragons2.src.models.Game.Exception.LifeTo0Exception;
 import DonjonAndDragons2.src.models.Game.utilities.Stats;
 import DonjonAndDragons2.src.models.Game.utilities.damages.Damage;
 import DonjonAndDragons2.src.models.items.Item;
@@ -28,15 +27,18 @@ public class Gobelin extends Caracter implements Fighter, NPC{
         this.setName("Gobelin");
         this.setCaracterClass("Gobelin");
         this.setSprite("👺");
-        this.setStats( new Stats(
+        Stats stats =  new Stats(
             10*level, 
-            level + 5, 
-            level+1, 
+            level, 
+            level, 
             1,
             0,
             2*level,
             level*10
-        ));
+        );
+        try{
+            this.setStats(this.getStats().merge(stats));
+        } catch (LifeTo0Exception e) {}
     }
 
     @Override
@@ -52,7 +54,7 @@ public class Gobelin extends Caracter implements Fighter, NPC{
     }
 
     @Override
-    public void defend(Damage damage) {
+    public Caracter defend(Damage damage) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'defend'");
     }

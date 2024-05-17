@@ -1,11 +1,15 @@
 package DonjonAndDragons2.src.models.Game;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import DonjonAndDragons2.src.models.Game.Board.Room;
+import DonjonAndDragons2.src.models.items.Item;
+import DonjonAndDragons2.src.models.items.equipables.Equipable;
+import DonjonAndDragons2.src.models.Caracters.Caracter;
 import DonjonAndDragons2.src.models.Caracters.Player.Playable;
 import DonjonAndDragons2.src.models.Game.Board.Board;
 import DonjonAndDragons2.src.views.Ascii;
@@ -46,7 +50,7 @@ public class Menu {
                 "___________________________________________________________________________________________\n"+
                 "Choose your class by typing : \n"+
                 "(1) for Warrior\n"+
-                "(2) for Wizard"+
+                "(2) for Wizard\n"+
                 "___________________________________________________________________________________________"
             );
             
@@ -73,7 +77,6 @@ public class Menu {
     }
 
     public void gameOverMenu() {
-        String answer = "";
         String[] ascii = (Ascii.gameOver());
         for (String line : ascii) {
             System.out.println(line);
@@ -105,10 +108,53 @@ public class Menu {
             return mainPhaseMenu();
         }
     }
-    public void caracterSheetMenu(Playable player) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'caracterSheetMenu'");
+    public void caracterSheetMenu(Caracter caracter) {
+        System.out.println(
+            "----------------------------------CARACTER-SHEET-------------------------------------------\n"+
+            "      Name: "+caracter.getName()+"    Class: "+caracter.getCaracterClass()+"      Level: "+caracter.getLevel()+"\n"+
+            caracter.getStats().toString()+"\n"+
+            "----------------------------------EQUIPMENT------------------------------------------------\n"+
+            this.showEquipment(caracter.getEquipment())+
+            "----------------------------------INVENTORY------------------------------------------------\n"+
+            this.showInventory(caracter.getInventory())+
+            "-------------------------------------------------------------------------------------------\n"
+        );
     }
+    private String showEquipment(ArrayList<Equipable> items) {
+        String str = "";
+        int index =0;
+        if (items == null || items.size() == 0) {
+            str += "No equipment\n";
+        } else {
+            for (Item item : items) {
+                str += "("+ index + ")";
+                str += item.toString();
+                index ++;
+                if (index % 2 ==0) {
+                    str += "\n";
+                }
+            }
+        }
+        return str;
+    }
+    private String showInventory(ArrayList<Item> items) {
+        String str = "";
+        int index =0;
+        if (items == null || items.size() == 0) {
+            str += "No equipment\n";
+        } else {
+            for (Item item : items) {
+                str += "("+ index + ")";
+                str += item.toString();
+                index ++;
+                if (index % 2 ==0) {
+                    str += "\n";
+                }
+            }
+        }
+        return str;
+    }
+
     public void startTurnMenu(int turnNumber, Playable player) {
         System.out.println(
             "--------------------------------Turn n°"+turnNumber+"------------------------------------------\n"
@@ -120,17 +166,62 @@ public class Menu {
         );
         int position = 0;
         for (Room room : board.getDungeon()) {
-            System.out.println("|| ");
+            System.out.print("|| ");
             if (position == player.getPosition()) {
                 System.out.print("🧍");
-                System.out.println(room.toString());
+                System.out.print(room.toString());
             } else {
                 System.out.print("🚪");
             }
+            System.out.print(" ||");
             position++;
         }
         System.out.println(
-            "-------------------------------------------------------------------------------------------"
+            "\n-------------------------------------------------------------------------------------------"
         );
+    }
+    public String inventoryMenu(ArrayList<Item> inventory) {
+       try {
+            System.out.println(
+                "----------------------------------INVENTORY------------------------------------------------\n"+
+                this.showInventory(inventory)+
+                "   Choose an item by typing its index or :\n"+
+                "       (ENTER) to go back to previous menu\n"+
+                "-------------------------------------------------------------------------------------------"
+            );
+            String answer = this.scanner.nextLine().toUpperCase();
+
+            // System.out.println("(" + answer+ ")");
+            answer = regexCheck("^[0-9]{0,2}$",answer);
+            return answer;
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return inventoryMenu(inventory);
+        }
+    }
+    public void noSuchItem(String noMatchIndex) {
+        System.out.println("Input : " + noMatchIndex +"\nNo such item in your inventory\n");
+    }
+    public String itemInteractionInventoryMenu(Item item) {
+        try {
+            System.out.println(
+                "----------------------------------ITEM-INTERACTION-----------------------------------------\n"+
+                item.toString()+
+                "   Choose an action by typing :\n"+
+                "       (E) Equip\n"+
+                "       (U) to use the item\n"+
+                "       (D) to drop the item\n"+
+                "       (ENTER) to go back to previous menu\n"+
+                "-------------------------------------------------------------------------------------------"
+            );
+            String answer = this.scanner.nextLine().toUpperCase();
+
+            // System.out.println("(" + answer+ ")");
+            answer = regexCheck("^(U|D|E)$",answer);
+            return answer;
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return itemInteractionInventoryMenu(item);
+        }
     }
 }

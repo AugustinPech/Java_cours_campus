@@ -7,7 +7,12 @@ import DonjonAndDragons2.src.models.Caracters.Player.Playable;
 import DonjonAndDragons2.src.models.Caracters.Player.Warrior;
 import DonjonAndDragons2.src.models.Caracters.Player.Wizard;
 import DonjonAndDragons2.src.models.Game.Board.Board;
-import DonjonAndDragons2.src.models.Game.dice.D100;
+import DonjonAndDragons2.src.models.Game.Board.Room;
+import DonjonAndDragons2.src.models.Game.Exception.EquipmentFullException;
+import DonjonAndDragons2.src.models.Game.Exception.NotConsumableException;
+import DonjonAndDragons2.src.models.Game.Exception.NotEquipableException;
+import DonjonAndDragons2.src.models.Game.Exception.PlayerIsDeadException;
+import DonjonAndDragons2.src.models.items.Item;
 
 public class Game {
     private Playable player;
@@ -17,7 +22,6 @@ public class Game {
     private int turnNumber;
     private User user;
     private String difficulty;
-    private D100 dice =new D100();
     
     public Game(User user){
         this.user = user;
@@ -104,15 +108,16 @@ public class Game {
 
     private ArrayList<Caracter> mainPhase(ArrayList<Caracter> whosThere) {
         String answer = this.menu.mainPhaseMenu();
+        ArrayList<Caracter> initial = whosThere;
         switch (answer) {
             case "C":
                 this.menu.caracterSheetMenu(this.player);
                 return this.mainPhase(whosThere);
             case "I":
-                whosThere=this.inventoryManager(this.player);
+                whosThere.set(whosThere.indexOf(this.player),this.inventoryManager(this.player));
                 return whosThere;
             case "E":
-                whosThere=this.equipmentManager(this.player);
+                whosThere.set(whosThere.indexOf(this.player),this.equipmentManager(this.player));
                 return whosThere;
             case "Q":
                 System.exit(0);
@@ -120,17 +125,60 @@ public class Game {
             default:
                 break;
         }
-        return whosThere;
+        if (answer !="" && initial == whosThere) {
+            return this.mainPhase(whosThere);
+        } else {
+            return whosThere;
+        }
     }
 
-    private ArrayList<Caracter> equipmentManager(Playable player2) {
+    private Caracter equipmentManager(Playable player) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'equipmentManager'");
+        return player;
     }
 
-    private ArrayList<Caracter> inventoryManager(Playable player2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'inventoryManager'");
+    private Caracter inventoryManager(Playable player) {
+        String answer = this.menu.inventoryMenu(player.getInventory());
+        if (answer == "" ){
+            return player;
+        } else if (!(player.getInventory().get(Integer.valueOf(answer)) instanceof Item)){
+            this.menu.noSuchItem(answer);
+            return player;
+        } else {
+            player = this.itemInteractionInventory(player.getInventory().get(Integer.valueOf(answer)));
+            return player;
+        }
+    }
+
+    private Playable itemInteractionInventory(Item item) throws PlayerIsDeadException {
+        String answer = this.menu.itemInteractionInventoryMenu(item);
+        switch (answer) {
+            case "E":
+                try {
+                    return player.equipItem(item);
+                } catch (EquipmentFullException e) {
+                    e.printStackTrace();
+                    return this.itemInteractionInventory(item);
+                } catch (NotEquipableException e) {
+                    e.printStackTrace();
+                    return this.itemInteractionInventory(item);
+                }
+            case "U":
+                try {
+                    return player.consumeItem(item);
+                } catch (NotConsumableException e) {
+                    e.printStackTrace();
+                    return this.itemInteractionInventory(item);
+                }
+            case "D":
+                Room room = this.board.getDungeon().get(player.getPosition());
+                item = player.dropItem(item);
+                ArrayList <Item> items = room.getItems().add(item);
+                room.setItems(items);
+                return player;
+            default:
+                return player;
+        }
     }
 
     private ArrayList<Caracter> upkeepPhase() {

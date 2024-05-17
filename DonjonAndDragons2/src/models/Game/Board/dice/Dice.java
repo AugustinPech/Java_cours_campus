@@ -1,4 +1,4 @@
-package DonjonAndDragons2.src.models.Game.dice;
+package DonjonAndDragons2.src.models.Game.Board.dice;
 
 /**
  * Dice

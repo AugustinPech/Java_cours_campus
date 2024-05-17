@@ -3,7 +3,6 @@ package DonjonAndDragons2.src.models.Caracters.NPC;
 import java.util.ArrayList;
 
 import DonjonAndDragons2.src.models.Caracters.Caracter;
-import DonjonAndDragons2.src.models.Game.Board.Board;
 import DonjonAndDragons2.src.models.Game.utilities.Stats;
 import DonjonAndDragons2.src.models.Game.utilities.damages.Damage;
 import DonjonAndDragons2.src.models.items.Item;
@@ -39,7 +38,7 @@ public class DoorMan extends Caracter implements NPC {
     }
 
     @Override
-    public void defend(Damage damage) {
+    public Caracter defend(Damage damage) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'defend'");
     }

@@ -6,8 +6,7 @@ import java.util.Map;
 import DonjonAndDragons.src.models.Stats;
 import DonjonAndDragons.src.models.Caracters.NPC.NPC;
 import DonjonAndDragons.src.models.Caracters.Player.Player;
-import DonjonAndDragons.src.models.Caracters.interfaces.SpellCaster;
-import DonjonAndDragons.src.models.Game.Game;
+
 import DonjonAndDragons.src.models.Game.Board.Board;
 import DonjonAndDragons.src.models.Game.Board.Room;
 import DonjonAndDragons.src.models.Game.Exception.PlayerIsDeadException;

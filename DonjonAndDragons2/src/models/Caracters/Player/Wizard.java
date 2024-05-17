@@ -2,6 +2,8 @@ package DonjonAndDragons2.src.models.Caracters.Player;
 
 import DonjonAndDragons2.src.models.Caracters.Caracter;
 import DonjonAndDragons2.src.models.Caracters.interfaces.SpellCaster;
+import DonjonAndDragons2.src.models.Game.Exception.CaracterIsDeadException;
+import DonjonAndDragons2.src.models.Game.Exception.LifeTo0Exception;
 import DonjonAndDragons2.src.models.Game.utilities.Stats;
 import DonjonAndDragons2.src.models.Game.utilities.damages.Damage;
 import DonjonAndDragons2.src.models.Game.utilities.damages.Fire;
@@ -9,52 +11,13 @@ import DonjonAndDragons2.src.models.Game.utilities.damages.Fire;
 public class Wizard extends Playable implements SpellCaster, Player {
 
     public Wizard(String name) {
-        super(name);
-        this.setStats(new Stats(
-            100, 
-            0, 
-            2, 
-            5,
-            4,
-            1,
-            0
-        ));
-    }
-
-    @Override
-    public void pickUpItem() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'pickUpItem'");
-    }
-
-    @Override
-    public void dropItem() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'dropItem'");
-    }
-
-    @Override
-    public void equipItem() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'equipItem'");
-    }
-
-    @Override
-    public void unequipItem() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'unequipItem'");
-    }
-
-    @Override
-    public void useItem() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'useItem'");
-    }
-
-    @Override
-    public void levelUp() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'levelUp'");
+            super(name);
+        try{
+            this.setCaracterClass("Wizard");
+            Stats stats = new Stats(-20, 0, -3, +3, +2, -2, 0);
+            this.setLevelUpStats(new Stats(10,1,1,2,2,1,0)); 
+            this.setStats(this.getStats().merge(stats));
+        } catch (LifeTo0Exception e){}
     }
 
     @Override
@@ -66,9 +29,9 @@ public class Wizard extends Playable implements SpellCaster, Player {
     }
 
     @Override
-    public void defend(Damage damage) {
+    public Caracter defend(Damage damage) {
         // TODO
-        
+        return null;
     }
    
 }

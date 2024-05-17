@@ -13,7 +13,11 @@ public class Item {
         this.name = name;
         this.level=level;
     }
-
+    @Override
+    public String toString() {
+        String str = this.getSprite() + " " + this.getName() +" LvL :" + this.getLevel();
+        return str;
+    }
     public String getName() {
         return name;
     }

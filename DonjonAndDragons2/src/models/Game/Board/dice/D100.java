@@ -1,4 +1,4 @@
-package DonjonAndDragons2.src.models.Game.dice;
+package DonjonAndDragons2.src.models.Game.Board.dice;
 
 public class D100 implements Dice{
     public int rollDie() {

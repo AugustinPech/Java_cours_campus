@@ -1,4 +1,4 @@
-package DonjonAndDragons2.src.models.items.usables;
+package DonjonAndDragons2.src.models.items.interfaces;
 
 import java.util.ArrayList;
 

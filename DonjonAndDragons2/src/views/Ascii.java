@@ -1,7 +1,6 @@
 package DonjonAndDragons2.src.views;
 
 import DonjonAndDragons2.src.models.Caracters.Caracter;
-import DonjonAndDragons2.src.models.Caracters.Player.Player;
 
 public class Ascii {
     public static String [] printTitle(){

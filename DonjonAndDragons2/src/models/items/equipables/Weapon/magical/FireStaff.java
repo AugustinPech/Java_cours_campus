@@ -2,7 +2,6 @@ package DonjonAndDragons2.src.models.items.equipables.Weapon.magical;
 
 import java.util.ArrayList;
 
-import DonjonAndDragons.src.models.Caracters.Player.Player;
 import DonjonAndDragons2.src.models.Caracters.Caracter;
 import DonjonAndDragons2.src.models.Caracters.Player.Playable;
 import DonjonAndDragons2.src.models.Game.utilities.Stats;
@@ -35,7 +34,7 @@ public class FireStaff extends MagicWeapons{
         Status burning = new Status(burn, 3, "burning");
         for (Caracter caracter : caracters) {
             if (caracter instanceof Playable) {
-                fire = new Fire(caracter.getStats().merge(itemStats),  this.getLevel());
+                fire = new Fire(itemStats,  this.getLevel());
             }
             caracter.defend(fire);
             caracter.addStatus(burning);
@@ -46,8 +45,7 @@ public class FireStaff extends MagicWeapons{
     @Override
     public Damage hitWith(Caracter caracter) {
         Stats caracterStats = caracter.getStats();
-        Stats itemStats = this.getStats();
-        Fire fire = new Fire(caracterStats.merge(itemStats),  this.getLevel());
+        Fire fire = new Fire(caracterStats,  this.getLevel());
        return fire;
     }
 }

@@ -1,5 +1,7 @@
 package DonjonAndDragons2.src.models.Game.utilities;
 
+import DonjonAndDragons2.src.models.Game.Exception.LifeTo0Exception;
+
 public class Stats {
     private int lifePoints;
     private int staminia;
@@ -23,74 +25,79 @@ public class Stats {
             int agility,
             int experience
         ) {
-        this.staminia = staminia;
-        this.strength = strength;
-        this.intel = intel;
-        this.mental = mental;
-        this.experience = experience;
-        this.agility = agility;
-        this.lifePoints = lifePoints;
-        this.armor = (((int) this.staminia/2) >0 ? (int) this.staminia/2 : 0);
-        this.initiative = (this.agility - this.armor) > 0 ? this.agility - this.armor : 0;
+        this.setStaminia( staminia);
+        this.setStrength(strength);
+        this.setIntel(intel);
+        this.setMental(mental);
+        this.setExperience(experience);
+        this.setAgility(agility);
+        this.lifePoints=(lifePoints);
+        this.recalculate();
     }
     
-    public Stats merge (Stats stats){
-        Stats result = new Stats(
-            (this.lifePoints + stats.lifePoints) > 0 ? this.lifePoints + stats.lifePoints : 0,
-            (this.staminia + stats.staminia) > 0 ? this.staminia + stats.staminia : 0,
-            (this.strength + stats.strength) > 0 ? this.strength + stats.strength : 0,
-            (this.intel + stats.intel) > 0 ? this.intel + stats.intel : 0,
-            (this.mental + stats.mental) > 0 ? this.mental + stats.mental : 0,
-            (this.agility + stats.agility) > 0 ? this.agility + stats.agility : 0,
-            (this.experience + stats.experience) > 0 ? this.experience + stats.experience : 0
-        );
-        this.armor = (((int) this.staminia/2) >0 ? (int) this.staminia/2 : 0)+stats.getArmor();
-        this.initiative = ((this.agility - this.armor) > 0 ? this.agility - this.armor : 0)+stats.getInitiative();
+    public Stats merge (Stats stats) throws LifeTo0Exception {
+        Stats result = new Stats(0,0,0,0,0,0,0);
+
+            result.setLifePoints((this.lifePoints + stats.lifePoints) > 0 ? this.lifePoints + stats.lifePoints : 0);
+            result.setStaminia((this.staminia + stats.staminia) > 0 ? this.staminia + stats.staminia : 0);
+            result.setStrength((this.strength + stats.strength) > 0 ? this.strength + stats.strength : 0);
+            result.setIntel((this.intel + stats.intel) > 0 ? this.intel + stats.intel : 0);
+            result.setMental((this.mental + stats.mental) > 0 ? this.mental + stats.mental : 0);
+            result.setAgility((this.agility + stats.agility) > 0 ? this.agility + stats.agility : 0);
+            result.setExperience((this.experience + stats.experience) > 0 ? this.experience + stats.experience : 0);
+        
+        result.armor = (((int) this.staminia/2) >0 ? (int) this.staminia/2 : 0)+stats.getArmor();
+        result.initiative = ((this.agility - this.armor) > 0 ? this.agility - this.armor : 0)+stats.getInitiative();
+
         if (result.experience < 0) {
             result.experience = 0;
         }
         return result;
     }
-    public Stats detach(Stats stats){
-        Stats result = new Stats(
-            (this.lifePoints - stats.lifePoints)>0 ? this.lifePoints - stats.lifePoints : 0,
-            (this.staminia - stats.staminia)>0 ? this.staminia - stats.staminia : 0,
-            (this.strength - stats.strength)>0 ? this.strength - stats.strength : 0,
-            (this.intel - stats.intel)>0 ? this.intel - stats.intel : 0,
-            (this.mental - stats.mental)>0 ? this.mental - stats.mental : 0,
-            (this.agility - stats.agility)>0 ? this.agility - stats.agility : 0,
-            this.experience
-        );
-        this.armor = (((int) this.staminia/2) >0 ? (int) this.staminia/2 : 0);
-        this.initiative = ((this.agility - this.armor) > 0 ? this.agility - this.armor : 0);
+    public Stats detach(Stats stats) throws LifeTo0Exception{
+        
+        Stats result = new Stats(0,0,0,0,0,0,0);
+
+            result.setLifePoints((this.lifePoints - stats.lifePoints) > 0 ? this.lifePoints - stats.lifePoints : 0);
+            result.setStaminia((this.staminia - stats.staminia) > 0 ? this.staminia - stats.staminia : 0);
+            result.setStrength((this.strength - stats.strength) > 0 ? this.strength - stats.strength : 0);
+            result.setIntel((this.intel - stats.intel) > 0 ? this.intel - stats.intel : 0);
+            result.setMental((this.mental - stats.mental) > 0 ? this.mental - stats.mental : 0);
+            result.setAgility((this.agility - stats.agility) > 0 ? this.agility - stats.agility : 0);
+            result.setExperience((this.experience));
+        
+        result.recalculate();
         if (result.experience < 0) {
             result.experience = 0;
         }
         return result;
     }
     public void recalculate() {
-        this.armor = (((int) this.staminia/2) >0 ? (int) this.staminia/2 : 0);
-        this.initiative = (this.agility - this.armor) > 0 ? this.agility - this.armor : 0;
+        this.setArmor();
+        this.setInitiative();
     }
     @Override
     public String toString() {
         String str =""
-        +"Life Points: "+this.lifePoints+"\n"
-        +"Staminia: "+this.staminia+"\n"
-        +"Strength: "+this.strength+"\n"
-        +"Intel: "+this.intel+"\n"
-        +"Mental: "+this.mental+"\n"
-        +"Agility: "+this.agility+"\n"
-        +"Experience: "+this.experience+"\n"
-        +"Armor: "+this.armor+"\n"
-        +"Initiative: "+this.initiative+"\n";
+        +"      Life Points: "+this.getLifePoints()
+        +"      Staminia: "+this.getStaminia()+"\n"
+        +"      Strength: "+this.getStrength()
+        +"      Intel: "+this.getIntel()+"\n"
+        +"      Mental: "+this.getMental()
+        +"      Agility: "+this.getAgility()+"\n"
+        +"      Experience: "+this.getExperience()
+        +"      Armor: "+this.getArmor()+"\n"
+        +"      Initiative: "+this.getInitiative();
         return str;
     }
     public int getLifePoints() {
         return lifePoints;
     }
-    public void setLifePoints(int lifePoints) {
+    public void setLifePoints(int lifePoints) throws LifeTo0Exception {
         this.lifePoints = lifePoints;
+        if (this.getLifePoints()<=0) {
+            throw new LifeTo0Exception();
+        }
     }
     public int getStaminia() {
         return staminia;
