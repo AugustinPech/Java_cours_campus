@@ -124,4 +124,7 @@ public abstract class Caracter {
     public void setInventory(ArrayList<Item> inventory) {
         this.inventory = inventory;
     }
+    public void upkeep() throws CaracterIsDeadException{
+        this.applyStatuses();
+    };
 }

@@ -155,9 +155,12 @@ public class Menu {
         return str;
     }
 
-    public void startTurnMenu(int turnNumber, Playable player) {
+    public void startTurnMenu(int turnNumber, Playable player, Board board) {
         System.out.println(
-            "--------------------------------Turn n°"+turnNumber+"------------------------------------------\n"
+            "----------------------------------Turn n°"+turnNumber+"--------------------------------------------\n"
+        );
+        System.err.println(
+            "       You are in "+board.getDungeon().get(player.getPosition())+"\n"
         );
     }
     public void displayBoard(Board board, Playable player) {
@@ -168,10 +171,10 @@ public class Menu {
         for (Room room : board.getDungeon()) {
             System.out.print("|| ");
             if (position == player.getPosition()) {
-                System.out.print("🧍");
+                System.out.print("[Player]");
                 System.out.print(room.toString());
             } else {
-                System.out.print("🚪");
+                System.out.print("[no-see]");
             }
             System.out.print(" ||");
             position++;
@@ -186,13 +189,14 @@ public class Menu {
                 "----------------------------------INVENTORY------------------------------------------------\n"+
                 this.showInventory(inventory)+
                 "   Choose an item by typing its index or :\n"+
-                "       (ENTER) to go back to previous menu\n"+
+                "       (B) to go back to previous menu\n"+
+                "       (ENTER) to proceed\n"+
                 "-------------------------------------------------------------------------------------------"
             );
             String answer = this.scanner.nextLine().toUpperCase();
 
             // System.out.println("(" + answer+ ")");
-            answer = regexCheck("^[0-9]{0,2}$",answer);
+            answer = regexCheck("^[0-9]{0,2}|B$",answer);
             return answer;
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
@@ -211,13 +215,14 @@ public class Menu {
                 "       (E) Equip\n"+
                 "       (U) to use the item\n"+
                 "       (D) to drop the item\n"+
-                "       (ENTER) to go back to previous menu\n"+
+                "       (B) to go back to previous menu\n"+
+                "       (ENTER) to proceed\n"+
                 "-------------------------------------------------------------------------------------------"
             );
             String answer = this.scanner.nextLine().toUpperCase();
 
             // System.out.println("(" + answer+ ")");
-            answer = regexCheck("^(U|D|E)$",answer);
+            answer = regexCheck("^[UDEB]{0,1}$",answer);
             return answer;
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());

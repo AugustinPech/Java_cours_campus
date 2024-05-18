@@ -8,6 +8,7 @@ import DonjonAndDragons2.src.models.Caracters.Player.Warrior;
 import DonjonAndDragons2.src.models.Caracters.Player.Wizard;
 import DonjonAndDragons2.src.models.Game.Board.Board;
 import DonjonAndDragons2.src.models.Game.Board.Room;
+import DonjonAndDragons2.src.models.Game.Exception.CaracterIsDeadException;
 import DonjonAndDragons2.src.models.Game.Exception.EquipmentFullException;
 import DonjonAndDragons2.src.models.Game.Exception.NotConsumableException;
 import DonjonAndDragons2.src.models.Game.Exception.NotEquipableException;
@@ -50,24 +51,28 @@ public class Game {
         }
     }
     public void play () {
-        boolean stopPlaying = this.win() || this.lose();
-        
-        while(!stopPlaying){
-            this.turnNumber++;
-            this.playTurn();
-            stopPlaying = this.win() || this.lose();
-        }
+        try {
+            boolean stopPlaying = this.win() || this.lose();
+            
+            while(!stopPlaying){
+                this.turnNumber++;
+                this.playTurn();
+                stopPlaying = this.win() || this.lose();
+            }
 
-        boolean win = this.win();
-        
-        if(win){
-            this.menu.winMenu();
-        } else {
+            boolean win = this.win();
+            
+            if(win){
+                this.menu.winMenu();
+            } else {
+                this.menu.gameOverMenu();
+            }
+        } catch (PlayerIsDeadException e) {
             this.menu.gameOverMenu();
         }
     }
     
-    public void playTurn(){
+    public void playTurn() throws PlayerIsDeadException{
 
             ArrayList<Caracter> whosThere = this.whosThere();
 
@@ -86,7 +91,9 @@ public class Game {
 
     private ArrayList<Caracter> whosThere() {
         ArrayList<Caracter> whosThere = this.board.getDungeon().get(this.player.getPosition()).getCaracters();
-        whosThere.add(this.player);
+        if (!whosThere.contains(this.player)){            
+            whosThere.add(this.player);
+        }
         return whosThere;
     }
 
@@ -132,20 +139,22 @@ public class Game {
         }
     }
 
-    private Caracter equipmentManager(Playable player) {
+    private Playable equipmentManager(Playable player) {
         // TODO Auto-generated method stub
         return player;
     }
 
-    private Caracter inventoryManager(Playable player) {
+    private Playable inventoryManager(Playable player) {
         String answer = this.menu.inventoryMenu(player.getInventory());
         if (answer == "" ){
             return player;
-        } else if (!(player.getInventory().get(Integer.valueOf(answer)) instanceof Item)){
-            this.menu.noSuchItem(answer);
+        } else if (answer == "B"){
+            return player;  // Tofix
+        } else if (player.getInventory().get(Integer.valueOf(answer)) instanceof Item){
+            player = this.itemInteractionInventory(player.getInventory().get(Integer.valueOf(answer)));
             return player;
         } else {
-            player = this.itemInteractionInventory(player.getInventory().get(Integer.valueOf(answer)));
+            this.menu.noSuchItem(answer);
             return player;
         }
     }
@@ -155,7 +164,7 @@ public class Game {
         switch (answer) {
             case "E":
                 try {
-                    return player.equipItem(item);
+                    return this.player.equipItem(item);
                 } catch (EquipmentFullException e) {
                     e.printStackTrace();
                     return this.itemInteractionInventory(item);
@@ -165,40 +174,46 @@ public class Game {
                 }
             case "U":
                 try {
-                    return player.consumeItem(item);
+                    return this.player.consumeItem(item);
                 } catch (NotConsumableException e) {
                     e.printStackTrace();
                     return this.itemInteractionInventory(item);
                 }
             case "D":
-                Room room = this.board.getDungeon().get(player.getPosition());
-                item = player.dropItem(item);
-                ArrayList <Item> items = room.getItems().add(item);
-                room.setItems(items);
-                return player;
+                this.board.getDungeon().get(this.player.getPosition()).addItem(this.player.dropItem(item));
+                return this.player;
+            case "B":
+                return this.inventoryManager(this.player);
             default:
-                return player;
+                return this.player;
         }
     }
 
-    private ArrayList<Caracter> upkeepPhase() {
-        ArrayList<Caracter> whosThere = this.board.getDungeon().get(this.player.getPosition()).getCaracters();
-        whosThere.add(this.player);
-        this.menu.startTurnMenu(this.turnNumber, this.player);
+    private ArrayList<Caracter> upkeepPhase() throws PlayerIsDeadException {
+        ArrayList<Caracter> whosThere = this.whosThere();
+        this.menu.startTurnMenu(this.turnNumber, this.player, this.board);
         this.menu.displayBoard(this.board , this.player);
-        // todo add menu output
-        // add consider the status of caracters
-        // 
+
+        whosThere.forEach(caracter -> {
+            try {caracter.upkeep();}
+            catch (CaracterIsDeadException e) {
+                if (caracter instanceof Playable){
+                    throw new PlayerIsDeadException();
+                }
+                // TODO
+                // this.caracterdies(caracter);
+            }
+        });
         return whosThere;
     }
 
     private boolean lose() {
-        // to do
+        // todo
         return false;
     }
 
     private boolean win() {
-        // to do
+        // todo
         return false;
     }
 

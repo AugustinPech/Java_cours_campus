@@ -25,6 +25,7 @@ public abstract class Room {
         if (this.getItems()!=null && this.getItems().size() > 0) {
             str += "📦";
         }
+        str += this.getName();
         return str;
     }
     
@@ -32,6 +33,12 @@ public abstract class Room {
     public abstract void leaveRoom();
     public abstract ArrayList<Caracter> getCaracters();
 
+    public void addItem (Item item) {
+        this.items.add(item);
+    }
+    public void addNpc (Caracter npc) {
+        this.npcs.add(npc);
+    }
     public ArrayList<Caracter> getNpcs() {
         return npcs;
     }
