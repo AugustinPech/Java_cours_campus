@@ -33,6 +33,7 @@ public abstract class Playable extends Caracter{
             return inventory;
         }
     };
+    
     public Item dropItem(Item item) throws PlayerIsDeadException{
         try{
             ArrayList<Item> inventory = this.getInventory();
@@ -70,7 +71,7 @@ public abstract class Playable extends Caracter{
             throw new PlayerIsDeadException();
         }
     };
-    public  ArrayList<Item> unEquipItem(Equipable item) throws InventoryFullException, PlayerIsDeadException{
+    public  ArrayList<Item> unEquipItem(Item item) throws InventoryFullException, PlayerIsDeadException{
         try{
             ArrayList<Item> inventory = this.getInventory();
             ArrayList<Equipable> equipment = this.getEquipment();
@@ -87,18 +88,25 @@ public abstract class Playable extends Caracter{
             throw new PlayerIsDeadException();
         }
     };
-    public ArrayList<Item> replaceEquipment(Item item1, Item item2) throws PlayerIsDeadException {
-       try {
+    public ArrayList<Item> replaceEquipment(Item item1, Item item2) throws PlayerIsDeadException, NotEquipableException {
+        try {
+            this.unEquipItem(item1);
+            this.equipItem(item2);
+            return this.getInventory();
+        } catch (InventoryFullException | EquipmentFullException e) {
             ArrayList<Equipable> equipment = this.getEquipment();
             ArrayList<Item> inventory = this.getInventory();
             int index = equipment.indexOf(item1);
             equipment.set(index, (Equipable) item2);
-            inventory.add(item1);
-            inventory.remove(item2);
-            this.setEquipment(equipment);
-            return inventory;
-        } catch (CaracterIsDeadException e) {
+            index = inventory.indexOf(item2);
+            inventory.set(index, item1);
+            try{
+                this.setEquipment(equipment);
+            } catch (CaracterIsDeadException ex) {
             throw new PlayerIsDeadException();
+            }
+            this.setInventory(inventory);
+            return this.getInventory();
         }
     }
     public Playable consumeItem(Item item) throws NotConsumableException{
@@ -125,8 +133,4 @@ public abstract class Playable extends Caracter{
         this.levelUpStats = levelUpStats;
     }
 
-    /*
-    * methods to manage equipment
-    * replace
-    */ 
 }

@@ -11,6 +11,9 @@ import DonjonAndDragons2.src.models.items.Item;
 import DonjonAndDragons2.src.models.items.equipables.Equipable;
 import DonjonAndDragons2.src.models.Caracters.Caracter;
 import DonjonAndDragons2.src.models.Caracters.Player.Playable;
+import DonjonAndDragons2.src.models.Caracters.Player.Player;
+import DonjonAndDragons2.src.models.Caracters.Player.Warrior;
+import DonjonAndDragons2.src.models.Caracters.Player.Wizard;
 import DonjonAndDragons2.src.models.Game.Board.Board;
 import DonjonAndDragons2.src.views.Ascii;
 
@@ -44,7 +47,7 @@ public class Menu {
         }
     }
 
-    public String chooseCaracterMenu() {
+    public Player.PlayerType chooseCaracterMenu() {
         try {
             System.out.println(
                 "___________________________________________________________________________________________\n"+
@@ -56,7 +59,15 @@ public class Menu {
             
             String answer = regexCheck("^[12]{1}$",this.scanner.nextLine().toUpperCase());
             
-            return answer;
+
+            if(answer.equals("1")){
+                return Player.PlayerType.WARRIOR;
+            }else if(answer.equals("2")){
+                return Player.PlayerType.WIZARD;
+            }else{
+                throw new UnsupportedOperationException("Invalid class");
+            }
+           
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             return chooseCaracterMenu();

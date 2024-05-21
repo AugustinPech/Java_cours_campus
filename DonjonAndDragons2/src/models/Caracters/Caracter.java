@@ -12,8 +12,8 @@ import DonjonAndDragons2.src.models.items.equipables.Equipable;
 
 
 public abstract class Caracter {
-    private ArrayList<Item> inventory;
-    private ArrayList<Equipable> equipment;
+    private ArrayList<Item> inventory= new ArrayList<Item>();
+    private ArrayList<Equipable> equipment= new ArrayList<Equipable>();
     private ArrayList<Status> statuses;
     private String name;
     private String caracterClass;

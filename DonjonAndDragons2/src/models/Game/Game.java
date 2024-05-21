@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import DonjonAndDragons2.src.models.Caracters.Caracter;
 import DonjonAndDragons2.src.models.Caracters.Player.Playable;
+import DonjonAndDragons2.src.models.Caracters.Player.Player;
 import DonjonAndDragons2.src.models.Caracters.Player.Warrior;
 import DonjonAndDragons2.src.models.Caracters.Player.Wizard;
 import DonjonAndDragons2.src.models.Game.Board.Board;
@@ -23,6 +24,8 @@ public class Game {
     private int turnNumber;
     private User user;
     private String difficulty;
+
+    ArrayList<Caracter> whosThere;
     
     public Game(User user){
         this.user = user;
@@ -35,12 +38,12 @@ public class Game {
 
     private Playable playerChoosesCaracter() {
         try {
-            String classRef = this.menu.chooseCaracterMenu();
+            Player.PlayerType classRef = this.menu.chooseCaracterMenu();
             String name = this.menu.chooseNameMenu();
 
-            if(classRef.equals("1")){
+            if(classRef.equals(Player.PlayerType.WARRIOR)){
                 return new Warrior(name);
-            }else if(classRef.equals("2")){
+            }else if(classRef.equals(Player.PlayerType.WIZARD)){
                 return new Wizard(name);
             }else{
                 throw new UnsupportedOperationException("Invalid class");
@@ -73,69 +76,62 @@ public class Game {
     }
     
     public void playTurn() throws PlayerIsDeadException{
+        this.updateWhosThere();
 
-            ArrayList<Caracter> whosThere = this.whosThere();
+        this.upkeepPhase();
+        this.mainPhase();
 
-            whosThere = this.upkeepPhase();
-            whosThere = this.mainPhase(whosThere);
+        this.movementPhase();
+        this.mainPhase();
 
-            whosThere = this.movementPhase(whosThere);
-            whosThere = this.mainPhase(whosThere);
+        this.encounterPhase();
+        this.mainPhase();
 
-            whosThere = this.encounterPhase(whosThere);
-            whosThere = this.mainPhase(whosThere);
-
-            this.endPhase(whosThere);
-            
+        this.endPhase();
     }
 
-    private ArrayList<Caracter> whosThere() {
-        ArrayList<Caracter> whosThere = this.board.getDungeon().get(this.player.getPosition()).getCaracters();
+    private void updateWhosThere() {
+        this.whosThere = this.board.getDungeon().get(this.player.getPosition()).getCaracters();
         if (!whosThere.contains(this.player)){            
             whosThere.add(this.player);
         }
-        return whosThere;
     }
 
 
-    private ArrayList<Caracter> endPhase(ArrayList<Caracter> whosThere) {
+    private void endPhase() {
         // TODO Auto-generated method stub
-        return whosThere;
     }
 
-    private ArrayList<Caracter> encounterPhase(ArrayList<Caracter> whosThere) {
+    private void encounterPhase() {
         // TODO Auto-generated method stub
-        return whosThere;
     }
 
-    private ArrayList<Caracter> movementPhase(ArrayList<Caracter> whosThere) {
+    private void movementPhase() {
         // TODO Auto-generated method stub
-        return whosThere;
+        
+        //ends with
+        this.updateWhosThere();
     }
 
-    private ArrayList<Caracter> mainPhase(ArrayList<Caracter> whosThere) {
+    private void mainPhase() {
         String answer = this.menu.mainPhaseMenu();
-        ArrayList<Caracter> initial = whosThere;
+        ArrayList<Caracter> initial = this.whosThere;
         switch (answer) {
             case "C":
                 this.menu.caracterSheetMenu(this.player);
-                return this.mainPhase(whosThere);
+                this.mainPhase();
             case "I":
-                whosThere.set(whosThere.indexOf(this.player),this.inventoryManager(this.player));
-                return whosThere;
+                this.whosThere.set(this.whosThere.indexOf(this.player),this.inventoryManager(this.player));
             case "E":
-                whosThere.set(whosThere.indexOf(this.player),this.equipmentManager(this.player));
-                return whosThere;
+                this.whosThere.set(this.whosThere.indexOf(this.player),this.equipmentManager(this.player));
             case "Q":
                 System.exit(0);
                 break;
             default:
                 break;
         }
-        if (answer !="" && initial == whosThere) {
-            return this.mainPhase(whosThere);
-        } else {
-            return whosThere;
+        if (answer !="" && initial == this.whosThere) {
+            this.mainPhase();
         }
     }
 
@@ -189,8 +185,7 @@ public class Game {
         }
     }
 
-    private ArrayList<Caracter> upkeepPhase() throws PlayerIsDeadException {
-        ArrayList<Caracter> whosThere = this.whosThere();
+    private void upkeepPhase() throws PlayerIsDeadException {
         this.menu.startTurnMenu(this.turnNumber, this.player, this.board);
         this.menu.displayBoard(this.board , this.player);
 
@@ -204,7 +199,6 @@ public class Game {
                 // this.caracterdies(caracter);
             }
         });
-        return whosThere;
     }
 
     private boolean lose() {

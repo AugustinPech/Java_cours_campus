@@ -5,7 +5,7 @@ import DonjonAndDragons2.src.models.Game.utilities.Stats;
 public class Item {
     private String name;
     private String description;
-    private Stats stats;
+    private Stats stats= new Stats(0,0,0,0,0,0,0); //TOFIX
     private int level;
     private String sprite = "📦";
 

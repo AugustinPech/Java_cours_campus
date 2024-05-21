@@ -1,5 +1,6 @@
 package DonjonAndDragons2.test.java.com.DungeonAndDragons2;
 
+import DonjonAndDragons2.src.models.Caracters.Player.Player;
 import DonjonAndDragons2.src.models.Game.Menu;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,14 +38,14 @@ class MenuTests {
             new ByteArrayInputStream("2\n3".getBytes()),
             new ByteArrayInputStream("1\n2".getBytes()),
         };
-        String[] ExpectedOut = {
-            "1",
-            "2",
-            "1"
+        Player.PlayerType[] ExpectedOut = {
+            Player.PlayerType.WARRIOR,
+            Player.PlayerType.WIZARD,
+            Player.PlayerType.WARRIOR
         };
         for (int i =0 ; i < in.length; i++) {
             Menu menu = new Menu(in[i]);
-            String classRef = menu.chooseCaracterMenu();
+            Player.PlayerType classRef = menu.chooseCaracterMenu();
             assertEquals(classRef, ExpectedOut[i]);
         }
     }
