@@ -1,4 +1,4 @@
-package DonjonAndDragons2.test.java.com.DungeonAndDragons2;
+package DonjonAndDragons2.src.test.java.com.DungeonAndDragons2;
 
 import DonjonAndDragons2.src.models.Caracters.Player.Player;
 import DonjonAndDragons2.src.models.Game.Menu;

@@ -1,4 +1,4 @@
-package DonjonAndDragons2.test.java.com.DungeonAndDragons2;
+package DonjonAndDragons2.src.test.java.com.DungeonAndDragons2;
 
 
 import org.junit.jupiter.api.Test;
@@ -8,8 +8,6 @@ import DonjonAndDragons2.src.models.Game.utilities.Stats;
 
 
 import static org.junit.jupiter.api.Assertions.*;
-
-
 
 class StatsTests {
     @Test

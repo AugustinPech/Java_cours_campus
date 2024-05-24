@@ -6,9 +6,9 @@ import DonjonAndDragons2.src.models.Game.utilities.damages.Damage;
 import DonjonAndDragons2.src.models.Game.utilities.damages.Normal;
 import DonjonAndDragons2.src.models.items.equipables.Weapon.abstractClasses.PhysicalWeapon;
 
-public class Axe extends PhysicalWeapon {
+public class Sword extends PhysicalWeapon {
 
-    public Axe(String name, int level) {
+    public Sword(String name, int level) {
         super(name, level);
         this.setSprite("🪓");
     }

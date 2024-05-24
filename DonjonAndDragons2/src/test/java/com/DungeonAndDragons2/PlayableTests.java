@@ -1,20 +1,16 @@
-package DonjonAndDragons2.test.java.com.DungeonAndDragons2;
+package DonjonAndDragons2.src.test.java.com.DungeonAndDragons2;
 
-import DonjonAndDragons2.src.models.Game.Menu;
 import DonjonAndDragons2.src.models.Game.Exception.EquipmentFullException;
 import DonjonAndDragons2.src.models.Game.Exception.InventoryFullException;
 import DonjonAndDragons2.src.models.Game.Exception.NotEquipableException;
-import DonjonAndDragons2.src.models.Game.utilities.status.Status;
 
 import org.junit.jupiter.api.Test;
 
 import DonjonAndDragons2.src.models.items.Item;
 import DonjonAndDragons2.src.models.items.equipables.Equipable;
 import DonjonAndDragons2.src.models.items.equipables.Weapon.abstractClasses.MagicWeapons;
-import DonjonAndDragons2.src.models.items.equipables.Weapon.abstractClasses.PhysicalWeapon;
 import DonjonAndDragons2.src.models.items.equipables.Weapon.magical.FireStaff;
-import DonjonAndDragons2.src.models.items.equipables.Weapon.physical.Axe;
-import DonjonAndDragons2.src.models.Game.utilities.Stats;
+import DonjonAndDragons2.src.models.items.equipables.Weapon.physical.Sword;
 import DonjonAndDragons2.src.models.Caracters.Caracter;
 import DonjonAndDragons2.src.models.Caracters.NPC.Gobelin;
 import DonjonAndDragons2.src.models.Caracters.Player.Warrior;
@@ -22,8 +18,6 @@ import DonjonAndDragons2.src.models.Caracters.Player.Wizard;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 class PlayableTests {
@@ -100,7 +94,7 @@ class PlayableTests {
     }
     @Test
     void testUnEquipItem() {
-        Axe item = new Axe("test", 1);
+        Sword item = new Sword("test", 1);
         Warrior warrior = new Warrior("Warrior");
         try {
             warrior.pickUpItem(item);
@@ -121,8 +115,8 @@ class PlayableTests {
     }
     @Test
     void testReplaceEquipment() {
-        Axe item1 = new Axe("test", 1);
-        Axe item2 = new Axe("test", 1);
+        Sword item1 = new Sword("test", 1);
+        Sword item2 = new Sword("test", 1);
 
         Warrior warrior = new Warrior("Warrior");
         try {

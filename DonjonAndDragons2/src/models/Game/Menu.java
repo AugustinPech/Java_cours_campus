@@ -59,7 +59,6 @@ public class Menu {
             
             String answer = regexCheck("^[12]{1}$",this.scanner.nextLine().toUpperCase());
             
-
             if(answer.equals("1")){
                 return Player.PlayerType.WARRIOR;
             }else if(answer.equals("2")){

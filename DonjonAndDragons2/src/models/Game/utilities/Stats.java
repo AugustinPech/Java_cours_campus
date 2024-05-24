@@ -10,7 +10,6 @@ public class Stats {
     private int experience;
     private int intel;
     private int mental;
-
     private int agility;
     private int initiative;
 
@@ -38,8 +37,8 @@ public class Stats {
     public Stats merge (Stats stats) throws LifeTo0Exception {
         Stats result = new Stats(0,0,0,0,0,0,0);
 
-            result.setLifePoints((this.lifePoints + stats.lifePoints) > 0 ? this.lifePoints + stats.lifePoints : 0);
             result.setStaminia((this.staminia + stats.staminia) > 0 ? this.staminia + stats.staminia : 0);
+            result.setLifePoints((this.lifePoints + stats.lifePoints) > 0 ? this.lifePoints + stats.lifePoints : 0);
             result.setStrength((this.strength + stats.strength) > 0 ? this.strength + stats.strength : 0);
             result.setIntel((this.intel + stats.intel) > 0 ? this.intel + stats.intel : 0);
             result.setMental((this.mental + stats.mental) > 0 ? this.mental + stats.mental : 0);
