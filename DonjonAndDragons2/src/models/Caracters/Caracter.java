@@ -55,9 +55,9 @@ public abstract class Caracter {
     public void addStatus(Status status){
         this.statuses.add(status);
     }
-    public abstract Damage attack(Caracter target);
+    public abstract Damage attack(Caracter target, int roll);
 
-    public abstract Caracter defend(Damage damage);
+    public abstract Caracter defend(Damage damage, int roll);
     
     public Stats getStats() {
         return stats;
@@ -127,4 +127,10 @@ public abstract class Caracter {
     public void upkeep() throws CaracterIsDeadException{
         this.applyStatuses();
     };
+    @Override
+    public String toString() {
+        String str = "";
+        str += this.getName() + ": LvL ["+this.getLevel()+"]\n";
+        return str;
+    }
 }

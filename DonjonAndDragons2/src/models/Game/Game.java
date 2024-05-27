@@ -8,7 +8,7 @@ import DonjonAndDragons2.src.models.Caracters.Player.Player;
 import DonjonAndDragons2.src.models.Caracters.Player.Warrior;
 import DonjonAndDragons2.src.models.Caracters.Player.Wizard;
 import DonjonAndDragons2.src.models.Game.Board.Board;
-import DonjonAndDragons2.src.models.Game.Board.Room;
+import DonjonAndDragons2.src.models.Game.Board.rooms.Room;
 import DonjonAndDragons2.src.models.Game.Exception.CaracterIsDeadException;
 import DonjonAndDragons2.src.models.Game.Exception.EquipmentFullException;
 import DonjonAndDragons2.src.models.Game.Exception.NotConsumableException;
@@ -21,12 +21,21 @@ public class Game {
     private Board board;
 
     private Menu menu;
+
+
     private int turnNumber;
     private User user;
     private String difficulty;
 
-    ArrayList<Caracter> whosThere;
+    private ArrayList<Caracter> whosThere;
     
+    public Game (Playable player) { // test
+        this.player = player;
+        this.menu = new Menu(System.in);
+        this.difficulty = "EASY";
+        this.board = new Board(this.difficulty);
+        this.turnNumber = 0;
+    }
     public Game(User user){
         this.user = user;
         this.menu = new Menu(System.in);
@@ -80,21 +89,52 @@ public class Game {
 
         this.upkeepPhase();
         this.mainPhase();
+        this.updateWhosThere();
 
         this.movementPhase();
         this.mainPhase();
+        this.updateWhosThere();
 
         this.encounterPhase();
         this.mainPhase();
+        this.updateWhosThere();
 
         this.endPhase();
     }
 
     private void updateWhosThere() {
-        this.whosThere = this.board.getDungeon().get(this.player.getPosition()).getCaracters();
-        if (!whosThere.contains(this.player)){            
-            whosThere.add(this.player);
+        //check in prev
+        if (player.getPosition() > 0) {
+            Room prevRoom = this.board.getDungeon().get(this.player.getPosition()-1);
+            ArrayList<Caracter> whoInPrev = prevRoom.getWhosThere();
+            if (whoInPrev.contains(this.player)){
+                whoInPrev.remove(this.player);
+            }
+            // update prev
+            this.board.getDungeon().get(this.player.getPosition()-1).setWhosThere(whoInPrev);
         }
+
+        // check in next
+        if (player.getPosition() < this.board.getDungeon().size()-1) {
+            Room nextRoom = this.board.getDungeon().get(this.player.getPosition()+1);
+            ArrayList<Caracter> whoInNext = nextRoom.getWhosThere();
+            if (whoInNext.contains(this.player)){
+                whoInNext.remove(this.player);
+            }
+            // update next
+            this.board.getDungeon().get(this.player.getPosition()+1).setWhosThere(whoInNext);
+        }
+
+        // check in current
+        Room currentRoom = this.board.getDungeon().get(this.player.getPosition());
+        ArrayList<Caracter> whoInCurrent = currentRoom.getWhosThere();
+        if (!whoInCurrent.contains(this.player)){
+            whoInCurrent.add(this.player);
+        }
+        // update current
+        this.board.getDungeon().get(this.player.getPosition()).setWhosThere(whoInCurrent);
+
+        this.whosThere = whoInCurrent;
     }
 
 
@@ -106,9 +146,31 @@ public class Game {
         // TODO Auto-generated method stub
     }
 
-    private void movementPhase() {
-        // TODO Auto-generated method stub
-        
+    public void movementPhase() {
+        try{
+            // do you wish to move ?
+            String answer = this.menu.movementPhaseMenu();
+
+            switch (answer) {
+                case "STAY":
+                    break;
+                case "BACKWARD":
+                    if (this.player.getPosition() ==0) {
+                        throw new UnsupportedOperationException("You can't go back");
+                    }
+                    this.player.move("backward");
+                    break;
+                case "FORWARD":
+                if (this.player.getPosition() ==this.board.getDungeon().size()-1) {
+                        throw new UnsupportedOperationException("You can't go back");
+                    }
+                    this.player.move("forward");
+                    break;
+            }
+        } catch (UnsupportedOperationException e) {
+            this.menu.exceptionMenu(e.getMessage());
+            this.movementPhase();
+        }
         //ends with
         this.updateWhosThere();
     }
@@ -187,7 +249,8 @@ public class Game {
 
     private void upkeepPhase() throws PlayerIsDeadException {
         this.menu.startTurnMenu(this.turnNumber, this.player, this.board);
-        this.menu.displayBoard(this.board , this.player);
+        this.menu.displayBoard(this.board);
+        this.menu.upkeepMenu(this.player.getPosition(), this.whosThere, this.board);
 
         whosThere.forEach(caracter -> {
             try {caracter.upkeep();}
@@ -213,5 +276,19 @@ public class Game {
 
     public Board getBoard() {
         return board;
+    }
+    public ArrayList<Caracter> getWhosThere() {
+        return whosThere;
+    }
+
+    public void setWhosThere(ArrayList<Caracter> whosThere) {
+        this.whosThere = whosThere;
+    }
+
+    public Menu getMenu() {
+        return menu;
+    }
+    public void setMenu(Menu menu) {
+        this.menu = menu;
     }
 }

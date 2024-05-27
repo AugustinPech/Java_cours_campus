@@ -2,7 +2,6 @@ package DonjonAndDragons2.src.models.Caracters.Player;
 
 import DonjonAndDragons2.src.models.Caracters.Caracter;
 import DonjonAndDragons2.src.models.Caracters.interfaces.SpellCaster;
-import DonjonAndDragons2.src.models.Game.Exception.CaracterIsDeadException;
 import DonjonAndDragons2.src.models.Game.Exception.LifeTo0Exception;
 import DonjonAndDragons2.src.models.Game.utilities.Stats;
 import DonjonAndDragons2.src.models.Game.utilities.damages.Damage;
@@ -21,7 +20,7 @@ public class Wizard extends Playable implements SpellCaster, Player {
     }
 
     @Override
-    public Damage attack(Caracter Target) {
+    public Damage attack(Caracter Target, int roll) {
         //todo : choice of the weapon
         Damage damage = new Fire(this.getStats(), this.getLevel());
 
@@ -29,7 +28,7 @@ public class Wizard extends Playable implements SpellCaster, Player {
     }
 
     @Override
-    public Caracter defend(Damage damage) {
+    public Caracter defend(Damage damage, int roll) {
         // TODO
         return null;
     }

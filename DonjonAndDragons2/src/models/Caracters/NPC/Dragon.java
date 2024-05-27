@@ -20,13 +20,13 @@ public class Dragon extends Caracter implements Monster{
     }
 
     @Override
-    public Damage attack(Caracter target) {
+    public Damage attack(Caracter target, int roll) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'attack'");
     }
 
     @Override
-    public Caracter defend(Damage damage) {
+    public Caracter defend(Damage damage, int roll) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'defend'");
     }

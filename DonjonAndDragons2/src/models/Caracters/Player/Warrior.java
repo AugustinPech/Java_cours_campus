@@ -22,14 +22,14 @@ public class Warrior extends Playable implements Fighter {
     }
 
     @Override
-    public Damage attack(Caracter target) {
+    public Damage attack(Caracter target, int roll) {
         //todo : choice of the weapon
         Damage damage = new Normal(this.getStats(), this.getLevel());
         return damage;
     }
 
     @Override
-    public Caracter defend(Damage damage) {
+    public Caracter defend(Damage damage, int roll) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'defend'");
     }

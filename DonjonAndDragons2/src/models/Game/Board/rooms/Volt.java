@@ -1,14 +1,13 @@
-package DonjonAndDragons2.src.models.Game.Board;
+package DonjonAndDragons2.src.models.Game.Board.rooms;
 
 import java.util.ArrayList;
 
 import DonjonAndDragons2.src.models.Caracters.Caracter;
 
-public class Heart extends Room {
-
-    public Heart(int level) {
+public class Volt extends TresoreRoom {
+    public Volt(int level) {
         super(level);
-        this.setName("Heart");
+        this.setName("Volt");
     }
 
     @Override
@@ -22,9 +21,10 @@ public class Heart extends Room {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'leaveRoom'");
     }
-        @Override
+
+    @Override
     public ArrayList<Caracter> getCaracters() {
         return this.getNpcs();
     }
-    
+
 }

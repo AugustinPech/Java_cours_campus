@@ -132,5 +132,14 @@ public abstract class Playable extends Caracter{
     public void setLevelUpStats(Stats levelUpStats) {
         this.levelUpStats = levelUpStats;
     }
-
+    public void move(String direction) {
+        switch (direction){
+            case "forward":
+                this.setPosition(this.getPosition()+1);
+                break;
+            case "backward":
+                this.setPosition(this.getPosition()-1);
+                break;
+        }
+    }
 }

@@ -1,20 +1,13 @@
-package DonjonAndDragons2.src.models.Game.Board;
+package DonjonAndDragons2.src.models.Game.Board.rooms;
 
 import java.util.ArrayList;
 
 import DonjonAndDragons2.src.models.Caracters.Caracter;
 
-
-public class BossRoom extends FightRoom{
-
-    public BossRoom(String name, String description, int level) {
+public class PotionRoom extends TresoreRoom {
+    public PotionRoom(int level) {
         super(level);
-        this.setName(name);
-    }
-
-    public BossRoom(int level) {
-        super(level);
-        this.setName("Boss Room");        
+        this.setName("Potion Room");
     }
 
     @Override
@@ -28,7 +21,7 @@ public class BossRoom extends FightRoom{
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'leaveRoom'");
     }
-    @Override
+        @Override
     public ArrayList<Caracter> getCaracters() {
         return this.getNpcs();
     }

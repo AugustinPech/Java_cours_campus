@@ -1,13 +1,14 @@
-package DonjonAndDragons2.src.models.Game.Board;
+package DonjonAndDragons2.src.models.Game.Board.rooms;
 
 import java.util.ArrayList;
 
 import DonjonAndDragons2.src.models.Caracters.Caracter;
 
-public class PotionRoom extends TresoreRoom {
-    public PotionRoom(int level) {
+public class Heart extends Room {
+
+    public Heart(int level) {
         super(level);
-        this.setName("Potion Room");
+        this.setName("Heart");
     }
 
     @Override
@@ -25,4 +26,5 @@ public class PotionRoom extends TresoreRoom {
     public ArrayList<Caracter> getCaracters() {
         return this.getNpcs();
     }
+    
 }

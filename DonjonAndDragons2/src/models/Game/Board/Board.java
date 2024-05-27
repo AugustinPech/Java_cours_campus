@@ -4,24 +4,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 import DonjonAndDragons.src.models.Game.dice.D100;
+import DonjonAndDragons2.src.models.Caracters.Caracter;
+import DonjonAndDragons2.src.models.Caracters.Player.Playable;
 import DonjonAndDragons2.src.models.Game.Board.dice.D10;
 import DonjonAndDragons2.src.models.Game.Board.dice.D20;
+import DonjonAndDragons2.src.models.Game.Board.rooms.BossRoom;
+import DonjonAndDragons2.src.models.Game.Board.rooms.DoorStep;
+import DonjonAndDragons2.src.models.Game.Board.rooms.GuardRoom;
+import DonjonAndDragons2.src.models.Game.Board.rooms.HallWay;
+import DonjonAndDragons2.src.models.Game.Board.rooms.Heart;
+import DonjonAndDragons2.src.models.Game.Board.rooms.PotionRoom;
+import DonjonAndDragons2.src.models.Game.Board.rooms.Room;
+import DonjonAndDragons2.src.models.Game.Board.rooms.Volt;
 
 
 public class Board {
 
     private int size;
-
-
     private int lvlMax=0;
     private int lvlMin=0;
     private ArrayList<Room> dungeon= new ArrayList<Room>();
     final ArrayList<Room> roomBank = new ArrayList<Room>();
     private ArrayList<Integer> path = new ArrayList<Integer>();
+
     private D10 d10 = new D10();
     private D20 d20 = new D20();
     private D100 d100 = new D100();
-    
     public Board(String difficulty) {
         this.size=10; //+some stuff
         switch (difficulty) {
@@ -125,5 +133,50 @@ public class Board {
 
     public void setSize(int size) {
         this.size = size;
+    }
+    public D100 getD100() {
+        return d100;
+    }
+
+    public void setD100(D100 d100) {
+        this.d100 = d100;
+    }
+
+    public D20 getD20() {
+        return d20;
+    }
+
+    public void setD20(D20 d20) {
+        this.d20 = d20;
+    }
+
+    public D10 getD10() {
+        return d10;
+    }
+
+    public void setD10(D10 d10) {
+        this.d10 = d10;
+    }
+
+    @Override
+    public String toString() {
+        String str ="----------------------------------BOARD----------------------------------------------------\n";
+        for (Room room : this.getDungeon()) {
+           str +=("|| ");
+            for (Caracter caracter : room.getWhosThere()) {
+                if (caracter instanceof Playable) {
+                    str+=("[Player] ");
+                } 
+            }
+            if (room.getVisited()) {
+                str+=(room.getName());
+            } else {
+                str+=("[no-see]");
+            }   
+            str+=(" ||");
+        }
+        str+="\n"
+        +"\n-------------------------------------------------------------------------------------------";
+        return str;
     }
 }

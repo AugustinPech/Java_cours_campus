@@ -1,5 +1,8 @@
 package DonjonAndDragons2.src.test.java.com.DungeonAndDragons2;
 
+import DonjonAndDragons2.src.models.Game.Game;
+import DonjonAndDragons2.src.models.Game.Menu;
+import DonjonAndDragons2.src.models.Game.User;
 import DonjonAndDragons2.src.models.Game.Exception.EquipmentFullException;
 import DonjonAndDragons2.src.models.Game.Exception.InventoryFullException;
 import DonjonAndDragons2.src.models.Game.Exception.NotEquipableException;
@@ -18,6 +21,8 @@ import DonjonAndDragons2.src.models.Caracters.Player.Wizard;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 class PlayableTests {
@@ -71,6 +76,7 @@ class PlayableTests {
         Wizard wizard = new Wizard ("Wizard");
         
         try {
+            int roll = 1;
             wizard.pickUpItem(item);
             ArrayList<Item> inventory = wizard.getInventory();
             assertEquals(inventory.size(), 1);
@@ -81,9 +87,9 @@ class PlayableTests {
             caracters.add(new Gobelin(1));
             caracters.add(wizard);
             MagicWeapons staff  = (MagicWeapons) wizard.getEquipment().get(0);
-            staff.use(caracters);
+            staff.use(caracters, roll);
             assertTrue(caracters.get(0).getStatuses().size()==1);
-        }catch (InventoryFullException e){
+        } catch (InventoryFullException e){
         } catch (EquipmentFullException e){
         } catch (NotEquipableException e){
         }
@@ -140,6 +146,37 @@ class PlayableTests {
     @Test
     void testConsumeItem() {
         //TODO
+    }
+    @Test
+    void testMove() {
+        InputStream[] in = {// 0
+            new ByteArrayInputStream("b\n".getBytes()),// 0
+            new ByteArrayInputStream("f\n".getBytes()),// 1
+            new ByteArrayInputStream("n\n".getBytes()),// 1
+            new ByteArrayInputStream("\nn".getBytes()),// 1
+            new ByteArrayInputStream("erzrtg\nb".getBytes()),// 0
+            new ByteArrayInputStream("erzrtg\nb".getBytes()),// 0
+        };
+
+        int[] ExpectedOut = {
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+        };
+
+        Warrior player = new Warrior("Warrior");
+        player.setPosition(0);
+        for (int i =0 ; i < in.length; i++) {
+            int exp =ExpectedOut[i];
+            int pos = player.getPosition();
+            Menu menu = new Menu(in[i]);
+            String answer = menu.movementPhaseMenu();
+            player.move(answer.toLowerCase());
+            // assertEquals(pos, exp);
+        }
     }
 
 }

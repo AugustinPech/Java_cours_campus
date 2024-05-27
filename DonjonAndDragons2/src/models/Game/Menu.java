@@ -6,15 +6,16 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import DonjonAndDragons2.src.models.Game.Board.Room;
 import DonjonAndDragons2.src.models.items.Item;
 import DonjonAndDragons2.src.models.items.equipables.Equipable;
 import DonjonAndDragons2.src.models.Caracters.Caracter;
+import DonjonAndDragons2.src.models.Caracters.NPC.NPC;
 import DonjonAndDragons2.src.models.Caracters.Player.Playable;
 import DonjonAndDragons2.src.models.Caracters.Player.Player;
 import DonjonAndDragons2.src.models.Caracters.Player.Warrior;
 import DonjonAndDragons2.src.models.Caracters.Player.Wizard;
 import DonjonAndDragons2.src.models.Game.Board.Board;
+import DonjonAndDragons2.src.models.Game.Board.rooms.Room;
 import DonjonAndDragons2.src.views.Ascii;
 
 public class Menu {
@@ -169,29 +170,11 @@ public class Menu {
         System.out.println(
             "----------------------------------Turn n°"+turnNumber+"--------------------------------------------\n"
         );
-        System.err.println(
-            "       You are in "+board.getDungeon().get(player.getPosition())+"\n"
-        );
     }
-    public void displayBoard(Board board, Playable player) {
+    public void displayBoard(Board board) {
         System.out.println(
-            "----------------------------------BOARD----------------------------------------------------\n"
-        );
-        int position = 0;
-        for (Room room : board.getDungeon()) {
-            System.out.print("|| ");
-            if (position == player.getPosition()) {
-                System.out.print("[Player]");
-                System.out.print(room.toString());
-            } else {
-                System.out.print("[no-see]");
-            }
-            System.out.print(" ||");
-            position++;
-        }
-        System.out.println(
-            "\n-------------------------------------------------------------------------------------------"
-        );
+            board
+            );
     }
     public String inventoryMenu(ArrayList<Item> inventory) {
        try {
@@ -239,4 +222,44 @@ public class Menu {
             return itemInteractionInventoryMenu(item);
         }
     }
+    public void upkeepMenu(int indexOfPlayer, ArrayList<Caracter> whosThere, Board board) {
+        String str = "";
+        str += board.getDungeon().get(indexOfPlayer) + "\n";
+        for (Caracter caracter : whosThere) {
+            if (caracter instanceof NPC) {
+                str += caracter ;
+            }
+        }
+        System.out.println(str);
+    }
+    public String movementPhaseMenu() {
+        try {
+            String answer ="";
+
+                System.out.println(
+                    "----------------------------------MOVEMENT-PHASE-------------------------------------------\n"+
+                    "   Do you wish to move ?\n"+
+                    "       (B) to move backward\n"+
+                    "       (F) to move forward\n"+
+                    "       (N) to stay where you are\n"+
+                    "-------------------------------------------------------------------------------------------"
+                );
+                answer = regexCheck("^[BFN]{0,1}$",this.scanner.nextLine().toUpperCase());
+                switch (answer) {
+                    case "B":
+                        answer = "BACKWARD";
+                    case "F":
+                        answer = "FORWARD";
+                    default :
+                        answer = "STAY";
+                }
+            return answer;
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return movementPhaseMenu();
+        }
+    }
+	public void exceptionMenu(String message) {
+		System.out.println(message);
+	}
 }

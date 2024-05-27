@@ -1,4 +1,4 @@
-package DonjonAndDragons2.src.models.Game.Board;
+package DonjonAndDragons2.src.models.Game.Board.rooms;
 
 import java.util.ArrayList;
 

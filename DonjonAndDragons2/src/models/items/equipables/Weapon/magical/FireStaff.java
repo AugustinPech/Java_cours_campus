@@ -19,7 +19,7 @@ public class FireStaff extends MagicWeapons{
     }
 
     @Override
-    public ArrayList<Caracter> use(ArrayList<Caracter> caracters) {
+    public ArrayList<Caracter> use(ArrayList<Caracter> caracters, int roll) {
         Fire fire = null;
         Stats itemStats = this.getStats();
         Stats burn = new Stats (
@@ -36,7 +36,7 @@ public class FireStaff extends MagicWeapons{
             if (caracter instanceof Playable) {
                 fire = new Fire(itemStats,  this.getLevel());
             }
-            caracter.defend(fire);
+            caracter.defend(fire, roll);
             caracter.addStatus(burning);
         }
         return caracters;

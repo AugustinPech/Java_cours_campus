@@ -1,32 +1,20 @@
-package DonjonAndDragons2.src.models.Game.Board;
+package DonjonAndDragons2.src.models.Game.Board.rooms;
 import java.util.ArrayList;
 
 import DonjonAndDragons2.src.models.items.Item;
 import DonjonAndDragons2.src.models.Caracters.Caracter;
+import DonjonAndDragons2.src.models.Caracters.Player.Playable;
 
 public abstract class Room {
     private String name;
     private String description;
     private int level;
+    private boolean visited = false;
     private ArrayList<Caracter> npcs= new ArrayList<Caracter>();
     private ArrayList<Item> items= new ArrayList<Item>();
-
+    private ArrayList<Caracter> whosThere = new ArrayList<Caracter>();
     public Room(int level) {
         this.level = level;
-    }
-    @Override
-    public String toString() {
-        String str = "";
-        if (this.getNpcs()!=null && this.getNpcs().size() > 0) {
-            for (Caracter npc : this.getNpcs()) {
-                str += npc.getSprite();
-            }
-        }
-        if (this.getItems()!=null && this.getItems().size() > 0) {
-            str += "📦";
-        }
-        str += this.getName();
-        return str;
     }
     
     public abstract void enterRoom();
@@ -76,6 +64,44 @@ public abstract class Room {
 
     public void setItems(ArrayList<Item> items) {
         this.items = items;
+    }
+    public ArrayList<Caracter> getWhosThere() {
+        return whosThere;
+    }
+
+    public void setWhosThere(ArrayList<Caracter> whosThere) {
+        for (Caracter caracter : whosThere) {
+            if (caracter instanceof Playable) {
+                this.setVisited(true);
+            }
+        }
+        this.whosThere = whosThere;
+    }
+    public boolean getVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
+    @Override
+    public String toString() {
+        String str = "";
+        str += "------------ "+this.getName()+" ------------\n";
+        if (this.getNpcs()!=null && this.getNpcs().size() > 0) {
+            for (Caracter npc : this.getNpcs()) {
+                str += npc;
+            }
+            str+="\n";
+        }
+        if (this.getItems()!=null && this.getItems().size() > 0) {
+        for (Item item : this.getItems()) {
+                str += item;
+            }
+        }
+        str+="\n";
+        str += "---------------------------------------------\n";
+        return str;
     }
 
 }
